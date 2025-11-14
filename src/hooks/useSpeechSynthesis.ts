@@ -54,23 +54,29 @@ export function useSpeechSynthesis() {
 
       // Try to find specific high-quality voices in order of preference
       let koreanVoice =
-        // First try Yuna Premium (best quality)
-        koreanVoices.find(v => v.name.includes('Yuna') && v.name.toLowerCase().includes('premium')) ||
+        // First try Yuna Premium (best quality) - check both name and case variations
+        koreanVoices.find(v => {
+          const nameLower = v.name.toLowerCase();
+          return nameLower.includes('yuna') && nameLower.includes('premium');
+        }) ||
         // Then try Siri voices
-        koreanVoices.find(v => v.name.includes('Siri')) ||
+        koreanVoices.find(v => v.name.toLowerCase().includes('siri')) ||
         // Then try any Yuna voice
-        koreanVoices.find(v => v.name.includes('Yuna')) ||
+        koreanVoices.find(v => v.name.toLowerCase().includes('yuna')) ||
         // Then try enhanced/premium
         koreanVoices.find(v => v.name.toLowerCase().includes('enhanced')) ||
         koreanVoices.find(v => v.name.toLowerCase().includes('premium')) ||
         // Avoid Rocko if possible
-        koreanVoices.find(v => !v.name.includes('Rocko')) ||
+        koreanVoices.find(v => !v.name.toLowerCase().includes('rocko')) ||
         // Last resort: any Korean voice
         koreanVoices[0];
 
       if (koreanVoice) {
         utterance.voice = koreanVoice;
         setCurrentVoice(koreanVoice.name);
+        console.log('Selected voice:', koreanVoice.name);
+      } else {
+        console.log('No Korean voice found');
       }
 
       // Estimate speech duration for fallback timeout
