@@ -1,6 +1,7 @@
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Mic } from 'lucide-react';
 import { SpeakButton } from './SpeakButton';
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
+import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 
 type InputRowProps = {
   label: string;
@@ -22,9 +23,16 @@ export function InputRow({
   onGrade,
 }: InputRowProps) {
   const { speak, isSpeaking } = useSpeechSynthesis();
+  const { isListening, startListening } = useSpeechRecognition();
 
   const handleSpeakClick = () => {
     speak(correctAnswer);
+  };
+
+  const handleMicClick = () => {
+    startListening((text) => {
+      onChange(text);
+    });
   };
 
   return (
@@ -47,6 +55,21 @@ export function InputRow({
         className="flex-1 min-w-0 px-2 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         placeholder="入力"
       />
+      {!showResult && (
+        <button
+          type="button"
+          onClick={handleMicClick}
+          disabled={isListening}
+          className={`p-2 rounded-md transition-colors flex items-center justify-center flex-shrink-0 ${
+            isListening
+              ? 'bg-red-100 text-red-600 cursor-not-allowed'
+              : 'bg-gray-100 hover:bg-gray-200 text-gray-600 cursor-pointer'
+          }`}
+          title="音声入力"
+        >
+          <Mic className="w-4 h-4" />
+        </button>
+      )}
       {showResult && (
         <SpeakButton onClick={handleSpeakClick} isSpeaking={isSpeaking} />
       )}
