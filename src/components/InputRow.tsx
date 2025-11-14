@@ -48,13 +48,6 @@ export function InputRow({
       <label className="w-24 flex-shrink-0 font-semibold text-xs text-gray-700">
         {label}
       </label>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="flex-1 min-w-0 px-2 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        placeholder="入力"
-      />
       {!showResult && (
         <button
           type="button"
@@ -70,6 +63,13 @@ export function InputRow({
           <Mic className="w-4 h-4" />
         </button>
       )}
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="flex-1 min-w-0 px-2 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        placeholder="入力"
+      />
       {showResult && (
         <SpeakButton onClick={handleSpeakClick} isSpeaking={isSpeaking} />
       )}
