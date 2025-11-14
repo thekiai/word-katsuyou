@@ -44,7 +44,7 @@ export function InputRow({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="flex-1 min-w-0 px-2 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="flex-1 min-w-0 px-2 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         placeholder="入力"
       />
       {showResult && (
