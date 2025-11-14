@@ -9,6 +9,15 @@ export function useSpeechSynthesis() {
     const loadVoices = () => {
       const availableVoices = window.speechSynthesis.getVoices();
       setVoices(availableVoices);
+
+      // Debug: Show available Korean voices
+      const koreanVoices = availableVoices.filter(
+        (voice) => voice.lang === 'ko-KR' || voice.lang.startsWith('ko')
+      );
+      if (koreanVoices.length > 0) {
+        const voiceList = koreanVoices.map(v => v.name).join(', ');
+        console.log('Korean voices:', voiceList);
+      }
     };
 
     loadVoices();
@@ -58,6 +67,8 @@ export function useSpeechSynthesis() {
 
       if (koreanVoice) {
         utterance.voice = koreanVoice;
+        // Debug: Alert which voice is being used
+        alert(`使用中の音声: ${koreanVoice.name}`);
       }
 
       // Estimate speech duration for fallback timeout
