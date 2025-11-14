@@ -9,17 +9,6 @@ export function useSpeechSynthesis() {
     const loadVoices = () => {
       const availableVoices = window.speechSynthesis.getVoices();
       setVoices(availableVoices);
-
-      // Log all Korean voices for debugging
-      const koreanVoices = availableVoices.filter(
-        (voice) => voice.lang === 'ko-KR' || voice.lang.startsWith('ko')
-      );
-      console.log('Available Korean voices:', koreanVoices.map(v => ({
-        name: v.name,
-        lang: v.lang,
-        localService: v.localService,
-        default: v.default
-      })));
     };
 
     loadVoices();
@@ -69,9 +58,6 @@ export function useSpeechSynthesis() {
 
       if (koreanVoice) {
         utterance.voice = koreanVoice;
-        console.log('Using voice:', koreanVoice.name, '(', koreanVoice.lang, ')');
-      } else {
-        console.warn('No Korean voice found');
       }
 
       // Estimate speech duration for fallback timeout
@@ -92,8 +78,7 @@ export function useSpeechSynthesis() {
         setIsSpeaking(false);
       };
 
-      utterance.onerror = (event) => {
-        console.error('Speech synthesis error:', event);
+      utterance.onerror = () => {
         clearTimeout(timeoutId);
         setIsSpeaking(false);
       };
