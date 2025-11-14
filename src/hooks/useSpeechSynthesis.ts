@@ -54,9 +54,11 @@ export function useSpeechSynthesis() {
 
       // Try to find specific high-quality voices in order of preference
       let koreanVoice =
-        // First try Siri voices
+        // First try Yuna Premium (best quality)
+        koreanVoices.find(v => v.name.includes('Yuna') && v.name.toLowerCase().includes('premium')) ||
+        // Then try Siri voices
         koreanVoices.find(v => v.name.includes('Siri')) ||
-        // Then try Yuna (common iOS premium voice)
+        // Then try any Yuna voice
         koreanVoices.find(v => v.name.includes('Yuna')) ||
         // Then try enhanced/premium
         koreanVoices.find(v => v.name.toLowerCase().includes('enhanced')) ||
