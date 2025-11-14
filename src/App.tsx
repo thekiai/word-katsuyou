@@ -32,7 +32,7 @@ function App() {
     negative_jian: null,
     possible: null,
   });
-  const [randomExampleKey, setRandomExampleKey] = useState<ConjugationType>('present');
+  const [randomExampleKey, setRandomExampleKey] = useState<Exclude<ConjugationType, 'base'>>('present');
 
   // Load verbs on mount
   useEffect(() => {
@@ -103,7 +103,7 @@ function App() {
       const allGraded = Object.values(newResults).every((r) => r !== null);
       if (allGraded) {
         // ランダムに例文の活用形を選ぶ（baseは例文がないので除外）
-        const conjugationKeys: ConjugationType[] = ['present', 'past', 'future', 'go', 'seo', 'negative_an', 'negative_jian', 'possible'];
+        const conjugationKeys: Exclude<ConjugationType, 'base'>[] = ['present', 'past', 'future', 'go', 'seo', 'negative_an', 'negative_jian', 'possible'];
         const randomKey = conjugationKeys[Math.floor(Math.random() * conjugationKeys.length)];
         setRandomExampleKey(randomKey);
       }
@@ -143,7 +143,7 @@ function App() {
     setResults(newResults);
 
     // ランダムに例文の活用形を選ぶ（baseは例文がないので除外）
-    const conjugationKeys: ConjugationType[] = ['present', 'past', 'future', 'go', 'seo', 'negative_an', 'negative_jian', 'possible'];
+    const conjugationKeys: Exclude<ConjugationType, 'base'>[] = ['present', 'past', 'future', 'go', 'seo', 'negative_an', 'negative_jian', 'possible'];
     const randomKey = conjugationKeys[Math.floor(Math.random() * conjugationKeys.length)];
     setRandomExampleKey(randomKey);
   };
@@ -185,14 +185,14 @@ function App() {
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
+        <div className="max-w-2xl mx-auto px-4 py-4 sm:py-6">
+          <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-800 mb-3 sm:mb-4">
             韓国語活用トレーニング
           </h1>
 
           {/* Question Section */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-            <p className="text-gray-900 text-center text-3xl font-bold">
+          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200">
+            <p className="text-gray-900 text-center text-2xl sm:text-3xl font-bold">
               {currentVerb.meaningJa}
             </p>
           </div>
@@ -200,9 +200,9 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-2xl mx-auto px-4 py-6">
+      <div className="max-w-2xl mx-auto px-4 py-4 sm:py-6">
         {/* Input Section */}
-        <div className="space-y-3 mb-6">
+        <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
           {CONJUGATION_FIELDS.map((field) => {
             const result = results[field.key];
             const correctAnswer = field.key === 'base'
@@ -224,7 +224,7 @@ function App() {
         </div>
 
         {/* Button Section */}
-        <div className="flex gap-3 mb-6">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-4 sm:mb-6">
           <button
             onClick={handleGradeAll}
             className="flex-1 py-3 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700"

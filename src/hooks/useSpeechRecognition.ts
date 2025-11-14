@@ -1,9 +1,22 @@
 import { useState, useCallback } from 'react';
 
+// Type definitions for Web Speech API
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+}
+
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SpeechRecognitionConstructor = any;
+
 // Extend Window interface for webkit support
 declare global {
   interface Window {
-    webkitSpeechRecognition: typeof SpeechRecognition;
+    SpeechRecognition: SpeechRecognitionConstructor;
+    webkitSpeechRecognition: SpeechRecognitionConstructor;
   }
 }
 
@@ -31,13 +44,15 @@ export function useSpeechRecognition() {
         setError(null);
       };
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
+      recognition.onresult = (event: Event) => {
+        const speechEvent = event as SpeechRecognitionEvent;
+        const transcript = speechEvent.results[0][0].transcript;
         onResult(transcript);
       };
 
-      recognition.onerror = (event) => {
-        setError(`音声認識エラー: ${event.error}`);
+      recognition.onerror = (event: Event) => {
+        const errorEvent = event as SpeechRecognitionErrorEvent;
+        setError(`音声認識エラー: ${errorEvent.error}`);
         setIsListening(false);
       };
 
