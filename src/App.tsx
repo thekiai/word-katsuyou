@@ -32,6 +32,7 @@ function App() {
     negative_jian: null,
     possible: null,
   });
+  const [randomExampleKey, setRandomExampleKey] = useState<ConjugationType>('present');
 
   // Load verbs on mount
   useEffect(() => {
@@ -82,7 +83,9 @@ function App() {
     if (!currentVerb) return;
 
     const userAnswer = answers[key].trim();
-    const correctAnswer = currentVerb[key].trim();
+    const correctAnswer = key === 'base'
+      ? currentVerb.base.trim()
+      : currentVerb[key].form.trim();
     const result: AnswerResult = {
       key,
       userAnswer,
@@ -90,10 +93,23 @@ function App() {
       isCorrect: userAnswer === correctAnswer,
     };
 
-    setResults((prev) => ({
-      ...prev,
-      [key]: result,
-    }));
+    setResults((prev) => {
+      const newResults = {
+        ...prev,
+        [key]: result,
+      };
+
+      // 全て採点されたかチェック
+      const allGraded = Object.values(newResults).every((r) => r !== null);
+      if (allGraded) {
+        // ランダムに例文の活用形を選ぶ（baseは例文がないので除外）
+        const conjugationKeys: ConjugationType[] = ['present', 'past', 'future', 'go', 'seo', 'negative_an', 'negative_jian', 'possible'];
+        const randomKey = conjugationKeys[Math.floor(Math.random() * conjugationKeys.length)];
+        setRandomExampleKey(randomKey);
+      }
+
+      return newResults;
+    });
   };
 
   const handleGradeAll = () => {
@@ -113,7 +129,9 @@ function App() {
 
     CONJUGATION_FIELDS.forEach((field) => {
       const userAnswer = answers[field.key].trim();
-      const correctAnswer = currentVerb[field.key].trim();
+      const correctAnswer = field.key === 'base'
+        ? currentVerb.base.trim()
+        : currentVerb[field.key].form.trim();
       newResults[field.key] = {
         key: field.key,
         userAnswer,
@@ -123,6 +141,11 @@ function App() {
     });
 
     setResults(newResults);
+
+    // ランダムに例文の活用形を選ぶ（baseは例文がないので除外）
+    const conjugationKeys: ConjugationType[] = ['present', 'past', 'future', 'go', 'seo', 'negative_an', 'negative_jian', 'possible'];
+    const randomKey = conjugationKeys[Math.floor(Math.random() * conjugationKeys.length)];
+    setRandomExampleKey(randomKey);
   };
 
   const handleNext = () => {
@@ -169,9 +192,6 @@ function App() {
 
           {/* Question Section */}
           <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-            <p className="text-gray-600 text-center text-sm font-medium mb-2">
-              意味
-            </p>
             <p className="text-gray-900 text-center text-3xl font-bold">
               {currentVerb.meaningJa}
             </p>
@@ -185,13 +205,16 @@ function App() {
         <div className="space-y-3 mb-6">
           {CONJUGATION_FIELDS.map((field) => {
             const result = results[field.key];
+            const correctAnswer = field.key === 'base'
+              ? currentVerb.base
+              : currentVerb[field.key].form;
             return (
               <InputRow
                 key={field.key}
                 label={field.label}
                 value={answers[field.key]}
                 onChange={(value) => handleAnswerChange(field.key, value)}
-                correctAnswer={currentVerb[field.key]}
+                correctAnswer={correctAnswer}
                 showResult={result !== null}
                 isCorrect={result?.isCorrect ?? false}
                 onGrade={() => handleGradeField(field.key)}
@@ -230,10 +253,10 @@ function App() {
         )}
 
         {/* Example Sentence Section */}
-        {Object.values(results).some((r) => r !== null) && currentVerb && (
+        {Object.values(results).every((r) => r !== null) && currentVerb && (
           <ExampleSentence
-            korean={currentVerb.exampleSentence}
-            japanese={currentVerb.exampleJa}
+            korean={currentVerb[randomExampleKey].example}
+            japanese={currentVerb[randomExampleKey].exampleJa}
           />
         )}
       </div>

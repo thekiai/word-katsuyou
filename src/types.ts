@@ -1,16 +1,20 @@
+export type ConjugationData = {
+  form: string;
+  example: string;
+  exampleJa: string;
+};
+
 export type VerbEntry = {
-  base: string;             // 動詞の原型
-  meaningJa: string;        // 日本語の意味
-  present: string;          // 現在形
-  past: string;             // 過去形
-  future: string;           // 未来形
-  go: string;               // 連用(고)
-  seo: string;              // 連用(서)
-  negative_an: string;      // 否定(안)
-  negative_jian: string;    // 否定(지 않아요)
-  possible: string;         // 可能
-  exampleSentence: string;  // 例文
-  exampleJa: string;        // 例文(日本語)
+  base: string;
+  meaningJa: string;
+  present: ConjugationData;
+  past: ConjugationData;
+  future: ConjugationData;
+  go: ConjugationData;
+  seo: ConjugationData;
+  negative_an: ConjugationData;
+  negative_jian: ConjugationData;
+  possible: ConjugationData;
 };
 
 export type ConjugationType =
