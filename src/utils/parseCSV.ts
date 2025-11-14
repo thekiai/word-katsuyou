@@ -1,7 +1,9 @@
 import { VerbEntry } from '../types';
 
 export async function parseCSV(csvText: string): Promise<VerbEntry[]> {
-  const lines = csvText.trim().split('\n');
+  // Remove BOM if present
+  const cleanedText = csvText.replace(/^\uFEFF/, '');
+  const lines = cleanedText.trim().split('\n');
 
   // Skip header line (first line)
   const dataLines = lines.slice(1);
@@ -14,7 +16,7 @@ export async function parseCSV(csvText: string): Promise<VerbEntry[]> {
     // Split by comma but handle potential issues
     const fields = line.split(',');
 
-    if (fields.length >= 10) {
+    if (fields.length >= 12) {
       verbs.push({
         base: fields[0].trim(),
         meaningJa: fields[1].trim(),
@@ -26,6 +28,8 @@ export async function parseCSV(csvText: string): Promise<VerbEntry[]> {
         negative_an: fields[7].trim(),
         negative_jian: fields[8].trim(),
         possible: fields[9].trim(),
+        exampleSentence: fields[10].trim(),
+        exampleJa: fields[11].trim(),
       });
     }
   }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { InputRow } from './components/InputRow';
+import { ExampleSentence } from './components/ExampleSentence';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
@@ -226,6 +227,14 @@ function App() {
               / {Object.values(results).filter((r) => r !== null).length}
             </p>
           </div>
+        )}
+
+        {/* Example Sentence Section */}
+        {Object.values(results).some((r) => r !== null) && currentVerb && (
+          <ExampleSentence
+            korean={currentVerb.exampleSentence}
+            japanese={currentVerb.exampleJa}
+          />
         )}
       </div>
     </div>

@@ -9,6 +9,8 @@ export type VerbEntry = {
   negative_an: string;      // 否定(안)
   negative_jian: string;    // 否定(지 않아요)
   possible: string;         // 可能
+  exampleSentence: string;  // 例文
+  exampleJa: string;        // 例文(日本語)
 };
 
 export type ConjugationType =
