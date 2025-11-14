@@ -46,16 +46,27 @@ export function useSpeechSynthesis() {
         utterance.voice = koreanVoice;
       }
 
+      // Estimate speech duration for fallback timeout
+      const estimatedDuration = (text.length * 100) + 2000; // ~100ms per character + 2s buffer
+      let timeoutId: number;
+
       utterance.onstart = () => {
         setIsSpeaking(true);
+
+        // Fallback timeout in case onend doesn't fire (iOS issue)
+        timeoutId = setTimeout(() => {
+          setIsSpeaking(false);
+        }, estimatedDuration);
       };
 
       utterance.onend = () => {
+        clearTimeout(timeoutId);
         setIsSpeaking(false);
       };
 
       utterance.onerror = (event) => {
         console.error('Speech synthesis error:', event);
+        clearTimeout(timeoutId);
         setIsSpeaking(false);
       };
 
