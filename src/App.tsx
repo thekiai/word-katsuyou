@@ -127,6 +127,7 @@ function App() {
   const handleNext = () => {
     if (verbs.length > 0) {
       selectRandomVerb(verbs);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
