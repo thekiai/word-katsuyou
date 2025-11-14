@@ -4,11 +4,9 @@ import { ExampleSentence } from './components/ExampleSentence';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
-import { useSpeechSynthesis } from './hooks/useSpeechSynthesis';
 import './App.css';
 
 function App() {
-  const { voices, currentVoice } = useSpeechSynthesis();
   const [verbs, setVerbs] = useState<VerbEntry[]>([]);
   const [currentVerb, setCurrentVerb] = useState<VerbEntry | null>(null);
   const [loading, setLoading] = useState(true);
@@ -271,30 +269,6 @@ function App() {
             japanese={currentVerb[randomExampleKey].exampleJa}
           />
         )}
-
-        {/* Voice Debug Info */}
-        <div className="mt-6 p-4 bg-gray-100 rounded-lg text-xs">
-          <h3 className="font-semibold mb-2">音声デバッグ情報</h3>
-          {currentVoice && (
-            <p className="mb-2">
-              <span className="font-semibold">使用中:</span> {currentVoice}
-            </p>
-          )}
-          <details>
-            <summary className="cursor-pointer font-semibold mb-1">
-              利用可能な韓国語音声 ({voices.filter(v => v.lang.startsWith('ko')).length}個)
-            </summary>
-            <ul className="ml-4 mt-2 space-y-1">
-              {voices
-                .filter((voice) => voice.lang === 'ko-KR' || voice.lang.startsWith('ko'))
-                .map((voice, index) => (
-                  <li key={index} className="break-words">
-                    {voice.name} ({voice.lang})
-                  </li>
-                ))}
-            </ul>
-          </details>
-        </div>
       </div>
     </div>
   );
