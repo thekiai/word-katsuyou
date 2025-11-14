@@ -42,7 +42,7 @@ export function InputRow({
         showResult
           ? isCorrect
             ? 'bg-green-50 border-green-300'
-            : 'bg-orange-50 border-orange-200'
+            : 'bg-pink-50 border-red-200'
           : 'bg-white border-gray-200 hover:shadow-sm'
       }`}
     >
@@ -66,12 +66,7 @@ export function InputRow({
         <button
           type="button"
           onClick={onGrade}
-          disabled={!value.trim()}
-          className={`px-3 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
-            value.trim()
-              ? 'bg-gray-600 hover:bg-gray-700 text-white'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-          }`}
+          className="px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap bg-gray-600 hover:bg-gray-700 text-white"
         >
           採点
         </button>
