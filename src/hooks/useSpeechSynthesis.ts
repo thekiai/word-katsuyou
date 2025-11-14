@@ -1,7 +1,27 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 export function useSpeechSynthesis() {
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+  // Load voices
+  useEffect(() => {
+    const loadVoices = () => {
+      const availableVoices = window.speechSynthesis.getVoices();
+      setVoices(availableVoices);
+    };
+
+    loadVoices();
+
+    // iOS requires waiting for voiceschanged event
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    return () => {
+      window.speechSynthesis.cancel();
+    };
+  }, []);
 
   const speak = useCallback((text: string) => {
     if (!text) return;
@@ -9,24 +29,39 @@ export function useSpeechSynthesis() {
     // Cancel any ongoing speech
     window.speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'ko-KR';
-    utterance.rate = 0.9; // Slightly slower for learning
+    // Small delay for iOS compatibility
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ko-KR';
+      utterance.rate = 0.9;
+      utterance.volume = 1.0;
+      utterance.pitch = 1.0;
 
-    utterance.onstart = () => {
-      setIsSpeaking(true);
-    };
+      // Find Korean voice
+      const koreanVoice = voices.find(
+        (voice) => voice.lang === 'ko-KR' || voice.lang.startsWith('ko')
+      );
 
-    utterance.onend = () => {
-      setIsSpeaking(false);
-    };
+      if (koreanVoice) {
+        utterance.voice = koreanVoice;
+      }
 
-    utterance.onerror = () => {
-      setIsSpeaking(false);
-    };
+      utterance.onstart = () => {
+        setIsSpeaking(true);
+      };
 
-    window.speechSynthesis.speak(utterance);
-  }, []);
+      utterance.onend = () => {
+        setIsSpeaking(false);
+      };
+
+      utterance.onerror = (event) => {
+        console.error('Speech synthesis error:', event);
+        setIsSpeaking(false);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }, 100);
+  }, [voices]);
 
   return {
     speak,
