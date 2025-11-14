@@ -62,7 +62,7 @@ export function InputRow({
           disabled={isListening}
           className={`p-2 rounded-md transition-colors flex items-center justify-center flex-shrink-0 ${
             isListening
-              ? 'bg-gray-100 text-gray-600 cursor-not-allowed animate-pulse'
+              ? 'bg-gray-300 text-gray-700 cursor-not-allowed animate-pulse'
               : 'bg-gray-100 hover:bg-gray-200 text-gray-600 cursor-pointer'
           }`}
           title="音声入力"
