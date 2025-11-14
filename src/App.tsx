@@ -88,11 +88,16 @@ function App() {
     const correctAnswer = key === 'base'
       ? currentVerb.base.trim()
       : currentVerb[key].form.trim();
+
+    // スペースを除去して比較
+    const normalizedUserAnswer = userAnswer.replace(/\s/g, '');
+    const normalizedCorrectAnswer = correctAnswer.replace(/\s/g, '');
+
     const result: AnswerResult = {
       key,
       userAnswer,
       correctAnswer,
-      isCorrect: userAnswer === correctAnswer,
+      isCorrect: normalizedUserAnswer === normalizedCorrectAnswer,
     };
 
     setResults((prev) => {
@@ -134,11 +139,16 @@ function App() {
       const correctAnswer = field.key === 'base'
         ? currentVerb.base.trim()
         : currentVerb[field.key].form.trim();
+
+      // スペースを除去して比較
+      const normalizedUserAnswer = userAnswer.replace(/\s/g, '');
+      const normalizedCorrectAnswer = correctAnswer.replace(/\s/g, '');
+
       newResults[field.key] = {
         key: field.key,
         userAnswer,
         correctAnswer,
-        isCorrect: userAnswer === correctAnswer,
+        isCorrect: normalizedUserAnswer === normalizedCorrectAnswer,
       };
     });
 
