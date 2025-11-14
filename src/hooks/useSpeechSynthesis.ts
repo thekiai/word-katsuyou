@@ -9,6 +9,17 @@ export function useSpeechSynthesis() {
     const loadVoices = () => {
       const availableVoices = window.speechSynthesis.getVoices();
       setVoices(availableVoices);
+
+      // Log all Korean voices for debugging
+      const koreanVoices = availableVoices.filter(
+        (voice) => voice.lang === 'ko-KR' || voice.lang.startsWith('ko')
+      );
+      console.log('Available Korean voices:', koreanVoices.map(v => ({
+        name: v.name,
+        lang: v.lang,
+        localService: v.localService,
+        default: v.default
+      })));
     };
 
     loadVoices();
@@ -38,36 +49,29 @@ export function useSpeechSynthesis() {
       utterance.pitch = 1.0;
 
       // Find best Korean voice
-      // Priority: ko-KR voices, then other ko voices
-      // Prefer voices with 'premium', 'enhanced', or female voices
       const koreanVoices = voices.filter(
         (voice) => voice.lang === 'ko-KR' || voice.lang.startsWith('ko')
       );
 
-      // Sort voices by quality indicators
-      const sortedVoices = koreanVoices.sort((a, b) => {
-        // Prefer ko-KR over other ko variants
-        if (a.lang === 'ko-KR' && b.lang !== 'ko-KR') return -1;
-        if (a.lang !== 'ko-KR' && b.lang === 'ko-KR') return 1;
-
-        // Prefer premium/enhanced voices
-        const aPremium = a.name.toLowerCase().includes('premium') ||
-                        a.name.toLowerCase().includes('enhanced') ||
-                        a.name.toLowerCase().includes('siri');
-        const bPremium = b.name.toLowerCase().includes('premium') ||
-                        b.name.toLowerCase().includes('enhanced') ||
-                        b.name.toLowerCase().includes('siri');
-        if (aPremium && !bPremium) return -1;
-        if (!aPremium && bPremium) return 1;
-
-        return 0;
-      });
-
-      const koreanVoice = sortedVoices[0];
+      // Try to find specific high-quality voices in order of preference
+      let koreanVoice =
+        // First try Siri voices
+        koreanVoices.find(v => v.name.includes('Siri')) ||
+        // Then try Yuna (common iOS premium voice)
+        koreanVoices.find(v => v.name.includes('Yuna')) ||
+        // Then try enhanced/premium
+        koreanVoices.find(v => v.name.toLowerCase().includes('enhanced')) ||
+        koreanVoices.find(v => v.name.toLowerCase().includes('premium')) ||
+        // Avoid Rocko if possible
+        koreanVoices.find(v => !v.name.includes('Rocko')) ||
+        // Last resort: any Korean voice
+        koreanVoices[0];
 
       if (koreanVoice) {
         utterance.voice = koreanVoice;
-        console.log('Using voice:', koreanVoice.name, koreanVoice.lang);
+        console.log('Using voice:', koreanVoice.name, '(', koreanVoice.lang, ')');
+      } else {
+        console.warn('No Korean voice found');
       }
 
       // Estimate speech duration for fallback timeout
