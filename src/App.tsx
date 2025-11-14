@@ -185,7 +185,7 @@ function App() {
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-4 sm:py-6">
+        <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
           <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-800 mb-3 sm:mb-4">
             韓国語活用トレーニング
           </h1>
@@ -200,7 +200,7 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-2xl mx-auto px-4 py-4 sm:py-6">
+      <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
         {/* Input Section */}
         <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
           {CONJUGATION_FIELDS.map((field) => {
