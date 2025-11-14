@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 export function useSpeechSynthesis() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [currentVoice, setCurrentVoice] = useState<string>('');
 
   // Load voices
   useEffect(() => {
@@ -67,8 +68,7 @@ export function useSpeechSynthesis() {
 
       if (koreanVoice) {
         utterance.voice = koreanVoice;
-        // Debug: Alert which voice is being used
-        alert(`使用中の音声: ${koreanVoice.name}`);
+        setCurrentVoice(koreanVoice.name);
       }
 
       // Estimate speech duration for fallback timeout
@@ -101,5 +101,7 @@ export function useSpeechSynthesis() {
   return {
     speak,
     isSpeaking,
+    voices,
+    currentVoice,
   };
 }
