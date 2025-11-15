@@ -7,6 +7,8 @@ type InputRowProps = {
   value: string;
   onChange: (value: string) => void;
   correctAnswer: string;
+  exampleJa?: string;
+  exampleKo?: string;
   showResult?: boolean;
   isCorrect?: boolean;
   onGrade?: () => void;
@@ -17,6 +19,8 @@ export function InputRow({
   value,
   onChange,
   correctAnswer,
+  exampleJa,
+  exampleKo,
   showResult = false,
   isCorrect = false,
   onGrade,
@@ -29,7 +33,7 @@ export function InputRow({
 
   return (
     <div
-      className={`flex items-center gap-2 p-3 rounded-lg border transition-colors ${
+      className={`p-3 rounded-lg border transition-colors ${
         showResult
           ? isCorrect
             ? 'bg-green-50 border-green-300'
@@ -37,37 +41,54 @@ export function InputRow({
           : 'bg-white border-gray-200 hover:shadow-sm'
       }`}
     >
-      <label className="w-24 flex-shrink-0 font-semibold text-xs text-gray-700">
-        {label}
-      </label>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="flex-1 min-w-0 px-2 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        placeholder="入力"
-      />
-      {showResult && (
-        <SpeakButton onClick={handleSpeakClick} isSpeaking={isSpeaking} />
-      )}
-      {onGrade && !showResult && (
-        <button
-          type="button"
-          onClick={onGrade}
-          className="px-2 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap bg-gray-600 hover:bg-gray-700 text-white flex-shrink-0"
-        >
-          採点
-        </button>
-      )}
-      {showResult && isCorrect && (
-        <div className="flex-shrink-0">
-          <CheckCircle className="w-5 h-5 text-green-600" />
+      <div className="mb-2">
+        <label className="font-semibold text-xs text-gray-700">
+          {label}
+        </label>
+      </div>
+
+      {exampleJa && (
+        <div className="mb-2 text-sm text-gray-600">
+          {exampleJa}
         </div>
       )}
-      {showResult && !isCorrect && (
-        <span className="text-xs text-gray-600 font-semibold flex-shrink-0 truncate">
-          👉 {correctAnswer}
-        </span>
+
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="flex-1 min-w-0 px-2 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="入力"
+        />
+        {showResult && (
+          <SpeakButton onClick={handleSpeakClick} isSpeaking={isSpeaking} />
+        )}
+        {onGrade && !showResult && (
+          <button
+            type="button"
+            onClick={onGrade}
+            className="px-2 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap bg-gray-600 hover:bg-gray-700 text-white flex-shrink-0"
+          >
+            採点
+          </button>
+        )}
+        {showResult && isCorrect && (
+          <div className="flex-shrink-0">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+          </div>
+        )}
+        {showResult && !isCorrect && (
+          <span className="text-xs text-gray-600 font-semibold flex-shrink-0 truncate">
+            👉 {correctAnswer}
+          </span>
+        )}
+      </div>
+
+      {showResult && exampleKo && (
+        <div className="mt-2 text-sm text-gray-700 font-medium">
+          {exampleKo}
+        </div>
       )}
     </div>
   );

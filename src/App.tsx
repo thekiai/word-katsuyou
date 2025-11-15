@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { InputRow } from './components/InputRow';
-import { ExampleSentence } from './components/ExampleSentence';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
@@ -32,7 +31,6 @@ function App() {
     negative_jian: null,
     possible: null,
   });
-  const [randomExampleKey, setRandomExampleKey] = useState<Exclude<ConjugationType, 'base'>>('present');
 
   // Load verbs on mount
   useEffect(() => {
@@ -98,23 +96,10 @@ function App() {
       isCorrect: normalizedUserAnswer === normalizedCorrectAnswer,
     };
 
-    setResults((prev) => {
-      const newResults = {
-        ...prev,
-        [key]: result,
-      };
-
-      // 全て採点されたかチェック
-      const allGraded = Object.values(newResults).every((r) => r !== null);
-      if (allGraded) {
-        // ランダムに例文の活用形を選ぶ（baseは例文がないので除外）
-        const conjugationKeys: Exclude<ConjugationType, 'base'>[] = ['present', 'past', 'future', 'go', 'seo', 'negative_an', 'negative_jian', 'possible'];
-        const randomKey = conjugationKeys[Math.floor(Math.random() * conjugationKeys.length)];
-        setRandomExampleKey(randomKey);
-      }
-
-      return newResults;
-    });
+    setResults((prev) => ({
+      ...prev,
+      [key]: result,
+    }));
   };
 
   const handleGradeAll = () => {
@@ -151,11 +136,6 @@ function App() {
     });
 
     setResults(newResults);
-
-    // ランダムに例文の活用形を選ぶ（baseは例文がないので除外）
-    const conjugationKeys: Exclude<ConjugationType, 'base'>[] = ['present', 'past', 'future', 'go', 'seo', 'negative_an', 'negative_jian', 'possible'];
-    const randomKey = conjugationKeys[Math.floor(Math.random() * conjugationKeys.length)];
-    setRandomExampleKey(randomKey);
   };
 
   const handleNext = () => {
@@ -218,6 +198,8 @@ function App() {
             const correctAnswer = field.key === 'base'
               ? currentVerb.base
               : currentVerb[field.key].form;
+            const exampleJa = field.key === 'base' ? undefined : currentVerb[field.key].exampleJa;
+            const exampleKo = field.key === 'base' ? undefined : currentVerb[field.key].example;
             return (
               <InputRow
                 key={field.key}
@@ -225,6 +207,8 @@ function App() {
                 value={answers[field.key]}
                 onChange={(value) => handleAnswerChange(field.key, value)}
                 correctAnswer={correctAnswer}
+                exampleJa={exampleJa}
+                exampleKo={exampleKo}
                 showResult={result !== null}
                 isCorrect={result?.isCorrect ?? false}
                 onGrade={() => handleGradeField(field.key)}
@@ -260,14 +244,6 @@ function App() {
               / {Object.values(results).filter((r) => r !== null).length}
             </p>
           </div>
-        )}
-
-        {/* Example Sentence Section */}
-        {Object.values(results).every((r) => r !== null) && currentVerb && (
-          <ExampleSentence
-            korean={currentVerb[randomExampleKey].example}
-            japanese={currentVerb[randomExampleKey].exampleJa}
-          />
         )}
       </div>
     </div>
