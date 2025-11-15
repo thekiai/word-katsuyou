@@ -7,9 +7,9 @@
     "future": { "form": "갈 거예요", "meaningJa": "行きます", "example": "내년에 갈 거예요", "exampleJa": "来年行く予定です" },
     "go": { "form": "가고", "meaningJa": "行って", "example": "학교 가고 싶지 않아요", "exampleJa": "学校に行きたくないです" },
     "seo": { "form": "가서", "meaningJa": "行って", "example": "다이어트 중인데 편의점 가서 과자 샀어요", "exampleJa": "ダイエット中なのにコンビニ行ってお菓子買いました" },
-    "negative_an": { "form": "안 가요", "meaningJa": "行かない", "example": "비 오면 안 가요", "exampleJa": "雨が降ったら行きません" },
-    "negative_jian": { "form": "가지 않아요", "meaningJa": "行かない", "example": "꿈속에서는 회사에 가지 않아요", "exampleJa": "夢の中では会社に行きません" },
-    "possible": { "form": "갈 수 있어요", "meaningJa": "行ける", "example": "지금 바로 갈 수 있어요", "exampleJa": "今すぐ行けますよ" }
+    "negative_an": { "form": "안 가요", "meaningJa": "行きません", "example": "비 오면 안 가요", "exampleJa": "雨が降ったら行きません" },
+    "negative_jian": { "form": "가지 않아요", "meaningJa": "行きません", "example": "꿈속에서는 회사에 가지 않아요", "exampleJa": "夢の中では会社に行きません" },
+    "possible": { "form": "갈 수 있어요", "meaningJa": "行けます", "example": "지금 바로 갈 수 있어요", "exampleJa": "今すぐ行けますよ" }
   },
   {
     "base": "오다",
@@ -19,9 +19,9 @@
     "future": { "form": "올 거예요", "meaningJa": "来ます", "example": "곧 올 텐데 준비 안 했어요", "exampleJa": "もうすぐ来るのに準備してません" },
     "go": { "form": "오고", "meaningJa": "来て", "example": "비가 오고 있는데 빨래가 밖에 있어요", "exampleJa": "雨が降っているのに洗濯物が外にあります" },
     "seo": { "form": "와서", "meaningJa": "来て", "example": "한국에 와서 5kg 쪘어요", "exampleJa": "韓国に来て5kg太りました" },
-    "negative_an": { "form": "안 와요", "meaningJa": "来ない", "example": "파티인데 아무도 안 와요", "exampleJa": "パーティーなのに誰も来ません" },
-    "negative_jian": { "form": "오지 않아요", "meaningJa": "来ない", "example": "버스가 오지 않아요", "exampleJa": "バスが来ません、遅刻確定" },
-    "possible": { "form": "올 수 있어요", "meaningJa": "来れる", "example": "지금 올 수 있어요", "exampleJa": "今来れます、パジャマですが" }
+    "negative_an": { "form": "안 와요", "meaningJa": "来ません", "example": "파티인데 아무도 안 와요", "exampleJa": "パーティーなのに誰も来ません" },
+    "negative_jian": { "form": "오지 않아요", "meaningJa": "来ません", "example": "버스가 오지 않아요", "exampleJa": "バスが来ません、遅刻確定" },
+    "possible": { "form": "올 수 있어요", "meaningJa": "来れます", "example": "지금 올 수 있어요", "exampleJa": "今来れます、パジャマですが" }
   },
   {
     "base": "하다",
@@ -31,9 +31,9 @@
     "future": { "form": "할 거예요", "meaningJa": "します", "example": "내일 할 거예요", "exampleJa": "明日やります、いつも言ってる" },
     "go": { "form": "하고", "meaningJa": "して", "example": "공부하고 싶지 않아요", "exampleJa": "勉強したくないです" },
     "seo": { "form": "해서", "meaningJa": "して", "example": "5분 운동해서 피곤해요", "exampleJa": "5分運動して疲れました" },
-    "negative_an": { "form": "안 해요", "meaningJa": "しない", "example": "오늘은 안 해요", "exampleJa": "今日はしません、明日もしない" },
-    "negative_jian": { "form": "하지 않아요", "meaningJa": "しない", "example": "절대 하지 않아요", "exampleJa": "絶対にしません、気が変わるまで" },
-    "possible": { "form": "할 수 있어요", "meaningJa": "できる", "example": "다 할 수 있어요", "exampleJa": "全部できます、多分" }
+    "negative_an": { "form": "안 해요", "meaningJa": "しません", "example": "오늘은 안 해요", "exampleJa": "今日はしません、明日もしない" },
+    "negative_jian": { "form": "하지 않아요", "meaningJa": "しません", "example": "절대 하지 않아요", "exampleJa": "絶対にしません、気が変わるまで" },
+    "possible": { "form": "할 수 있어요", "meaningJa": "できます", "example": "다 할 수 있어요", "exampleJa": "全部できます、多分" }
   },
   {
     "base": "먹다",
@@ -43,9 +43,9 @@
     "future": { "form": "먹을 거예요", "meaningJa": "食べます", "example": "샐러드만 먹을 거예요", "exampleJa": "サラダだけ食べます、デザートは別" },
     "go": { "form": "먹고", "meaningJa": "食べて", "example": "먹고 바로 자요", "exampleJa": "食べてすぐ寝ます" },
     "seo": { "form": "먹어서", "meaningJa": "食べて", "example": "많이 먹어서 배부른데 디저트는 먹어요", "exampleJa": "たくさん食べてお腹いっぱいだけどデザートは食べます" },
-    "negative_an": { "form": "안 먹어요", "meaningJa": "食べない", "example": "야채는 안 먹어요", "exampleJa": "野菜は食べません" },
-    "negative_jian": { "form": "먹지 않아요", "meaningJa": "食べない", "example": "건강한 음식은 먹지 않아요", "exampleJa": "健康的な食べ物は食べません" },
-    "possible": { "form": "먹을 수 있어요", "meaningJa": "食べれる", "example": "아직 먹을 수 있어요", "exampleJa": "まだ食べれます、本当に" }
+    "negative_an": { "form": "안 먹어요", "meaningJa": "食べません", "example": "야채는 안 먹어요", "exampleJa": "野菜は食べません" },
+    "negative_jian": { "form": "먹지 않아요", "meaningJa": "食べません", "example": "건강한 음식은 먹지 않아요", "exampleJa": "健康的な食べ物は食べません" },
+    "possible": { "form": "먹을 수 있어요", "meaningJa": "食べれます", "example": "아직 먹을 수 있어요", "exampleJa": "まだ食べれます、本当に" }
   },
   {
     "base": "마시다",
@@ -55,9 +55,9 @@
     "future": { "form": "마실 거예요", "meaningJa": "飲みます", "example": "오늘은 안 마실 거예요", "exampleJa": "今日は飲みません、明日飲む" },
     "go": { "form": "마시고", "meaningJa": "飲んで", "example": "커피 마시고 못 자요", "exampleJa": "コーヒー飲んで眠れません、また飲む" },
     "seo": { "form": "마셔서", "meaningJa": "飲んで", "example": "술 마셔서 기억이 없어요", "exampleJa": "お酒飲んで記憶がありません" },
-    "negative_an": { "form": "안 마셔요", "meaningJa": "飲まない", "example": "물은 안 마셔요", "exampleJa": "水は飲みません" },
-    "negative_jian": { "form": "마시지 않아요", "meaningJa": "飲まない", "example": "건강 음료는 마시지 않아요", "exampleJa": "健康飲料は飲みません" },
-    "possible": { "form": "마실 수 있어요", "meaningJa": "飲める", "example": "더 마실 수 있어요", "exampleJa": "もっと飲めます、危険" }
+    "negative_an": { "form": "안 마셔요", "meaningJa": "飲みません", "example": "물은 안 마셔요", "exampleJa": "水は飲みません" },
+    "negative_jian": { "form": "마시지 않아요", "meaningJa": "飲みません", "example": "건강 음료는 마시지 않아요", "exampleJa": "健康飲料は飲みません" },
+    "possible": { "form": "마실 수 있어요", "meaningJa": "飲めます", "example": "더 마실 수 있어요", "exampleJa": "もっと飲めます、危険" }
   },
   {
     "base": "자다",
@@ -67,9 +67,9 @@
     "future": { "form": "잘 거예요", "meaningJa": "寝ます", "example": "오늘은 일찍 잘 거예요", "exampleJa": "今日は早く寝ます、朝4時" },
     "go": { "form": "자고", "meaningJa": "寝て", "example": "자고 일어나면 월요일이에요", "exampleJa": "寝て起きたら月曜日です" },
     "seo": { "form": "자서", "meaningJa": "寝て", "example": "늦잠 자서 또 지각했어요", "exampleJa": "寝坊してまた遅刻しました" },
-    "negative_an": { "form": "안 자요", "meaningJa": "寝ない", "example": "오늘 밤 안 자요", "exampleJa": "今夜は寝ません、ゲームする" },
-    "negative_jian": { "form": "자지 않아요", "meaningJa": "寝ない", "example": "주말에 자지 않아요", "exampleJa": "週末は寝ません、ずっと寝るけど" },
-    "possible": { "form": "잘 수 있어요", "meaningJa": "寝れる", "example": "어디서든 잘 수 있어요", "exampleJa": "どこでも寝れます、才能" }
+    "negative_an": { "form": "안 자요", "meaningJa": "寝ません", "example": "오늘 밤 안 자요", "exampleJa": "今夜は寝ません、ゲームする" },
+    "negative_jian": { "form": "자지 않아요", "meaningJa": "寝ません", "example": "주말에 자지 않아요", "exampleJa": "週末は寝ません、ずっと寝るけど" },
+    "possible": { "form": "잘 수 있어요", "meaningJa": "寝れます", "example": "어디서든 잘 수 있어요", "exampleJa": "どこでも寝れます、才能" }
   },
   {
     "base": "보다",
@@ -79,9 +79,9 @@
     "future": { "form": "볼 거예요", "meaningJa": "見ます", "example": "공부 동영상 볼 거예요", "exampleJa": "勉強動画見ます、見ないけど" },
     "go": { "form": "보고", "meaningJa": "見て", "example": "영화 보고 울었어요", "exampleJa": "映画見て泣きました" },
     "seo": { "form": "봐서", "meaningJa": "見て", "example": "스마트폰 봐서 눈이 아픈데 또 봐요", "exampleJa": "スマホ見て目が痛いけどまた見ます" },
-    "negative_an": { "form": "안 봐요", "meaningJa": "見ない", "example": "뉴스는 안 봐요", "exampleJa": "ニュースは見ません" },
-    "negative_jian": { "form": "보지 않아요", "meaningJa": "見ない", "example": "현실은 보지 않아요", "exampleJa": "現実は見ません" },
-    "possible": { "form": "볼 수 있어요", "meaningJa": "見れる", "example": "밤새 볼 수 있어요", "exampleJa": "徹夜で見れます" }
+    "negative_an": { "form": "안 봐요", "meaningJa": "見ません", "example": "뉴스는 안 봐요", "exampleJa": "ニュースは見ません" },
+    "negative_jian": { "form": "보지 않아요", "meaningJa": "見ません", "example": "현실은 보지 않아요", "exampleJa": "現実は見ません" },
+    "possible": { "form": "볼 수 있어요", "meaningJa": "見れます", "example": "밤새 볼 수 있어요", "exampleJa": "徹夜で見れます" }
   },
   {
     "base": "듣다",
@@ -91,9 +91,9 @@
     "future": { "form": "들을 거예요", "meaningJa": "聞きます", "example": "조용히 들을 거예요", "exampleJa": "静かに聞きます、口出しするけど" },
     "go": { "form": "듣고", "meaningJa": "聞いて", "example": "노래 듣고 춤춰요", "exampleJa": "歌聞いて踊ります、下手だけど" },
     "seo": { "form": "들어서", "meaningJa": "聞いて", "example": "음악 들어서 일 못 해요", "exampleJa": "音楽聞いて仕事できません" },
-    "negative_an": { "form": "안 들어요", "meaningJa": "聞かない", "example": "충고는 안 들어요", "exampleJa": "アドバイスは聞きません" },
-    "negative_jian": { "form": "듣지 않아요", "meaningJa": "聞かない", "example": "부모님 말씀 듣지 않아요", "exampleJa": "親の言うこと聞きません" },
-    "possible": { "form": "들을 수 있어요", "meaningJa": "聞ける", "example": "하루 종일 들을 수 있어요", "exampleJa": "一日中聞けます" }
+    "negative_an": { "form": "안 들어요", "meaningJa": "聞きません", "example": "충고는 안 들어요", "exampleJa": "アドバイスは聞きません" },
+    "negative_jian": { "form": "듣지 않아요", "meaningJa": "聞きません", "example": "부모님 말씀 듣지 않아요", "exampleJa": "親の言うこと聞きません" },
+    "possible": { "form": "들을 수 있어요", "meaningJa": "聞けます", "example": "하루 종일 들을 수 있어요", "exampleJa": "一日中聞けます" }
   },
   {
     "base": "일어나다",
@@ -103,9 +103,9 @@
     "future": { "form": "일어날 거예요", "meaningJa": "起きます", "example": "내일 일찍 일어날 거예요", "exampleJa": "明日早く起きます、多分無理" },
     "go": { "form": "일어나고", "meaningJa": "起きて", "example": "일어나고 다시 자요", "exampleJa": "起きてまた寝ます" },
     "seo": { "form": "일어나서", "meaningJa": "起きて", "example": "일어나서 바로 휴대폰 봐요", "exampleJa": "起きてすぐ携帯見ます" },
-    "negative_an": { "form": "안 일어나요", "meaningJa": "起きない", "example": "주말에 안 일어나요", "exampleJa": "週末は起きません" },
-    "negative_jian": { "form": "일어나지 않아요", "meaningJa": "起きない", "example": "알람 10개 울려도 일어나지 않아요", "exampleJa": "アラーム10個鳴っても起きません" },
-    "possible": { "form": "일어날 수 있어요", "meaningJa": "起きれる", "example": "혼자 일어날 수 있어요", "exampleJa": "一人で起きれます、起きないけど" }
+    "negative_an": { "form": "안 일어나요", "meaningJa": "起きません", "example": "주말에 안 일어나요", "exampleJa": "週末は起きません" },
+    "negative_jian": { "form": "일어나지 않아요", "meaningJa": "起きません", "example": "알람 10개 울려도 일어나지 않아요", "exampleJa": "アラーム10個鳴っても起きません" },
+    "possible": { "form": "일어날 수 있어요", "meaningJa": "起きれます", "example": "혼자 일어날 수 있어요", "exampleJa": "一人で起きれます、起きないけど" }
   },
   {
     "base": "알다",
@@ -115,9 +115,9 @@
     "future": { "form": "알 거예요", "meaningJa": "知ります", "example": "곧 알 거예요", "exampleJa": "すぐわかります" },
     "go": { "form": "알고", "meaningJa": "知って", "example": "알고 있어요", "exampleJa": "知ってます" },
     "seo": { "form": "알아서", "meaningJa": "知って", "example": "알아서 적당히 해요", "exampleJa": "わかって適当にやります" },
-    "negative_an": { "form": "몰라요", "meaningJa": "知らない", "example": "아무것도 몰라요", "exampleJa": "何も知りません" },
-    "negative_jian": { "form": "알지 않아요", "meaningJa": "知らない", "example": "전혀 알지 않아요", "exampleJa": "全然知りません" },
-    "possible": { "form": "알 수 있어요", "meaningJa": "知れる", "example": "다 알 수 있어요", "exampleJa": "全部わかります、天才なので" }
+    "negative_an": { "form": "몰라요", "meaningJa": "知りません", "example": "아무것도 몰라요", "exampleJa": "何も知りません" },
+    "negative_jian": { "form": "알지 않아요", "meaningJa": "知りません", "example": "전혀 알지 않아요", "exampleJa": "全然知りません" },
+    "possible": { "form": "알 수 있어요", "meaningJa": "知れます", "example": "다 알 수 있어요", "exampleJa": "全部わかります、天才なので" }
   },
   {
     "base": "모르다",
@@ -127,9 +127,9 @@
     "future": { "form": "모를 거예요", "meaningJa": "知らないでしょう", "example": "아마 모를 거예요", "exampleJa": "多分知らないでしょう" },
     "go": { "form": "모르고", "meaningJa": "知らなくて", "example": "모르고 했어요", "exampleJa": "知らずにやりました" },
     "seo": { "form": "몰라서", "meaningJa": "知らなくて", "example": "몰라서 못 가요", "exampleJa": "知らなくて行けません" },
-    "negative_an": { "form": "안 몰라요", "meaningJa": "知らない", "example": "안 몰라요", "exampleJa": "知らなくないです" },
-    "negative_jian": { "form": "모르지 않아요", "meaningJa": "知らない", "example": "사실 모르지 않아요", "exampleJa": "実は知らなくないです" },
-    "possible": { "form": "모를 수 있어요", "meaningJa": "知らないかもしれない", "example": "모를 수도 있어요", "exampleJa": "知らないかもしれません" }
+    "negative_an": { "form": "안 몰라요", "meaningJa": "知りません", "example": "안 몰라요", "exampleJa": "知らなくないです" },
+    "negative_jian": { "form": "모르지 않아요", "meaningJa": "知らなくないです", "example": "사실 모르지 않아요", "exampleJa": "実は知らなくないです" },
+    "possible": { "form": "모를 수 있어요", "meaningJa": "知らないかもしれません", "example": "모를 수도 있어요", "exampleJa": "知らないかもしれません" }
   },
   {
     "base": "말하다",
@@ -139,9 +139,9 @@
     "future": { "form": "말할 거예요", "meaningJa": "話します", "example": "아무한테도 안 말할 거예요", "exampleJa": "誰にも言いません、多分" },
     "go": { "form": "말하고", "meaningJa": "話して", "example": "말하고 후회했어요", "exampleJa": "話して後悔しました" },
     "seo": { "form": "말해서", "meaningJa": "話して", "example": "솔직히 말해서 귀찮아요", "exampleJa": "正直に言うとめんどくさいです" },
-    "negative_an": { "form": "안 말해요", "meaningJa": "話さない", "example": "절대 안 말해요", "exampleJa": "絶対言いません" },
-    "negative_jian": { "form": "말하지 않아요", "meaningJa": "話さない", "example": "진실은 말하지 않아요", "exampleJa": "真実は話しません" },
-    "possible": { "form": "말할 수 있어요", "meaningJa": "話せる", "example": "하루 종일 말할 수 있어요", "exampleJa": "一日中話せます" }
+    "negative_an": { "form": "안 말해요", "meaningJa": "話しません", "example": "절대 안 말해요", "exampleJa": "絶対言いません" },
+    "negative_jian": { "form": "말하지 않아요", "meaningJa": "話しません", "example": "진실은 말하지 않아요", "exampleJa": "真実は話しません" },
+    "possible": { "form": "말할 수 있어요", "meaningJa": "話せます", "example": "하루 종일 말할 수 있어요", "exampleJa": "一日中話せます" }
   },
   {
     "base": "생각하다",
@@ -151,9 +151,9 @@
     "future": { "form": "생각할 거예요", "meaningJa": "考えます", "example": "내일 생각할 거예요", "exampleJa": "明日考えます" },
     "go": { "form": "생각하고", "meaningJa": "考えて", "example": "생각하고 있어요", "exampleJa": "考えています、考えてないけど" },
     "seo": { "form": "생각해서", "meaningJa": "考えて", "example": "많이 생각해서 포기했어요", "exampleJa": "たくさん考えて諦めました" },
-    "negative_an": { "form": "안 생각해요", "meaningJa": "考えない", "example": "깊게 안 생각해요", "exampleJa": "深く考えません" },
-    "negative_jian": { "form": "생각하지 않아요", "meaningJa": "考えない", "example": "미래는 생각하지 않아요", "exampleJa": "未来は考えません" },
-    "possible": { "form": "생각할 수 있어요", "meaningJa": "考えられる", "example": "생각할 수 있어요", "exampleJa": "考えられます" }
+    "negative_an": { "form": "안 생각해요", "meaningJa": "考えません", "example": "깊게 안 생각해요", "exampleJa": "深く考えません" },
+    "negative_jian": { "form": "생각하지 않아요", "meaningJa": "考えません", "example": "미래는 생각하지 않아요", "exampleJa": "未来は考えません" },
+    "possible": { "form": "생각할 수 있어요", "meaningJa": "考えられます", "example": "생각할 수 있어요", "exampleJa": "考えられます" }
   },
   {
     "base": "만들다",
@@ -163,9 +163,9 @@
     "future": { "form": "만들 거예요", "meaningJa": "作ります", "example": "직접 만들 거예요", "exampleJa": "自分で作ります、買うけど" },
     "go": { "form": "만들고", "meaningJa": "作って", "example": "만들고 안 먹어요", "exampleJa": "作って食べません" },
     "seo": { "form": "만들어서", "meaningJa": "作って", "example": "만들어서 자랑해요", "exampleJa": "作って自慢します" },
-    "negative_an": { "form": "안 만들어요", "meaningJa": "作らない", "example": "요리는 안 만들어요", "exampleJa": "料理は作りません、配達" },
-    "negative_jian": { "form": "만들지 않아요", "meaningJa": "作らない", "example": "건강한 음식은 만들지 않아요", "exampleJa": "健康的な食べ物は作りません" },
-    "possible": { "form": "만들 수 있어요", "meaningJa": "作れる", "example": "뭐든지 만들 수 있어요", "exampleJa": "何でも作れます、ラーメンだけ" }
+    "negative_an": { "form": "안 만들어요", "meaningJa": "作りません", "example": "요리는 안 만들어요", "exampleJa": "料理は作りません、配達" },
+    "negative_jian": { "form": "만들지 않아요", "meaningJa": "作りません", "example": "건강한 음식은 만들지 않아요", "exampleJa": "健康的な食べ物は作りません" },
+    "possible": { "form": "만들 수 있어요", "meaningJa": "作れます", "example": "뭐든지 만들 수 있어요", "exampleJa": "何でも作れます、ラーメンだけ" }
   },
   {
     "base": "배우다",
@@ -175,9 +175,9 @@
     "future": { "form": "배울 거예요", "meaningJa": "習います", "example": "열심히 배울 거예요", "exampleJa": "一生懸命習います、三日坊主" },
     "go": { "form": "배우고", "meaningJa": "習って", "example": "배우고 잊어버려요", "exampleJa": "習って忘れます" },
     "seo": { "form": "배워서", "meaningJa": "習って", "example": "배워서 써먹어요", "exampleJa": "習って使います" },
-    "negative_an": { "form": "안 배워요", "meaningJa": "習わない", "example": "수학은 안 배워요", "exampleJa": "数学は習いません" },
-    "negative_jian": { "form": "배우지 않아요", "meaningJa": "習わない", "example": "어려운 건 배우지 않아요", "exampleJa": "難しいのは習いません" },
-    "possible": { "form": "배울 수 있어요", "meaningJa": "習える", "example": "뭐든 배울 수 있어요", "exampleJa": "何でも習えます" }
+    "negative_an": { "form": "안 배워요", "meaningJa": "習いません", "example": "수학은 안 배워요", "exampleJa": "数学は習いません" },
+    "negative_jian": { "form": "배우지 않아요", "meaningJa": "習いません", "example": "어려운 건 배우지 않아요", "exampleJa": "難しいのは習いません" },
+    "possible": { "form": "배울 수 있어요", "meaningJa": "習えます", "example": "뭐든 배울 수 있어요", "exampleJa": "何でも習えます" }
   },
   {
     "base": "가르치다",
@@ -187,9 +187,9 @@
     "future": { "form": "가르칠 거예요", "meaningJa": "教えます", "example": "친절하게 가르칠 거예요", "exampleJa": "親切に教えます" },
     "go": { "form": "가르치고", "meaningJa": "教えて", "example": "가르치고 배워요", "exampleJa": "教えて学びます" },
     "seo": { "form": "가르쳐서", "meaningJa": "教えて", "example": "가르쳐서 더 헷갈려요", "exampleJa": "教えて余計混乱します" },
-    "negative_an": { "form": "안 가르쳐요", "meaningJa": "教えない", "example": "비밀은 안 가르쳐요", "exampleJa": "秘密は教えません" },
-    "negative_jian": { "form": "가르치지 않아요", "meaningJa": "教えない", "example": "귀찮아서 가르치지 않아요", "exampleJa": "めんどくさくて教えません" },
-    "possible": { "form": "가르칠 수 있어요", "meaningJa": "教えられる", "example": "뭐든 가르칠 수 있어요", "exampleJa": "何でも教えられます" }
+    "negative_an": { "form": "안 가르쳐요", "meaningJa": "教えません", "example": "비밀은 안 가르쳐요", "exampleJa": "秘密は教えません" },
+    "negative_jian": { "form": "가르치지 않아요", "meaningJa": "教えません", "example": "귀찮아서 가르치지 않아요", "exampleJa": "めんどくさくて教えません" },
+    "possible": { "form": "가르칠 수 있어요", "meaningJa": "教えられます", "example": "뭐든 가르칠 수 있어요", "exampleJa": "何でも教えられます" }
   },
   {
     "base": "놀다",
@@ -199,9 +199,9 @@
     "future": { "form": "놀 거예요", "meaningJa": "遊びます", "example": "주말에 놀 거예요", "exampleJa": "週末遊びます、家で" },
     "go": { "form": "놀고", "meaningJa": "遊んで", "example": "놀고 후회해요", "exampleJa": "遊んで後悔します" },
     "seo": { "form": "놀아서", "meaningJa": "遊んで", "example": "놀아서 숙제 못 했어요", "exampleJa": "遊んで宿題できませんでした" },
-    "negative_an": { "form": "안 놀아요", "meaningJa": "遊ばない", "example": "요즘 돈이 없어서 안 놀아요", "exampleJa": "最近お金なくて遊びません" },
-    "negative_jian": { "form": "놀지 않아요", "meaningJa": "遊ばない", "example": "평일엔 놀지 않아요", "exampleJa": "平日は遊びません" },
-    "possible": { "form": "놀 수 있어요", "meaningJa": "遊べる", "example": "밤새 놀 수 있어요", "exampleJa": "徹夜で遊べます" }
+    "negative_an": { "form": "안 놀아요", "meaningJa": "遊びません", "example": "요즘 돈이 없어서 안 놀아요", "exampleJa": "最近お金なくて遊びません" },
+    "negative_jian": { "form": "놀지 않아요", "meaningJa": "遊びません", "example": "평일엔 놀지 않아요", "exampleJa": "平日は遊びません" },
+    "possible": { "form": "놀 수 있어요", "meaningJa": "遊べます", "example": "밤새 놀 수 있어요", "exampleJa": "徹夜で遊べます" }
   },
   {
     "base": "쉬다",
@@ -211,9 +211,9 @@
     "future": { "form": "쉴 거예요", "meaningJa": "休みます", "example": "평생 쉴 거예요", "exampleJa": "一生休みます" },
     "go": { "form": "쉬고", "meaningJa": "休んで", "example": "쉬고 또 쉬어요", "exampleJa": "休んでまた休みます" },
     "seo": { "form": "쉬어서", "meaningJa": "休んで", "example": "쉬어서 더 피곤해요", "exampleJa": "休んで余計疲れます" },
-    "negative_an": { "form": "안 쉬어요", "meaningJa": "休まない", "example": "주말에도 안 쉬어요", "exampleJa": "週末も休みません、嘘" },
-    "negative_jian": { "form": "쉬지 않아요", "meaningJa": "休まない", "example": "절대 쉬지 않아요", "exampleJa": "絶対休みません" },
-    "possible": { "form": "쉴 수 있어요", "meaningJa": "休める", "example": "언제든지 쉴 수 있어요", "exampleJa": "いつでも休めます" }
+    "negative_an": { "form": "안 쉬어요", "meaningJa": "休みません", "example": "주말에도 안 쉬어요", "exampleJa": "週末も休みません、嘘" },
+    "negative_jian": { "form": "쉬지 않아요", "meaningJa": "休みません", "example": "절대 쉬지 않아요", "exampleJa": "絶対休みません" },
+    "possible": { "form": "쉴 수 있어요", "meaningJa": "休めます", "example": "언제든지 쉴 수 있어요", "exampleJa": "いつでも休めます" }
   },
   {
     "base": "기다리다",
@@ -223,9 +223,9 @@
     "future": { "form": "기다릴 거예요", "meaningJa": "待ちます", "example": "인내심 있게 기다릴 거예요", "exampleJa": "我慢強く待ちます" },
     "go": { "form": "기다리고", "meaningJa": "待って", "example": "기다리고 포기해요", "exampleJa": "待って諦めます" },
     "seo": { "form": "기다려서", "meaningJa": "待って", "example": "기다려서 화났어요", "exampleJa": "待って怒りました" },
-    "negative_an": { "form": "안 기다려요", "meaningJa": "待たない", "example": "안 기다려요", "exampleJa": "待ちません" },
-    "negative_jian": { "form": "기다리지 않아요", "meaningJa": "待たない", "example": "아무도 기다리지 않아요", "exampleJa": "誰も待ちません" },
-    "possible": { "form": "기다릴 수 있어요", "meaningJa": "待てる", "example": "하루 종일 기다릴 수 있어요", "exampleJa": "一日中待てます" }
+    "negative_an": { "form": "안 기다려요", "meaningJa": "待ちません", "example": "안 기다려요", "exampleJa": "待ちません" },
+    "negative_jian": { "form": "기다리지 않아요", "meaningJa": "待ちません", "example": "아무도 기다리지 않아요", "exampleJa": "誰も待ちません" },
+    "possible": { "form": "기다릴 수 있어요", "meaningJa": "待てます", "example": "하루 종일 기다릴 수 있어요", "exampleJa": "一日中待てます" }
   },
   {
     "base": "사다",
@@ -235,9 +235,9 @@
     "future": { "form": "살 거예요", "meaningJa": "買います", "example": "절약하면서 살 거예요", "exampleJa": "節約しながら買います" },
     "go": { "form": "사고", "meaningJa": "買って", "example": "사고 후회해요", "exampleJa": "買って後悔します" },
     "seo": { "form": "사서", "meaningJa": "買って", "example": "사서 안 써요", "exampleJa": "買って使いません" },
-    "negative_an": { "form": "안 사요", "meaningJa": "買わない", "example": "필요한 건 안 사요", "exampleJa": "必要なものは買いません" },
-    "negative_jian": { "form": "사지 않아요", "meaningJa": "買わない", "example": "건강식품은 사지 않아요", "exampleJa": "健康食品は買いません" },
-    "possible": { "form": "살 수 있어요", "meaningJa": "買える", "example": "뭐든지 살 수 있어요", "exampleJa": "何でも買えます" }
+    "negative_an": { "form": "안 사요", "meaningJa": "買いません", "example": "필요한 건 안 사요", "exampleJa": "必要なものは買いません" },
+    "negative_jian": { "form": "사지 않아요", "meaningJa": "買いません", "example": "건강식품은 사지 않아요", "exampleJa": "健康食品は買いません" },
+    "possible": { "form": "살 수 있어요", "meaningJa": "買えます", "example": "뭐든지 살 수 있어요", "exampleJa": "何でも買えます" }
   },
   {
     "base": "팔다",
@@ -247,9 +247,9 @@
     "future": { "form": "팔 거예요", "meaningJa": "売ります", "example": "비싸게 팔 거예요", "exampleJa": "高く売ります" },
     "go": { "form": "팔고", "meaningJa": "売って", "example": "팔고 후회해요", "exampleJa": "売って後悔します" },
     "seo": { "form": "팔아서", "meaningJa": "売って", "example": "팔아서 돈 벌었는데 바로 썼어요", "exampleJa": "売ってお金稼いだけどすぐ使いました" },
-    "negative_an": { "form": "안 팔아요", "meaningJa": "売らない", "example": "소중한 건 안 팔아요", "exampleJa": "大切なものは売りません" },
-    "negative_jian": { "form": "팔지 않아요", "meaningJa": "売らない", "example": "절대 팔지 않아요", "exampleJa": "絶対売りません" },
-    "possible": { "form": "팔 수 있어요", "meaningJa": "売れる", "example": "뭐든 팔 수 있어요", "exampleJa": "何でも売れます" }
+    "negative_an": { "form": "안 팔아요", "meaningJa": "売りません", "example": "소중한 건 안 팔아요", "exampleJa": "大切なものは売りません" },
+    "negative_jian": { "form": "팔지 않아요", "meaningJa": "売りません", "example": "절대 팔지 않아요", "exampleJa": "絶対売りません" },
+    "possible": { "form": "팔 수 있어요", "meaningJa": "売れます", "example": "뭐든 팔 수 있어요", "exampleJa": "何でも売れます" }
   },
   {
     "base": "쓰다",
@@ -259,9 +259,9 @@
     "future": { "form": "쓸 거예요", "meaningJa": "書きます", "example": "매일 쓸 거예요", "exampleJa": "毎日書きます" },
     "go": { "form": "쓰고", "meaningJa": "書いて", "example": "쓰고 지워요", "exampleJa": "書いて消します" },
     "seo": { "form": "써서", "meaningJa": "書いて", "example": "글 써서 유명해질 거예요", "exampleJa": "文章書いて有名になります" },
-    "negative_an": { "form": "안 써요", "meaningJa": "書かない", "example": "한자는 안 써요", "exampleJa": "漢字は書きません" },
-    "negative_jian": { "form": "쓰지 않아요", "meaningJa": "書かない", "example": "어려운 단어는 쓰지 않아요", "exampleJa": "難しい単語は書きません" },
-    "possible": { "form": "쓸 수 있어요", "meaningJa": "書ける", "example": "하루 종일 쓸 수 있어요", "exampleJa": "一日中書けます" }
+    "negative_an": { "form": "안 써요", "meaningJa": "書きません", "example": "한자는 안 써요", "exampleJa": "漢字は書きません" },
+    "negative_jian": { "form": "쓰지 않아요", "meaningJa": "書きません", "example": "어려운 단어는 쓰지 않아요", "exampleJa": "難しい単語は書きません" },
+    "possible": { "form": "쓸 수 있어요", "meaningJa": "書けます", "example": "하루 종일 쓸 수 있어요", "exampleJa": "一日中書けます" }
   },
   {
     "base": "읽다",
@@ -271,9 +271,9 @@
     "future": { "form": "읽을 거예요", "meaningJa": "読みます", "example": "많이 읽을 거예요", "exampleJa": "たくさん読みます" },
     "go": { "form": "읽고", "meaningJa": "読んで", "example": "읽고 잊어버려요", "exampleJa": "読んで忘れます" },
     "seo": { "form": "읽어서", "meaningJa": "読んで", "example": "읽어서 눈물 났어요", "exampleJa": "読んで涙出ました" },
-    "negative_an": { "form": "안 읽어요", "meaningJa": "読まない", "example": "교과서는 안 읽어요", "exampleJa": "教科書は読みません" },
-    "negative_jian": { "form": "읽지 않아요", "meaningJa": "読まない", "example": "긴 글은 읽지 않아요", "exampleJa": "長い文は読みません" },
-    "possible": { "form": "읽을 수 있어요", "meaningJa": "読める", "example": "밤새 읽을 수 있어요", "exampleJa": "徹夜で読めます" }
+    "negative_an": { "form": "안 읽어요", "meaningJa": "読みません", "example": "교과서는 안 읽어요", "exampleJa": "教科書は読みません" },
+    "negative_jian": { "form": "읽지 않아요", "meaningJa": "読みません", "example": "긴 글은 읽지 않아요", "exampleJa": "長い文は読みません" },
+    "possible": { "form": "읽을 수 있어요", "meaningJa": "読めます", "example": "밤새 읽을 수 있어요", "exampleJa": "徹夜で読めます" }
   },
   {
     "base": "입다",
@@ -283,9 +283,9 @@
     "future": { "form": "입을 거예요", "meaningJa": "着ます", "example": "멋있게 입을 거예요", "exampleJa": "かっこよく着ます" },
     "go": { "form": "입고", "meaningJa": "着て", "example": "파자마 입고 나가요", "exampleJa": "パジャマ着て出かけます" },
     "seo": { "form": "입어서", "meaningJa": "着て", "example": "너무 두껍게 입어서 땀났어요", "exampleJa": "厚着しすぎて汗かきました" },
-    "negative_an": { "form": "안 입어요", "meaningJa": "着ない", "example": "정장은 안 입어요", "exampleJa": "スーツは着ません" },
-    "negative_jian": { "form": "입지 않아요", "meaningJa": "着ない", "example": "불편한 옷은 입지 않아요", "exampleJa": "不便な服は着ません" },
-    "possible": { "form": "입을 수 있어요", "meaningJa": "着れる", "example": "뭐든 입을 수 있어요", "exampleJa": "何でも着れます" }
+    "negative_an": { "form": "안 입어요", "meaningJa": "着ません", "example": "정장은 안 입어요", "exampleJa": "スーツは着ません" },
+    "negative_jian": { "form": "입지 않아요", "meaningJa": "着ません", "example": "불편한 옷은 입지 않아요", "exampleJa": "不便な服は着ません" },
+    "possible": { "form": "입을 수 있어요", "meaningJa": "着れます", "example": "뭐든 입을 수 있어요", "exampleJa": "何でも着れます" }
   },
   {
     "base": "걷다",
@@ -295,9 +295,9 @@
     "future": { "form": "걸을 거예요", "meaningJa": "歩きます", "example": "건강하게 걸을 거예요", "exampleJa": "健康的に歩きます" },
     "go": { "form": "걷고", "meaningJa": "歩いて", "example": "5분 걷고 피곤해요", "exampleJa": "5分歩いて疲れます" },
     "seo": { "form": "걸어서", "meaningJa": "歩いて", "example": "걸어서 다리 아파요", "exampleJa": "歩いて足が痛いです" },
-    "negative_an": { "form": "안 걸어요", "meaningJa": "歩かない", "example": "멀면 안 걸어요", "exampleJa": "遠いと歩きません" },
-    "negative_jian": { "form": "걷지 않아요", "meaningJa": "歩かない", "example": "절대 걷지 않아요", "exampleJa": "絶対歩きません" },
-    "possible": { "form": "걸을 수 있어요", "meaningJa": "歩ける", "example": "하루 종일 걸을 수 있어요", "exampleJa": "一日中歩けます" }
+    "negative_an": { "form": "안 걸어요", "meaningJa": "歩きません", "example": "멀면 안 걸어요", "exampleJa": "遠いと歩きません" },
+    "negative_jian": { "form": "걷지 않아요", "meaningJa": "歩きません", "example": "절대 걷지 않아요", "exampleJa": "絶対歩きません" },
+    "possible": { "form": "걸을 수 있어요", "meaningJa": "歩けます", "example": "하루 종일 걸을 수 있어요", "exampleJa": "一日中歩けます" }
   },
   {
     "base": "타다",
@@ -307,9 +307,9 @@
     "future": { "form": "탈 거예요", "meaningJa": "乗ります", "example": "지하철 탈 거예요", "exampleJa": "地下鉄に乗ります" },
     "go": { "form": "타고", "meaningJa": "乗って", "example": "타고 졸아요", "exampleJa": "乗って寝ます" },
     "seo": { "form": "타서", "meaningJa": "乗って", "example": "타서 멀미했어요", "exampleJa": "乗って酔いました" },
-    "negative_an": { "form": "안 타요", "meaningJa": "乗らない", "example": "비행기는 무서워서 안 타요", "exampleJa": "飛行機は怖くて乗りません" },
-    "negative_jian": { "form": "타지 않아요", "meaningJa": "乗らない", "example": "택시는 비싸서 타지 않아요", "exampleJa": "タクシーは高くて乗りません" },
-    "possible": { "form": "탈 수 있어요", "meaningJa": "乗れる", "example": "뭐든 탈 수 있어요", "exampleJa": "何でも乗れます" }
+    "negative_an": { "form": "안 타요", "meaningJa": "乗りません", "example": "비행기는 무서워서 안 타요", "exampleJa": "飛行機は怖くて乗りません" },
+    "negative_jian": { "form": "타지 않아요", "meaningJa": "乗りません", "example": "택시는 비싸서 타지 않아요", "exampleJa": "タクシーは高くて乗りません" },
+    "possible": { "form": "탈 수 있어요", "meaningJa": "乗れます", "example": "뭐든 탈 수 있어요", "exampleJa": "何でも乗れます" }
   },
   {
     "base": "찍다",
@@ -319,9 +319,9 @@
     "future": { "form": "찍을 거예요", "meaningJa": "撮ります", "example": "예쁘게 찍을 거예요", "exampleJa": "綺麗に撮ります" },
     "go": { "form": "찍고", "meaningJa": "撮って", "example": "찍고 지워요", "exampleJa": "撮って消します" },
     "seo": { "form": "찍어서", "meaningJa": "撮って", "example": "찍어서 SNS에 올렸어요", "exampleJa": "撮ってSNSにアップしました" },
-    "negative_an": { "form": "안 찍어요", "meaningJa": "撮らない", "example": "증명사진은 안 찍어요", "exampleJa": "証明写真は撮りません" },
-    "negative_jian": { "form": "찍지 않아요", "meaningJa": "撮らない", "example": "못생긴 날은 찍지 않아요", "exampleJa": "ブサイクな日は撮りません" },
-    "possible": { "form": "찍을 수 있어요", "meaningJa": "撮れる", "example": "하루 종일 찍을 수 있어요", "exampleJa": "一日中撮れます" }
+    "negative_an": { "form": "안 찍어요", "meaningJa": "撮りません", "example": "증명사진은 안 찍어요", "exampleJa": "証明写真は撮りません" },
+    "negative_jian": { "form": "찍지 않아요", "meaningJa": "撮りません", "example": "못생긴 날은 찍지 않아요", "exampleJa": "ブサイクな日は撮りません" },
+    "possible": { "form": "찍을 수 있어요", "meaningJa": "撮れます", "example": "하루 종일 찍을 수 있어요", "exampleJa": "一日中撮れます" }
   },
   {
     "base": "보내다",
@@ -331,9 +331,9 @@
     "future": { "form": "보낼 거예요", "meaningJa": "送ります", "example": "나중에 보낼 거예요", "exampleJa": "後で送ります" },
     "go": { "form": "보내고", "meaningJa": "送って", "example": "보내고 후회해요", "exampleJa": "送って後悔します" },
     "seo": { "form": "보내서", "meaningJa": "送って", "example": "보내서 기다려요", "exampleJa": "送って待ちます、既読無視" },
-    "negative_an": { "form": "안 보내요", "meaningJa": "送らない", "example": "답장은 안 보내요", "exampleJa": "返信は送りません" },
-    "negative_jian": { "form": "보내지 않아요", "meaningJa": "送らない", "example": "귀찮아서 보내지 않아요", "exampleJa": "めんどくさくて送りません" },
-    "possible": { "form": "보낼 수 있어요", "meaningJa": "送れる", "example": "지금 보낼 수 있어요", "exampleJa": "今送れます" }
+    "negative_an": { "form": "안 보내요", "meaningJa": "送りません", "example": "답장은 안 보내요", "exampleJa": "返信は送りません" },
+    "negative_jian": { "form": "보내지 않아요", "meaningJa": "送りません", "example": "귀찮아서 보내지 않아요", "exampleJa": "めんどくさくて送りません" },
+    "possible": { "form": "보낼 수 있어요", "meaningJa": "送れます", "example": "지금 보낼 수 있어요", "exampleJa": "今送れます" }
   },
   {
     "base": "받다",
@@ -343,9 +343,9 @@
     "future": { "form": "받을 거예요", "meaningJa": "もらいます", "example": "많이 받을 거예요", "exampleJa": "たくさんもらいます" },
     "go": { "form": "받고", "meaningJa": "もらって", "example": "받고 기뻐요", "exampleJa": "もらって嬉しいです" },
     "seo": { "form": "받아서", "meaningJa": "もらって", "example": "받아서 감동했어요", "exampleJa": "もらって感動しました" },
-    "negative_an": { "form": "안 받아요", "meaningJa": "もらわない", "example": "안 받아요", "exampleJa": "もらいません" },
-    "negative_jian": { "form": "받지 않아요", "meaningJa": "もらわない", "example": "공짜는 받지 않아요", "exampleJa": "タダはもらいません" },
-    "possible": { "form": "받을 수 있어요", "meaningJa": "もらえる", "example": "뭐든 받을 수 있어요", "exampleJa": "何でももらえます" }
+    "negative_an": { "form": "안 받아요", "meaningJa": "もらいません", "example": "안 받아요", "exampleJa": "もらいません" },
+    "negative_jian": { "form": "받지 않아요", "meaningJa": "もらいません", "example": "공짜는 받지 않아요", "exampleJa": "タダはもらいません" },
+    "possible": { "form": "받을 수 있어요", "meaningJa": "もらえます", "example": "뭐든 받을 수 있어요", "exampleJa": "何でももらえます" }
   },
   {
     "base": "준비하다",
@@ -355,8 +355,8 @@
     "future": { "form": "준비할 거예요", "meaningJa": "準備します", "example": "미리 준비할 거예요", "exampleJa": "事前に準備します" },
     "go": { "form": "준비하고", "meaningJa": "準備して", "example": "준비하고 포기해요", "exampleJa": "準備して諦めます" },
     "seo": { "form": "준비해서", "meaningJa": "準備して", "example": "준비만 해서 지쳤어요", "exampleJa": "準備だけして疲れました" },
-    "negative_an": { "form": "안 준비해요", "meaningJa": "準備しない", "example": "전혀 안 준비해요", "exampleJa": "全然準備しません" },
-    "negative_jian": { "form": "준비하지 않아요", "meaningJa": "準備しない", "example": "계획적으로 준비하지 않아요", "exampleJa": "計画的に準備しません" },
-    "possible": { "form": "준비할 수 있어요", "meaningJa": "準備できる", "example": "빨리 준비할 수 있어요", "exampleJa": "早く準備できます" }
+    "negative_an": { "form": "안 준비해요", "meaningJa": "準備しません", "example": "전혀 안 준비해요", "exampleJa": "全然準備しません" },
+    "negative_jian": { "form": "준비하지 않아요", "meaningJa": "準備しません", "example": "계획적으로 준비하지 않아요", "exampleJa": "計画的に準備しません" },
+    "possible": { "form": "준비할 수 있어요", "meaningJa": "準備できます", "example": "빨리 준비할 수 있어요", "exampleJa": "早く準備できます" }
   }
 ]
