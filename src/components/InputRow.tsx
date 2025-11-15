@@ -31,6 +31,12 @@ export function InputRow({
     speak(correctAnswer);
   };
 
+  const handleExampleSpeakClick = () => {
+    if (exampleKo) {
+      speak(exampleKo);
+    }
+  };
+
   return (
     <div
       className={`p-3 rounded-lg border transition-colors ${
@@ -41,19 +47,18 @@ export function InputRow({
           : 'bg-white border-gray-200 hover:shadow-sm'
       }`}
     >
-      <div className="mb-2">
-        <label className="font-semibold text-xs text-gray-700">
+      <div className="mb-2 flex items-center justify-between">
+        <label className="font-semibold text-base text-gray-700">
           {label}
         </label>
+        {showResult && !isCorrect && (
+          <span className="text-base text-gray-600 font-semibold">
+            {correctAnswer}
+          </span>
+        )}
       </div>
 
-      {exampleJa && (
-        <div className="mb-2 text-sm text-gray-500 italic">
-          <span className="font-semibold not-italic">例：</span>{exampleJa}
-        </div>
-      )}
-
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 mb-2">
         <input
           type="text"
           value={value}
@@ -78,16 +83,20 @@ export function InputRow({
             <CheckCircle className="w-5 h-5 text-green-600" />
           </div>
         )}
-        {showResult && !isCorrect && (
-          <span className="text-xs text-gray-600 font-semibold flex-shrink-0 truncate">
-            👉 {correctAnswer}
-          </span>
-        )}
       </div>
 
+      {exampleJa && (
+        <div className="mb-1 text-sm text-gray-500 italic">
+          <span className="font-semibold not-italic">例：</span>{exampleJa}
+        </div>
+      )}
+
       {showResult && exampleKo && (
-        <div className="mt-2 text-sm text-gray-600 italic">
-          <span className="font-semibold not-italic">例：</span>{exampleKo}
+        <div className="flex items-center gap-2">
+          <SpeakButton onClick={handleExampleSpeakClick} isSpeaking={isSpeaking} />
+          <div className="text-sm text-gray-600 italic flex-1">
+            {exampleKo}
+          </div>
         </div>
       )}
     </div>

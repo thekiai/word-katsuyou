@@ -1,5 +1,6 @@
 export type ConjugationData = {
   form: string;
+  meaningJa: string;
   example: string;
   exampleJa: string;
 };

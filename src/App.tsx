@@ -200,10 +200,14 @@ function App() {
               : currentVerb[field.key].form;
             const exampleJa = field.key === 'base' ? undefined : currentVerb[field.key].exampleJa;
             const exampleKo = field.key === 'base' ? undefined : currentVerb[field.key].example;
+            const meaningJa = field.key === 'base'
+              ? currentVerb.meaningJa
+              : currentVerb[field.key].meaningJa;
+            const label = `${meaningJa}（${field.label}）`;
             return (
               <InputRow
                 key={field.key}
-                label={field.label}
+                label={label}
                 value={answers[field.key]}
                 onChange={(value) => handleAnswerChange(field.key, value)}
                 correctAnswer={correctAnswer}
