@@ -3,11 +3,9 @@ import { InputRow } from './components/InputRow';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
-import { useSpeechSynthesis } from './hooks/useSpeechSynthesis';
 import './App.css';
 
 function App() {
-  const { voices, currentVoice } = useSpeechSynthesis();
   const [verbs, setVerbs] = useState<VerbEntry[]>([]);
   const [currentVerb, setCurrentVerb] = useState<VerbEntry | null>(null);
   const [loading, setLoading] = useState(true);
@@ -251,55 +249,6 @@ function App() {
             </p>
           </div>
         )}
-
-        {/* Voice Debug Section */}
-        <div className="mt-4 bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-          <h3 className="text-sm font-bold text-gray-800 mb-2">🔧 音声デバッグ情報</h3>
-
-          <div className="mb-3">
-            <p className="text-xs font-semibold text-gray-700 mb-1">現在使用中の音声:</p>
-            <p className="text-sm text-gray-900 bg-white px-2 py-1 rounded border border-gray-200">
-              {currentVoice || '未選択'}
-            </p>
-          </div>
-
-          <div>
-            <p className="text-xs font-semibold text-gray-700 mb-1">利用可能な韓国語音声:</p>
-            <div className="space-y-1 max-h-40 overflow-y-auto">
-              {voices
-                .filter((voice) => voice.lang === 'ko-KR' || voice.lang.startsWith('ko'))
-                .map((voice, index) => {
-                  const nameLower = voice.name.toLowerCase();
-                  const isYunaPremium = nameLower.includes('yuna') && nameLower.includes('premium');
-                  const isYuna = nameLower.includes('yuna');
-                  const isSiri = nameLower.includes('siri');
-
-                  return (
-                    <div
-                      key={index}
-                      className={`text-xs px-2 py-1 rounded border ${
-                        isYunaPremium
-                          ? 'bg-green-100 border-green-300 font-bold'
-                          : isYuna
-                          ? 'bg-blue-100 border-blue-300'
-                          : isSiri
-                          ? 'bg-purple-100 border-purple-300'
-                          : 'bg-white border-gray-200'
-                      }`}
-                    >
-                      {voice.name} ({voice.lang})
-                      {isYunaPremium && ' ⭐ Yuna Premium'}
-                      {!isYunaPremium && isYuna && ' ✨ Yuna'}
-                      {isSiri && ' 🎤 Siri'}
-                    </div>
-                  );
-                })}
-              {voices.filter((voice) => voice.lang === 'ko-KR' || voice.lang.startsWith('ko')).length === 0 && (
-                <p className="text-xs text-gray-500 italic">韓国語音声が見つかりません</p>
-              )}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
