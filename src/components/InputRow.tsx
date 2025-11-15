@@ -25,7 +25,7 @@ export function InputRow({
   isCorrect = false,
   onGrade,
 }: InputRowProps) {
-  const { speak, isSpeaking } = useSpeechSynthesis();
+  const { speak, isSpeaking, currentText } = useSpeechSynthesis();
 
   const handleSpeakClick = () => {
     speak(correctAnswer);
@@ -36,6 +36,9 @@ export function InputRow({
       speak(exampleKo);
     }
   };
+
+  const isAnswerSpeaking = isSpeaking && currentText === correctAnswer;
+  const isExampleSpeaking = isSpeaking && currentText === exampleKo;
 
   return (
     <div
@@ -67,7 +70,7 @@ export function InputRow({
           placeholder="入力"
         />
         {showResult && (
-          <SpeakButton onClick={handleSpeakClick} isSpeaking={isSpeaking} />
+          <SpeakButton onClick={handleSpeakClick} isSpeaking={isAnswerSpeaking} />
         )}
         {onGrade && !showResult && (
           <button
@@ -93,7 +96,7 @@ export function InputRow({
 
       {showResult && exampleKo && (
         <div className="flex items-center gap-2">
-          <SpeakButton onClick={handleExampleSpeakClick} isSpeaking={isSpeaking} />
+          <SpeakButton onClick={handleExampleSpeakClick} isSpeaking={isExampleSpeaking} />
           <div className="text-sm text-gray-600 italic flex-1">
             {exampleKo}
           </div>

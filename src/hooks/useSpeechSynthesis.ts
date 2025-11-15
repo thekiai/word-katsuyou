@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 
 export function useSpeechSynthesis() {
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [currentText, setCurrentText] = useState<string>('');
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [currentVoice, setCurrentVoice] = useState<string>('');
 
@@ -85,21 +86,25 @@ export function useSpeechSynthesis() {
 
       utterance.onstart = () => {
         setIsSpeaking(true);
+        setCurrentText(text);
 
         // Fallback timeout in case onend doesn't fire (iOS issue)
         timeoutId = setTimeout(() => {
           setIsSpeaking(false);
+          setCurrentText('');
         }, estimatedDuration);
       };
 
       utterance.onend = () => {
         clearTimeout(timeoutId);
         setIsSpeaking(false);
+        setCurrentText('');
       };
 
       utterance.onerror = () => {
         clearTimeout(timeoutId);
         setIsSpeaking(false);
+        setCurrentText('');
       };
 
       window.speechSynthesis.speak(utterance);
@@ -109,6 +114,7 @@ export function useSpeechSynthesis() {
   return {
     speak,
     isSpeaking,
+    currentText,
     voices,
     currentVoice,
   };
