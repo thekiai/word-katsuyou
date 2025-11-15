@@ -48,8 +48,8 @@ export function InputRow({
       </div>
 
       {exampleJa && (
-        <div className="mb-2 text-sm text-gray-600">
-          {exampleJa}
+        <div className="mb-2 text-sm text-gray-500 italic">
+          <span className="font-semibold not-italic">例：</span>{exampleJa}
         </div>
       )}
 
@@ -86,8 +86,8 @@ export function InputRow({
       </div>
 
       {showResult && exampleKo && (
-        <div className="mt-2 text-sm text-gray-700 font-medium">
-          {exampleKo}
+        <div className="mt-2 text-sm text-gray-600 italic">
+          <span className="font-semibold not-italic">例：</span>{exampleKo}
         </div>
       )}
     </div>
