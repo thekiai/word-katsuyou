@@ -7,55 +7,65 @@ import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
 import './App.css';
 
-// 完了した動詞を管理する関数
-const COMPLETED_VERBS_KEY = 'completedVerbs';
+// 動詞の進捗を管理する関数
+const PROGRESS_KEY = 'verbProgress';
 
-type CompletedData = {
-  date: string;
-  verbs: string[];
+type VerbProgress = {
+  count: number; // 完了回数
+  lastCompleted?: string; // 最後に完了した日時
 };
 
-const getTodayString = () => {
-  return new Date().toISOString().split('T')[0];
+type ProgressData = {
+  verbs: Record<string, VerbProgress>;
 };
 
-const getCompletedVerbs = (): string[] => {
+const getProgress = (): ProgressData => {
   try {
-    const data = localStorage.getItem(COMPLETED_VERBS_KEY);
-    if (!data) return [];
-
-    const parsed: CompletedData = JSON.parse(data);
-    const today = getTodayString();
-
-    // 日付が変わっていたらリセット
-    if (parsed.date !== today) {
-      localStorage.removeItem(COMPLETED_VERBS_KEY); // 古いデータを削除
-      return [];
-    }
-
-    return parsed.verbs;
+    const data = localStorage.getItem(PROGRESS_KEY);
+    if (!data) return { verbs: {} };
+    return JSON.parse(data);
   } catch {
-    return [];
+    return { verbs: {} };
   }
 };
 
-const addCompletedVerb = (verbBase: string) => {
-  const today = getTodayString();
-  const currentCompleted = getCompletedVerbs();
-
-  if (!currentCompleted.includes(verbBase)) {
-    const newData: CompletedData = {
-      date: today,
-      verbs: [...currentCompleted, verbBase],
-    };
-    localStorage.setItem(COMPLETED_VERBS_KEY, JSON.stringify(newData));
-  }
+const getVerbCount = (verbBase: string): number => {
+  const progress = getProgress();
+  return progress.verbs[verbBase]?.count || 0;
 };
 
-type Mode = 'conjugation' | 'typing';
+const incrementVerbCount = (verbBase: string) => {
+  const progress = getProgress();
+  const currentCount = progress.verbs[verbBase]?.count || 0;
+
+  progress.verbs[verbBase] = {
+    count: currentCount + 1,
+    lastCompleted: new Date().toISOString(),
+  };
+
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+};
+
+const getTotalCompletedCount = (): number => {
+  const progress = getProgress();
+  return Object.values(progress.verbs).reduce((sum, verb) => sum + verb.count, 0);
+};
+
+const getTodayCompletedCount = (): number => {
+  const progress = getProgress();
+  const today = new Date().toISOString().split('T')[0];
+
+  return Object.values(progress.verbs).filter(verb => {
+    if (!verb.lastCompleted) return false;
+    const completedDate = verb.lastCompleted.split('T')[0];
+    return completedDate === today;
+  }).reduce((sum, verb) => sum + verb.count, 0);
+};
+
+type Mode = 'home' | 'conjugation' | 'typing';
 
 function App() {
-  const [mode, setMode] = useState<Mode>('conjugation');
+  const [mode, setMode] = useState<Mode>('home');
   const [selectedVerbMode, setSelectedVerbMode] = useState<'single' | 'random'>('single');
 
   const inputRefs = useRef<Record<ConjugationType, HTMLInputElement | null>>({
@@ -73,7 +83,6 @@ function App() {
   const [verbs, setVerbs] = useState<VerbEntry[]>([]);
   const [currentVerb, setCurrentVerb] = useState<VerbEntry | null>(null);
   const [loading, setLoading] = useState(true);
-  const [completedVerbs, setCompletedVerbs] = useState<string[]>([]);
   const [answers, setAnswers] = useState<Record<ConjugationType, string>>({
     base: '',
     present: '',
@@ -106,8 +115,6 @@ function App() {
       }
       setLoading(false);
     });
-    // Load completed verbs from localStorage
-    setCompletedVerbs(getCompletedVerbs());
   }, []);
 
   // Check for all correct answers
@@ -127,7 +134,7 @@ function App() {
       return result?.isCorrect === true;
     });
 
-    if (allCorrect && !completedVerbs.includes(currentVerb.base)) {
+    if (allCorrect) {
       // Celebrate with confetti!
       confetti({
         particleCount: 100,
@@ -135,11 +142,10 @@ function App() {
         origin: { y: 0.6 }
       });
 
-      // Add to completed verbs
-      addCompletedVerb(currentVerb.base);
-      setCompletedVerbs(getCompletedVerbs());
+      // Increment completion count
+      incrementVerbCount(currentVerb.base);
     }
-  }, [results, currentVerb, completedVerbs]);
+  }, [results, currentVerb]);
 
   const selectRandomVerb = (verbList: VerbEntry[]) => {
     const randomIndex = Math.floor(Math.random() * verbList.length);
@@ -263,6 +269,100 @@ function App() {
     );
   }
 
+  // ホームページ
+  if (mode === 'home') {
+    const totalCount = getTotalCompletedCount();
+    const todayCount = getTodayCompletedCount();
+
+    // 動詞を完了回数でソート
+    const sortedVerbs = [...verbs].sort((a, b) => {
+      const countA = getVerbCount(a.base);
+      const countB = getVerbCount(b.base);
+      return countB - countA; // 降順
+    });
+
+    return (
+      <div className="min-h-screen bg-gray-50 text-gray-900">
+        {/* Header */}
+        <div className="bg-white shadow-sm border-b border-gray-200">
+          <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-4">
+              韓国語活用トレーニング
+            </h1>
+
+            {/* 統計情報 */}
+            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div>
+                  <p className="text-gray-600 text-xs mb-1">総練習回数</p>
+                  <p className="text-xl font-bold text-gray-800">{totalCount}回</p>
+                </div>
+                <div>
+                  <p className="text-gray-600 text-xs mb-1">今日の練習</p>
+                  <p className="text-xl font-bold text-gray-800">{todayCount}回</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
+          {/* アクションボタン */}
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-4 sm:mb-6">
+            <button
+              onClick={() => {
+                selectRandomVerb(verbs);
+                setMode('conjugation');
+              }}
+              className="flex-1 py-3 bg-gray-500 hover:bg-gray-600 rounded-lg font-medium transition-colors text-white"
+            >
+              ランダムに練習
+            </button>
+            <button
+              onClick={() => setMode('typing')}
+              className="flex-1 py-3 bg-gray-500 hover:bg-gray-600 rounded-lg font-medium transition-colors text-white"
+            >
+              タイピング練習
+            </button>
+          </div>
+
+          {/* 動詞リスト */}
+          <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+            {sortedVerbs.map((verb) => {
+              const count = getVerbCount(verb.base);
+              return (
+                <button
+                  key={verb.base}
+                  onClick={() => {
+                    setCurrentVerb(verb);
+                    setMode('conjugation');
+                  }}
+                  className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-white hover:shadow-sm transition-colors text-left"
+                >
+                  <div>
+                    <span className="font-semibold text-base text-gray-800">{verb.meaningJa}</span>
+                    <span className="text-gray-500 text-sm ml-2">({verb.base})</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {count > 0 && (
+                      <span className="text-yellow-500 text-sm font-semibold">
+                        {'⭐'.repeat(Math.min(count, 5))} {count}
+                      </span>
+                    )}
+                    {count === 0 && (
+                      <span className="text-gray-400 text-sm">-</span>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // タイピング練習モード
   if (mode === 'typing') {
     return (
@@ -288,21 +388,32 @@ function App() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
               >
                 <option value="random">🎲 ランダム（全動詞）</option>
-                {verbs.map((verb) => (
-                  <option key={verb.base} value={verb.base}>
-                    {completedVerbs.includes(verb.base) ? '✓ ' : ''}{verb.meaningJa}
-                  </option>
-                ))}
+                {verbs.map((verb) => {
+                  const count = getVerbCount(verb.base);
+                  return (
+                    <option key={verb.base} value={verb.base}>
+                      {count > 0 ? `⭐${count} ` : ''}{verb.meaningJa}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 
             {/* モード切り替えボタン */}
-            <button
-              onClick={() => setMode('conjugation')}
-              className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
-            >
-              活用トレーニングへ
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setMode('home')}
+                className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
+              >
+                ホーム
+              </button>
+              <button
+                onClick={() => setMode('conjugation')}
+                className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
+              >
+                活用トレーニング
+              </button>
+            </div>
           </div>
         </div>
 
@@ -358,21 +469,32 @@ function App() {
                 }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
               >
-                {verbs.map((verb) => (
-                  <option key={verb.base} value={verb.base}>
-                    {completedVerbs.includes(verb.base) ? '✓ ' : ''}{verb.meaningJa}
-                  </option>
-                ))}
+                {verbs.map((verb) => {
+                  const count = getVerbCount(verb.base);
+                  return (
+                    <option key={verb.base} value={verb.base}>
+                      {count > 0 ? `⭐${count} ` : ''}{verb.meaningJa}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 
             {/* モード切り替えボタン */}
-            <button
-              onClick={() => setMode('typing')}
-              className="px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
-            >
-              タイピング練習
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setMode('home')}
+                className="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
+              >
+                ホーム
+              </button>
+              <button
+                onClick={() => setMode('typing')}
+                className="px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
+              >
+                タイピング練習
+              </button>
+            </div>
           </div>
 
           {/* Question Section */}
