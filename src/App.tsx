@@ -182,7 +182,8 @@ function App() {
       const nextKey = CONJUGATION_FIELDS[currentIndex + 1].key;
       const nextInput = inputRefs.current[nextKey];
       if (nextInput) {
-        nextInput.focus();
+        // モバイルでキーボードを維持するため、preventScrollなしでフォーカス
+        nextInput.focus({ preventScroll: true });
       }
     }
   };

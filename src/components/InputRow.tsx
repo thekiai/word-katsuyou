@@ -57,10 +57,10 @@ export const InputRow = forwardRef<HTMLInputElement, InputRowProps>(({
           onGrade();
           // 正解になったら次の入力にフォーカス
           if (onCorrect) {
-            // 少し遅延させてから次にフォーカス（状態更新を待つ）
-            setTimeout(() => {
+            // モバイルでキーボードを維持するため、次のフレームでフォーカス
+            requestAnimationFrame(() => {
               onCorrect();
-            }, 100);
+            });
           }
         }
       }
