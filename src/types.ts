@@ -39,4 +39,5 @@ export type AnswerResult = {
   userAnswer: string;
   correctAnswer: string;
   isCorrect: boolean;
+  showAnswerOnly?: boolean; // 採点せずに答えのみ表示
 };

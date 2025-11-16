@@ -12,7 +12,9 @@ type InputRowProps = {
   exampleKo?: string;
   showResult?: boolean;
   isCorrect?: boolean;
+  showAnswerOnly?: boolean; // 採点せずに答えのみ表示
   onGrade?: () => void;
+  onShowAnswer?: () => void; // 答えのみを表示するハンドラー
   onCorrect?: () => void;
 };
 
@@ -25,7 +27,9 @@ export const InputRow = forwardRef<HTMLInputElement, InputRowProps>(({
   exampleKo,
   showResult = false,
   isCorrect = false,
+  showAnswerOnly = false,
   onGrade,
+  onShowAnswer,
   onCorrect,
 }, ref) => {
   const { speak, isSpeaking, currentText } = useSpeechSynthesis();
@@ -70,7 +74,9 @@ export const InputRow = forwardRef<HTMLInputElement, InputRowProps>(({
     <div
       className={`p-3 rounded-lg border transition-colors ${
         showResult
-          ? isCorrect
+          ? showAnswerOnly
+            ? 'bg-white border-gray-200' // 答えのみ表示時は白背景
+            : isCorrect
             ? 'bg-green-50 border-green-300'
             : 'bg-pink-50 border-red-200'
           : 'bg-white border-gray-200 hover:shadow-sm'
@@ -80,12 +86,12 @@ export const InputRow = forwardRef<HTMLInputElement, InputRowProps>(({
         <label className="font-semibold text-base text-gray-700">
           {label}
         </label>
-        {showResult && !isCorrect && (
+        {showResult && (showAnswerOnly || !isCorrect) && (
           <span className="text-base text-gray-600 font-semibold">
             {correctAnswer}
           </span>
         )}
-        {showResult && isCorrect && (
+        {showResult && !showAnswerOnly && isCorrect && (
           <CheckCircle className="w-5 h-5 text-green-600" />
         )}
       </div>
@@ -114,13 +120,13 @@ export const InputRow = forwardRef<HTMLInputElement, InputRowProps>(({
         {showResult && (
           <SpeakButton onClick={handleSpeakClick} isSpeaking={isAnswerSpeaking} />
         )}
-        {onGrade && !showResult && (
+        {onShowAnswer && !showResult && (
           <button
             type="button"
-            onClick={onGrade}
-            className="px-2 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap bg-gray-600 hover:bg-gray-700 text-white flex-shrink-0"
+            onClick={onShowAnswer}
+            className="text-xs text-gray-400 hover:text-gray-600 underline underline-offset-2 transition-colors whitespace-nowrap flex-shrink-0"
           >
-            答え
+            答えを見る
           </button>
         )}
       </div>

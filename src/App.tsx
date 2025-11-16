@@ -110,6 +110,27 @@ function App() {
     }));
   };
 
+  const handleShowAnswer = (key: ConjugationType) => {
+    if (!currentVerb) return;
+
+    const correctAnswer = key === 'base'
+      ? currentVerb.base.trim()
+      : currentVerb[key].form.trim();
+
+    const result: AnswerResult = {
+      key,
+      userAnswer: '',
+      correctAnswer,
+      isCorrect: false,
+      showAnswerOnly: true, // 採点せずに答えのみ表示
+    };
+
+    setResults((prev) => ({
+      ...prev,
+      [key]: result,
+    }));
+  };
+
   const handleGradeAll = () => {
     if (!currentVerb) return;
 
@@ -231,7 +252,9 @@ function App() {
                 exampleKo={exampleKo}
                 showResult={result !== null}
                 isCorrect={result?.isCorrect ?? false}
+                showAnswerOnly={result?.showAnswerOnly ?? false}
                 onGrade={() => handleGradeField(field.key)}
+                onShowAnswer={() => handleShowAnswer(field.key)}
                 onCorrect={() => focusNextField(field.key)}
               />
             );
@@ -253,19 +276,6 @@ function App() {
             次の問題へ
           </button>
         </div>
-
-        {/* Score Section */}
-        {Object.values(results).some((r) => r !== null) && (
-          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-            <p className="text-center text-lg font-semibold text-gray-800">
-              正解数:{' '}
-              <span className="text-gray-900">
-                {Object.values(results).filter((r) => r?.isCorrect).length}
-              </span>{' '}
-              / {Object.values(results).filter((r) => r !== null).length}
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
