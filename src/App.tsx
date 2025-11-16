@@ -210,7 +210,7 @@ function App() {
                 <option value="random">🎲 ランダム（全動詞）</option>
                 {verbs.map((verb) => (
                   <option key={verb.base} value={verb.base}>
-                    {verb.meaningJa} ({verb.base})
+                    {verb.meaningJa}
                   </option>
                 ))}
               </select>
@@ -280,7 +280,7 @@ function App() {
               >
                 {verbs.map((verb) => (
                   <option key={verb.base} value={verb.base}>
-                    {verb.meaningJa} ({verb.base})
+                    {verb.meaningJa}
                   </option>
                 ))}
               </select>

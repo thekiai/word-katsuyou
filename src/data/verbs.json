@@ -116,7 +116,7 @@
     "go": { "form": "알고", "meaningJa": "知って", "example": "알고 있어요", "exampleJa": "知ってます" },
     "seo": { "form": "알아서", "meaningJa": "知って", "example": "알아서 적당히 해요", "exampleJa": "わかって適当にやります" },
     "negative_an": { "form": "몰라요", "meaningJa": "知りません", "example": "아무것도 몰라요", "exampleJa": "何も知りません" },
-    "negative_jian": { "form": "알지 않아요", "meaningJa": "知りません", "example": "전혀 알지 않아요", "exampleJa": "全然知りません" },
+    "negative_jian": { "form": "몰라요", "meaningJa": "知りません", "example": "전혀 알지 않아요", "exampleJa": "全然知りません" },
     "possible": { "form": "알 수 있어요", "meaningJa": "知れます", "example": "다 알 수 있어요", "exampleJa": "全部わかります（天才なので）" }
   },
   {
