@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Hangul from 'hangul-js';
-import { Volume2 } from 'lucide-react';
+import { Volume2, Check } from 'lucide-react';
 import { VerbEntry } from '../types';
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
 
@@ -25,6 +25,7 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState(''); // ユーザー入力（QWERTY or ハングル）
   const [isPlayingFullText, setIsPlayingFullText] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { speak, isSpeaking, currentText } = useSpeechSynthesis();
 
@@ -60,9 +61,21 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
     }
   }
 
-  // 問題が変わったらinputにフォーカス
+  // 問題が変わったらinputにフォーカス & 自動音声再生
   useEffect(() => {
+    setUserInput(''); // 入力をクリア
     inputRef.current?.focus();
+
+    // 少し遅延させて、Strict Modeの2重実行を回避
+    const timer = setTimeout(() => {
+      speak(targetText);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      window.speechSynthesis.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
   // 入力を字母に変換（スペースも含める）
@@ -106,14 +119,18 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
       // 完成したら次へ
       if (inputJamo.length === targetJamo.length &&
           inputJamo.every((j, i) => j === targetJamo[i])) {
+        // チェックマーク表示
+        setShowSuccess(true);
+
         setTimeout(() => {
+          setShowSuccess(false);
           if (currentIndex < examples.length - 1) {
             setCurrentIndex(currentIndex + 1);
             setUserInput('');
           } else {
             onComplete();
           }
-        }, 500);
+        }, 1000);
       }
     }
   };
@@ -207,6 +224,13 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
     return (
       <div className="text-3xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-wide flex justify-center items-center flex-wrap">
         {elements}
+        {showSuccess && (
+          <div className="animate-scale-in inline-flex ml-4">
+            <div className="bg-green-500 rounded-full p-2">
+              <Check className="w-8 h-8 md:w-10 md:h-10 text-white" strokeWidth={3} />
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -260,6 +284,7 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
         {/* 入力フィールド */}
         <div className="mt-4 flex justify-center">
           <input
+            key={currentIndex}
             ref={inputRef}
             type="text"
             value={userInput}
