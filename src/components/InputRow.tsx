@@ -96,7 +96,10 @@ export const InputRow = forwardRef<HTMLInputElement, InputRowProps>(({
             </>
           )}
           {showResult && !showAnswerOnly && isCorrect && (
-            <CheckCircle className="w-5 h-5 text-green-600" />
+            <>
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <SpeakButton onClick={handleSpeakClick} isSpeaking={isAnswerSpeaking} />
+            </>
           )}
           {onShowAnswer && !showResult && (
             <button
