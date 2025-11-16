@@ -93,7 +93,9 @@ export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps)
   // 問題が変わったらinputにフォーカス & 自動音声再生
   useEffect(() => {
     setUserInput(''); // 入力をクリア
-    inputRef.current?.focus();
+
+    // フォーカス時にスクロールしないようにする
+    inputRef.current?.focus({ preventScroll: true });
 
     // 少し遅延させて、Strict Modeの2重実行を回避
     const timer = setTimeout(() => {
@@ -276,10 +278,10 @@ export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps)
   const progress = (currentIndex / examples.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 lg:p-8 pt-8 md:pt-6 lg:pt-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 lg:p-8 pt-4 md:pt-6 lg:pt-8">
       <div className="max-w-4xl w-full">
         {/* プログレスバー */}
-        <div className="mb-8">
+        <div className="mb-3 md:mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600">
               完了: {currentIndex} / {examples.length}
@@ -304,12 +306,12 @@ export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps)
         </div>
 
         {/* 日本語の意味 */}
-        <div className="text-center mb-8">
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-700">{currentExample.meaning}</p>
+        <div className="text-center mb-3 md:mb-8">
+          <p className="text-base md:text-xl lg:text-2xl text-gray-700">{currentExample.meaning}</p>
         </div>
 
         {/* タイピングテキストと再生ボタン */}
-        <div className="flex items-center justify-center gap-4 mb-8">
+        <div className="flex items-center justify-center gap-4 mb-4 md:mb-8">
           {/* 全文再生ボタン */}
           <button
             type="button"
@@ -341,6 +343,7 @@ export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps)
             placeholder="ここに入力..."
             autoComplete="off"
             autoFocus
+            inputMode="text"
           />
         </div>
       </div>
