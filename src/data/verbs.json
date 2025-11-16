@@ -302,7 +302,7 @@
   {
     "base": "타다",
     "meaningJa": "乗る",
-    "present": { "form": "타요", "meaningJa": "乗ります", "example": "전 남친 차 타요", "exampleJa": "元カレの車に乗ります" },
+    "present": { "form": "타요", "meaningJa": "乗ります", "example": "전 남친 차 타요", "exampleJa": "友達の車に乗ります" },
     "past": { "form": "탔어요", "meaningJa": "乗りました", "example": "잘못된 버스 탔어요", "exampleJa": "間違ったバスに乗りました" },
     "future": { "form": "탈 거예요", "meaningJa": "乗ります", "example": "지하철 탈 거예요", "exampleJa": "地下鉄に乗ります" },
     "go": { "form": "타고", "meaningJa": "乗って", "example": "타고 졸아요", "exampleJa": "乗って寝ます" },
