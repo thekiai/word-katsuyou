@@ -238,7 +238,7 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
   const progress = ((currentIndex + 1) / examples.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 lg:p-8 pt-8 md:pt-6 lg:pt-8">
       <div className="max-w-4xl w-full">
         {/* プログレスバー */}
         <div className="mb-8">
