@@ -127,7 +127,7 @@
     "future": { "form": "모를 거예요", "meaningJa": "知らないでしょう", "example": "아마 모를 거예요", "exampleJa": "多分知らないでしょう" },
     "go": { "form": "모르고", "meaningJa": "知らなくて", "example": "모르고 했어요", "exampleJa": "知らずにやりました" },
     "seo": { "form": "몰라서", "meaningJa": "知らなくて", "example": "몰라서 못 가요", "exampleJa": "知らなくて行けません" },
-    "negative_an": { "form": "안 몰라요", "meaningJa": "知りません", "example": "안 몰라요", "exampleJa": "知らなくないです" },
+    "negative_an": { "form": "안 몰라요", "meaningJa": "知らなくないです", "example": "안 몰라요", "exampleJa": "知らなくないです" },
     "negative_jian": { "form": "모르지 않아요", "meaningJa": "知らなくないです", "example": "사실 모르지 않아요", "exampleJa": "実は知らなくないです" },
     "possible": { "form": "모를 수 있어요", "meaningJa": "知らないかもしれません", "example": "모를 수도 있어요", "exampleJa": "知らないかもしれません" }
   },
