@@ -5,25 +5,41 @@ import { VerbEntry } from '../types';
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
 
 type TypingPracticeProps = {
-  verb: VerbEntry;
+  verb?: VerbEntry;
+  verbs?: VerbEntry[];
   onComplete: () => void;
 };
 
-export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
-  // 全ての例文を取得（baseを除く）
-  const examples = [
-    { text: verb.present.example, label: '現在形', meaning: verb.present.exampleJa },
-    { text: verb.past.example, label: '過去形', meaning: verb.past.exampleJa },
-    { text: verb.future.example, label: '未来形', meaning: verb.future.exampleJa },
-    { text: verb.go.example, label: '連用（고）', meaning: verb.go.exampleJa },
-    { text: verb.seo.example, label: '連用（서）', meaning: verb.seo.exampleJa },
-    { text: verb.negative_an.example, label: '否定（안）', meaning: verb.negative_an.exampleJa },
-    { text: verb.negative_jian.example, label: '否定（지 않아요）', meaning: verb.negative_jian.exampleJa },
-    { text: verb.possible.example, label: '可能', meaning: verb.possible.exampleJa },
-  ];
+export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps) => {
+  // 全ての例文を取得
+  const examples = verbs
+    ? // ランダムモード: 全動詞の全例文をシャッフル
+      verbs.flatMap((v) => [
+        { text: v.present.example, label: `現在形（${v.meaningJa}）`, meaning: v.present.exampleJa, verb: v.base },
+        { text: v.past.example, label: `過去形（${v.meaningJa}）`, meaning: v.past.exampleJa, verb: v.base },
+        { text: v.future.example, label: `未来形（${v.meaningJa}）`, meaning: v.future.exampleJa, verb: v.base },
+        { text: v.go.example, label: `連用（고）（${v.meaningJa}）`, meaning: v.go.exampleJa, verb: v.base },
+        { text: v.seo.example, label: `連用（서）（${v.meaningJa}）`, meaning: v.seo.exampleJa, verb: v.base },
+        { text: v.negative_an.example, label: `否定（안）（${v.meaningJa}）`, meaning: v.negative_an.exampleJa, verb: v.base },
+        { text: v.negative_jian.example, label: `否定（지 않아요）（${v.meaningJa}）`, meaning: v.negative_jian.exampleJa, verb: v.base },
+        { text: v.possible.example, label: `可能（${v.meaningJa}）`, meaning: v.possible.exampleJa, verb: v.base },
+      ]).sort(() => Math.random() - 0.5)
+    : // 通常モード: 1つの動詞の例文を順番に
+      verb
+      ? [
+          { text: verb.present.example, label: '現在形', meaning: verb.present.exampleJa },
+          { text: verb.past.example, label: '過去形', meaning: verb.past.exampleJa },
+          { text: verb.future.example, label: '未来形', meaning: verb.future.exampleJa },
+          { text: verb.go.example, label: '連用（고）', meaning: verb.go.exampleJa },
+          { text: verb.seo.example, label: '連用（서）', meaning: verb.seo.exampleJa },
+          { text: verb.negative_an.example, label: '否定（안）', meaning: verb.negative_an.exampleJa },
+          { text: verb.negative_jian.example, label: '否定（지 않아요）', meaning: verb.negative_jian.exampleJa },
+          { text: verb.possible.example, label: '可能', meaning: verb.possible.exampleJa },
+        ]
+      : [];
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [userInput, setUserInput] = useState(''); // ユーザー入力（QWERTY or ハングル）
+  const [userInput, setUserInput] = useState('');
   const [isPlayingFullText, setIsPlayingFullText] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -49,6 +65,16 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
   // 単語をクリックして再生
   const playWord = (word: string) => {
     speak(word);
+  };
+
+  // スキップ機能
+  const handleSkip = () => {
+    if (currentIndex < examples.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      setUserInput('');
+    } else {
+      onComplete();
+    }
   };
 
   // ターゲットテキストを字母に分解（スペースも含める）
@@ -222,7 +248,7 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
     });
 
     return (
-      <div className="text-3xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-wide flex justify-center items-center flex-wrap">
+      <div className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-wide flex justify-center items-center flex-wrap">
         {elements}
         {showSuccess && (
           <div className="animate-scale-in inline-flex ml-4">
@@ -235,7 +261,7 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
     );
   };
 
-  const progress = ((currentIndex + 1) / examples.length) * 100;
+  const progress = (currentIndex / examples.length) * 100;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-start md:justify-center p-4 md:p-6 lg:p-8 pt-8 md:pt-6 lg:pt-8">
@@ -244,15 +270,24 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600">
-              {currentIndex + 1} / {examples.length}
+              完了: {currentIndex} / {examples.length}
             </span>
             <span className="text-sm text-gray-600">{currentExample.label}</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
             <div
               className="bg-blue-500 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={handleSkip}
+              className="text-sm text-gray-500 hover:text-gray-700 underline cursor-pointer"
+            >
+              &gt;&gt;スキップする
+            </button>
           </div>
         </div>
 
@@ -261,11 +296,9 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
           <p className="text-lg md:text-xl lg:text-2xl text-gray-700">{currentExample.meaning}</p>
         </div>
 
-        {/* タイピングテキスト */}
-        {renderText()}
-
-        {/* 全文再生ボタン */}
-        <div className="mt-8 flex justify-center">
+        {/* タイピングテキストと再生ボタン */}
+        <div className="flex items-center justify-center gap-4 mb-8">
+          {/* 全文再生ボタン */}
           <button
             type="button"
             onClick={playFullText}
@@ -279,6 +312,9 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
           >
             <Volume2 className="w-4 h-4" />
           </button>
+
+          {/* タイピングテキスト */}
+          {renderText()}
         </div>
 
         {/* 入力フィールド */}

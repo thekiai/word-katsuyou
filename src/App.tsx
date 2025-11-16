@@ -10,6 +10,7 @@ type Mode = 'conjugation' | 'typing';
 
 function App() {
   const [mode, setMode] = useState<Mode>('conjugation');
+  const [selectedVerbMode, setSelectedVerbMode] = useState<'single' | 'random'>('single');
 
   const inputRefs = useRef<Record<ConjugationType, HTMLInputElement | null>>({
     base: null,
@@ -216,17 +217,49 @@ function App() {
   if (mode === 'typing') {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* モード切り替えボタン */}
-        <div className="absolute top-4 right-4 z-10">
-          <button
-            onClick={() => setMode('conjugation')}
-            className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 shadow-sm"
-          >
-            活用トレーニングへ
-          </button>
+        {/* ヘッダー */}
+        <div className="sticky top-0 bg-white shadow-sm border-b border-gray-200 z-20 px-4 py-3">
+          <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+            {/* 動詞選択 */}
+            <div className="flex-1 max-w-xs">
+              <select
+                value={selectedVerbMode === 'random' ? 'random' : currentVerb.base}
+                onChange={(e) => {
+                  if (e.target.value === 'random') {
+                    setSelectedVerbMode('random');
+                  } else {
+                    setSelectedVerbMode('single');
+                    const selectedVerb = verbs.find(v => v.base === e.target.value);
+                    if (selectedVerb) {
+                      setCurrentVerb(selectedVerb);
+                    }
+                  }
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+              >
+                <option value="random">🎲 ランダム（全動詞）</option>
+                {verbs.map((verb) => (
+                  <option key={verb.base} value={verb.base}>
+                    {verb.meaningJa} ({verb.base})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* モード切り替えボタン */}
+            <button
+              onClick={() => setMode('conjugation')}
+              className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
+            >
+              活用トレーニングへ
+            </button>
+          </div>
         </div>
+
         <TypingPractice
-          verb={currentVerb}
+          key={selectedVerbMode === 'random' ? 'random' : currentVerb.base}
+          verb={selectedVerbMode === 'single' ? currentVerb : undefined}
+          verbs={selectedVerbMode === 'random' ? verbs : undefined}
           onComplete={() => {
             handleNext();
           }}
