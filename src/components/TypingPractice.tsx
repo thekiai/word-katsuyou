@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Hangul from 'hangul-js';
 import { Volume2, Check } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { VerbEntry } from '../types';
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
 
@@ -147,6 +148,15 @@ export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps)
           inputJamo.every((j, i) => j === targetJamo[i])) {
         // チェックマーク表示
         setShowSuccess(true);
+
+        // 最後の問題を完了した場合は紙吹雪
+        if (currentIndex === examples.length - 1) {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        }
 
         setTimeout(() => {
           setShowSuccess(false);
