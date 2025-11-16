@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Hangul from 'hangul-js';
+import { Volume2 } from 'lucide-react';
 import { VerbEntry } from '../types';
+import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
 
 type TypingPracticeProps = {
   verb: VerbEntry;
@@ -22,10 +24,31 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState(''); // ユーザー入力（QWERTY or ハングル）
+  const [isPlayingFullText, setIsPlayingFullText] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { speak, isSpeaking, currentText } = useSpeechSynthesis();
 
   const currentExample = examples[currentIndex];
   const targetText = currentExample.text;
+
+  // 全文再生中かどうかをチェック
+  useEffect(() => {
+    if (isSpeaking && currentText === targetText) {
+      setIsPlayingFullText(true);
+    } else {
+      setIsPlayingFullText(false);
+    }
+  }, [isSpeaking, currentText, targetText]);
+
+  // 全文再生
+  const playFullText = () => {
+    speak(targetText);
+  };
+
+  // 単語をクリックして再生
+  const playWord = (word: string) => {
+    speak(word);
+  };
 
   // ターゲットテキストを字母に分解（スペースも含める）
   const targetJamo: string[] = [];
@@ -96,82 +119,94 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
   };
 
   const renderText = () => {
-    const chars = targetText.split('');
+    const words = targetText.split(' ');
     const inputJamo = inputToJamo(userInput);
+    let jamoIndex = 0;
 
-    let jamoIndex = 0; // 現在どこまで字母が入力されたか
+    const elements: JSX.Element[] = [];
 
-    return (
-      <div className="text-6xl font-bold mb-8 tracking-wide flex justify-center items-center flex-wrap">
-        {chars.map((char, charIndex) => {
-          // この文字が空白の場合
-          if (char === ' ') {
-            // スペースの入力状態をチェック
-            let spaceClassName = 'inline-block w-4 h-1 mx-1 rounded ';
+    words.forEach((word, wordIndex) => {
+      const chars = word.split('');
+      const wordElements: JSX.Element[] = [];
 
-            if (jamoIndex < inputJamo.length) {
-              if (inputJamo[jamoIndex] === ' ') {
-                // 正しくスペースが入力された
-                spaceClassName += 'bg-green-500';
-              } else {
-                // スペースが入力されるべきだが別の文字が入力された
-                spaceClassName += 'bg-red-500';
-              }
+      // 単語内の各文字を処理
+      chars.forEach((char, charIndex) => {
+        const charJamo = Hangul.disassemble(char);
+        const charJamoCount = charJamo.length;
+
+        let matchedJamoCount = 0;
+        let hasError = false;
+
+        for (let i = 0; i < charJamoCount; i++) {
+          if (jamoIndex + i < inputJamo.length) {
+            if (inputJamo[jamoIndex + i] === charJamo[i]) {
+              matchedJamoCount++;
             } else {
-              // まだ入力されていない
-              spaceClassName += 'bg-gray-300';
-            }
-
-            jamoIndex++; // スペース分のインデックスを進める
-            return <span key={charIndex} className={spaceClassName}></span>;
-          }
-
-          // この文字の字母を取得
-          const charJamo = Hangul.disassemble(char);
-          const charJamoCount = charJamo.length;
-
-          // この文字の字母がどこまで入力されているかチェック
-          let matchedJamoCount = 0;
-          let hasError = false;
-
-          for (let i = 0; i < charJamoCount; i++) {
-            if (jamoIndex + i < inputJamo.length) {
-              if (inputJamo[jamoIndex + i] === charJamo[i]) {
-                matchedJamoCount++;
-              } else {
-                hasError = true;
-                break;
-              }
-            } else {
+              hasError = true;
               break;
             }
-          }
-
-          // この文字の字母インデックスを進める
-          jamoIndex += charJamoCount;
-
-          // 色を決定
-          let className = 'inline-block';
-          if (hasError) {
-            // 間違いがある → 赤
-            className += ' text-red-500';
-          } else if (matchedJamoCount === charJamoCount) {
-            // 全ての字母が入力済み → 緑
-            className += ' text-green-500';
-          } else if (matchedJamoCount > 0) {
-            // 一部の字母が入力済み → 青（入力中）
-            className += ' text-blue-400';
           } else {
-            // まだ入力されていない → グレー
-            className += ' text-gray-400';
+            break;
           }
+        }
 
-          return (
-            <span key={charIndex} className={className}>
-              {char}
-            </span>
-          );
-        })}
+        jamoIndex += charJamoCount;
+
+        let className = 'inline-block';
+        if (hasError) {
+          className += ' text-pink-400';
+        } else if (matchedJamoCount === charJamoCount) {
+          className += ' text-green-500';
+        } else if (matchedJamoCount > 0) {
+          className += ' text-blue-400';
+        } else {
+          className += ' text-gray-400';
+        }
+
+        wordElements.push(
+          <span key={charIndex} className={className}>
+            {char}
+          </span>
+        );
+      });
+
+      // 単語を追加
+      elements.push(
+        <span
+          key={`word-${wordIndex}`}
+          className="cursor-pointer hover:opacity-70 transition-opacity"
+          onClick={() => playWord(word)}
+          title="クリックで再生"
+        >
+          {wordElements}
+        </span>
+      );
+
+      // スペースの処理（最後の単語以外）
+      if (wordIndex < words.length - 1) {
+        let spaceClassName = 'inline-block w-4 h-1 mx-1 rounded ';
+
+        if (jamoIndex < inputJamo.length) {
+          if (inputJamo[jamoIndex] === ' ') {
+            spaceClassName += 'bg-green-500';
+          } else {
+            spaceClassName += 'bg-pink-400';
+          }
+        } else {
+          spaceClassName += 'bg-gray-300';
+        }
+
+        jamoIndex++;
+
+        elements.push(
+          <span key={`space-${wordIndex}`} className={spaceClassName}></span>
+        );
+      }
+    });
+
+    return (
+      <div className="text-3xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-wide flex justify-center items-center flex-wrap">
+        {elements}
       </div>
     );
   };
@@ -179,7 +214,7 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
   const progress = ((currentIndex + 1) / examples.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 md:p-6 lg:p-8">
       <div className="max-w-4xl w-full">
         {/* プログレスバー */}
         <div className="mb-8">
@@ -199,31 +234,41 @@ export const TypingPractice = ({ verb, onComplete }: TypingPracticeProps) => {
 
         {/* 日本語の意味 */}
         <div className="text-center mb-8">
-          <p className="text-2xl text-gray-700">{currentExample.meaning}</p>
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-700">{currentExample.meaning}</p>
         </div>
 
         {/* タイピングテキスト */}
         {renderText()}
 
+        {/* 全文再生ボタン */}
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={playFullText}
+            disabled={isPlayingFullText}
+            className={`p-2 rounded-md transition-colors flex items-center justify-center ${
+              isPlayingFullText
+                ? 'bg-yellow-100 text-yellow-600 cursor-not-allowed'
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-600 cursor-pointer'
+            }`}
+            title="全文を読み上げ"
+          >
+            <Volume2 className="w-4 h-4" />
+          </button>
+        </div>
+
         {/* 入力フィールド */}
-        <div className="mt-8">
+        <div className="mt-4 flex justify-center">
           <input
             ref={inputRef}
             type="text"
             value={userInput}
             onChange={handleInputChange}
-            className="w-full max-w-2xl px-4 py-3 text-2xl text-center border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full max-w-2xl px-3 py-2 md:px-4 md:py-3 text-lg md:text-xl lg:text-2xl text-center border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             placeholder="ここに入力..."
             autoComplete="off"
             autoFocus
           />
-        </div>
-
-        {/* 進捗表示 */}
-        <div className="mt-4 text-center text-gray-500">
-          <p className="text-sm">
-            {inputToJamo(userInput).length} / {targetJamo.length} 字母
-          </p>
         </div>
       </div>
     </div>
