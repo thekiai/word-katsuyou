@@ -340,13 +340,13 @@ function App() {
           })}
         </div>
 
-        {/* Button Section */}
-        <div className="mb-4 sm:mb-6">
+        {/* Next Problem Link */}
+        <div className="mb-4 sm:mb-6 text-center">
           <button
             onClick={handleNext}
-            className="w-full py-3 bg-gray-500 hover:bg-gray-600 rounded-lg font-medium transition-colors text-white"
+            className="text-gray-600 hover:text-gray-800 underline cursor-pointer font-medium transition-colors"
           >
-            次の問題へ
+            &gt;&gt;次の問題へ（ランダム選択）
           </button>
         </div>
       </div>
