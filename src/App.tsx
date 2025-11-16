@@ -85,15 +85,11 @@ function App() {
       ? currentVerb.base.trim()
       : currentVerb[key].form.trim();
 
-    // スペースを除去して比較
-    const normalizedUserAnswer = userAnswer.replace(/\s/g, '');
-    const normalizedCorrectAnswer = correctAnswer.replace(/\s/g, '');
-
     const result: AnswerResult = {
       key,
       userAnswer,
       correctAnswer,
-      isCorrect: normalizedUserAnswer === normalizedCorrectAnswer,
+      isCorrect: userAnswer === correctAnswer,
     };
 
     setResults((prev) => ({
@@ -123,15 +119,11 @@ function App() {
         ? currentVerb.base.trim()
         : currentVerb[field.key].form.trim();
 
-      // スペースを除去して比較
-      const normalizedUserAnswer = userAnswer.replace(/\s/g, '');
-      const normalizedCorrectAnswer = correctAnswer.replace(/\s/g, '');
-
       newResults[field.key] = {
         key: field.key,
         userAnswer,
         correctAnswer,
-        isCorrect: normalizedUserAnswer === normalizedCorrectAnswer,
+        isCorrect: userAnswer === correctAnswer,
       };
     });
 
@@ -227,7 +219,7 @@ function App() {
             onClick={handleGradeAll}
             className="flex-1 py-3 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700"
           >
-            全て採点する
+            全ての答えを確認する
           </button>
           <button
             onClick={handleNext}

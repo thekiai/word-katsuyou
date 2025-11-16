@@ -1,6 +1,7 @@
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, X } from 'lucide-react';
 import { SpeakButton } from './SpeakButton';
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
+import { useEffect } from 'react';
 
 type InputRowProps = {
   label: string;
@@ -37,6 +38,22 @@ export function InputRow({
     }
   };
 
+  // 自動採点: 正解が入力されたら自動的に採点（不正解後の修正も対応）
+  useEffect(() => {
+    if (onGrade) {
+      const normalizedUserAnswer = value.trim();
+      const normalizedCorrectAnswer = correctAnswer.trim();
+
+      // 正解が入力されたら自動採点
+      if (normalizedUserAnswer === normalizedCorrectAnswer && normalizedUserAnswer !== '') {
+        // まだ採点されていないか、不正解の場合のみ再採点
+        if (!showResult || !isCorrect) {
+          onGrade();
+        }
+      }
+    }
+  }, [value, correctAnswer, onGrade, showResult, isCorrect]);
+
   const isAnswerSpeaking = isSpeaking && currentText === correctAnswer;
   const isExampleSpeaking = isSpeaking && currentText === exampleKo;
 
@@ -59,16 +76,31 @@ export function InputRow({
             {correctAnswer}
           </span>
         )}
+        {showResult && isCorrect && (
+          <CheckCircle className="w-5 h-5 text-green-600" />
+        )}
       </div>
 
       <div className="flex items-center gap-2 mb-2">
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="flex-1 min-w-0 px-2 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="入力"
-        />
+        <div className="relative flex-1 min-w-0">
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            disabled={showResult && isCorrect}
+            className="w-full px-2 py-2 pr-8 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+            placeholder="入力"
+          />
+          {value && !showResult && (
+            <button
+              type="button"
+              onClick={() => onChange('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
         {showResult && (
           <SpeakButton onClick={handleSpeakClick} isSpeaking={isAnswerSpeaking} />
         )}
@@ -78,13 +110,8 @@ export function InputRow({
             onClick={onGrade}
             className="px-2 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap bg-gray-600 hover:bg-gray-700 text-white flex-shrink-0"
           >
-            採点
+            答え
           </button>
-        )}
-        {showResult && isCorrect && (
-          <div className="flex-shrink-0">
-            <CheckCircle className="w-5 h-5 text-green-600" />
-          </div>
         )}
       </div>
 
