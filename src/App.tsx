@@ -29,6 +29,7 @@ const getCompletedVerbs = (): string[] => {
 
     // 日付が変わっていたらリセット
     if (parsed.date !== today) {
+      localStorage.removeItem(COMPLETED_VERBS_KEY); // 古いデータを削除
       return [];
     }
 
@@ -289,7 +290,7 @@ function App() {
                 <option value="random">🎲 ランダム（全動詞）</option>
                 {verbs.map((verb) => (
                   <option key={verb.base} value={verb.base}>
-                    {verb.meaningJa}
+                    {completedVerbs.includes(verb.base) ? '✓ ' : ''}{verb.meaningJa}
                   </option>
                 ))}
               </select>
@@ -359,7 +360,7 @@ function App() {
               >
                 {verbs.map((verb) => (
                   <option key={verb.base} value={verb.base}>
-                    {verb.meaningJa}
+                    {completedVerbs.includes(verb.base) ? '✓ ' : ''}{verb.meaningJa}
                   </option>
                 ))}
               </select>
