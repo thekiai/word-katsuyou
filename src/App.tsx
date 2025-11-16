@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { InputRow } from './components/InputRow';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
@@ -6,6 +6,18 @@ import { CONJUGATION_FIELDS } from './constants';
 import './App.css';
 
 function App() {
+  const inputRefs = useRef<Record<ConjugationType, HTMLInputElement | null>>({
+    base: null,
+    present: null,
+    past: null,
+    future: null,
+    go: null,
+    seo: null,
+    negative_an: null,
+    negative_jian: null,
+    possible: null,
+  });
+
   const [verbs, setVerbs] = useState<VerbEntry[]>([]);
   const [currentVerb, setCurrentVerb] = useState<VerbEntry | null>(null);
   const [loading, setLoading] = useState(true);
@@ -137,6 +149,17 @@ function App() {
     }
   };
 
+  const focusNextField = (currentKey: ConjugationType) => {
+    const currentIndex = CONJUGATION_FIELDS.findIndex((f) => f.key === currentKey);
+    if (currentIndex < CONJUGATION_FIELDS.length - 1) {
+      const nextKey = CONJUGATION_FIELDS[currentIndex + 1].key;
+      const nextInput = inputRefs.current[nextKey];
+      if (nextInput) {
+        nextInput.focus();
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 text-gray-900">
@@ -199,6 +222,7 @@ function App() {
             return (
               <InputRow
                 key={field.key}
+                ref={(el) => (inputRefs.current[field.key] = el)}
                 label={label}
                 value={answers[field.key]}
                 onChange={(value) => handleAnswerChange(field.key, value)}
@@ -208,6 +232,7 @@ function App() {
                 showResult={result !== null}
                 isCorrect={result?.isCorrect ?? false}
                 onGrade={() => handleGradeField(field.key)}
+                onCorrect={() => focusNextField(field.key)}
               />
             );
           })}

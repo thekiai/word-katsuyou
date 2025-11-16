@@ -1,7 +1,7 @@
 import { CheckCircle, X } from 'lucide-react';
 import { SpeakButton } from './SpeakButton';
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
-import { useEffect } from 'react';
+import { useEffect, forwardRef } from 'react';
 
 type InputRowProps = {
   label: string;
@@ -13,9 +13,10 @@ type InputRowProps = {
   showResult?: boolean;
   isCorrect?: boolean;
   onGrade?: () => void;
+  onCorrect?: () => void;
 };
 
-export function InputRow({
+export const InputRow = forwardRef<HTMLInputElement, InputRowProps>(({
   label,
   value,
   onChange,
@@ -25,7 +26,8 @@ export function InputRow({
   showResult = false,
   isCorrect = false,
   onGrade,
-}: InputRowProps) {
+  onCorrect,
+}, ref) => {
   const { speak, isSpeaking, currentText } = useSpeechSynthesis();
 
   const handleSpeakClick = () => {
@@ -49,10 +51,17 @@ export function InputRow({
         // まだ採点されていないか、不正解の場合のみ再採点
         if (!showResult || !isCorrect) {
           onGrade();
+          // 正解になったら次の入力にフォーカス
+          if (onCorrect) {
+            // 少し遅延させてから次にフォーカス（状態更新を待つ）
+            setTimeout(() => {
+              onCorrect();
+            }, 100);
+          }
         }
       }
     }
-  }, [value, correctAnswer, onGrade, showResult, isCorrect]);
+  }, [value, correctAnswer, onGrade, showResult, isCorrect, onCorrect]);
 
   const isAnswerSpeaking = isSpeaking && currentText === correctAnswer;
   const isExampleSpeaking = isSpeaking && currentText === exampleKo;
@@ -84,6 +93,7 @@ export function InputRow({
       <div className="flex items-center gap-2 mb-2">
         <div className="relative flex-1 min-w-0">
           <input
+            ref={ref}
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
@@ -131,4 +141,6 @@ export function InputRow({
       )}
     </div>
   );
-}
+});
+
+InputRow.displayName = 'InputRow';
