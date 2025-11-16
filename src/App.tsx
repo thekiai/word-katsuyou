@@ -137,37 +137,6 @@ function App() {
     }));
   };
 
-  const handleGradeAll = () => {
-    if (!currentVerb) return;
-
-    const newResults: Record<ConjugationType, AnswerResult | null> = {
-      base: null,
-      present: null,
-      past: null,
-      future: null,
-      go: null,
-      seo: null,
-      negative_an: null,
-      negative_jian: null,
-      possible: null,
-    };
-
-    CONJUGATION_FIELDS.forEach((field) => {
-      const userAnswer = answers[field.key].trim();
-      const correctAnswer = field.key === 'base'
-        ? currentVerb.base.trim()
-        : currentVerb[field.key].form.trim();
-
-      newResults[field.key] = {
-        key: field.key,
-        userAnswer,
-        correctAnswer,
-        isCorrect: userAnswer === correctAnswer,
-      };
-    });
-
-    setResults(newResults);
-  };
 
   const handleNext = () => {
     if (verbs.length > 0) {
@@ -272,23 +241,63 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
-          <div className="flex items-center justify-between mb-3 sm:mb-4">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-              韓国語活用トレーニング
-            </h1>
+      <div className="sticky top-0 bg-white shadow-sm border-b border-gray-200 z-20">
+        <div className="max-w-md mx-auto px-4 py-3">
+          <div className="flex items-center justify-between gap-4 mb-3">
+            {/* 動詞選択 */}
+            <div className="flex-1">
+              <select
+                value={currentVerb.base}
+                onChange={(e) => {
+                  const selectedVerb = verbs.find(v => v.base === e.target.value);
+                  if (selectedVerb) {
+                    setCurrentVerb(selectedVerb);
+                    setAnswers({
+                      base: '',
+                      present: '',
+                      past: '',
+                      future: '',
+                      go: '',
+                      seo: '',
+                      negative_an: '',
+                      negative_jian: '',
+                      possible: '',
+                    });
+                    setResults({
+                      base: null,
+                      present: null,
+                      past: null,
+                      future: null,
+                      go: null,
+                      seo: null,
+                      negative_an: null,
+                      negative_jian: null,
+                      possible: null,
+                    });
+                  }
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+              >
+                {verbs.map((verb) => (
+                  <option key={verb.base} value={verb.base}>
+                    {verb.meaningJa} ({verb.base})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* モード切り替えボタン */}
             <button
               onClick={() => setMode('typing')}
-              className="px-3 py-1.5 text-sm bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white"
+              className="px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
             >
               タイピング練習
             </button>
           </div>
 
           {/* Question Section */}
-          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200">
-            <p className="text-gray-900 text-center text-2xl sm:text-3xl font-bold">
+          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+            <p className="text-gray-900 text-center text-xl sm:text-2xl font-bold">
               {currentVerb.meaningJa}
             </p>
           </div>
@@ -296,7 +305,7 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
+      <div className="max-w-md mx-auto px-4 py-4 sm:py-6 mt-2">
         {/* Input Section */}
         <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
           {CONJUGATION_FIELDS.map((field) => {
@@ -332,16 +341,10 @@ function App() {
         </div>
 
         {/* Button Section */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-4 sm:mb-6">
-          <button
-            onClick={handleGradeAll}
-            className="flex-1 py-3 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700"
-          >
-            全ての答えを確認する
-          </button>
+        <div className="mb-4 sm:mb-6">
           <button
             onClick={handleNext}
-            className="flex-1 py-3 bg-gray-500 hover:bg-gray-600 rounded-lg font-medium transition-colors text-white"
+            className="w-full py-3 bg-gray-500 hover:bg-gray-600 rounded-lg font-medium transition-colors text-white"
           >
             次の問題へ
           </button>
