@@ -1,10 +1,55 @@
 import { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import { InputRow } from './components/InputRow';
 import { TypingPractice } from './components/TypingPractice';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
 import './App.css';
+
+// 完了した動詞を管理する関数
+const COMPLETED_VERBS_KEY = 'completedVerbs';
+
+type CompletedData = {
+  date: string;
+  verbs: string[];
+};
+
+const getTodayString = () => {
+  return new Date().toISOString().split('T')[0];
+};
+
+const getCompletedVerbs = (): string[] => {
+  try {
+    const data = localStorage.getItem(COMPLETED_VERBS_KEY);
+    if (!data) return [];
+
+    const parsed: CompletedData = JSON.parse(data);
+    const today = getTodayString();
+
+    // 日付が変わっていたらリセット
+    if (parsed.date !== today) {
+      return [];
+    }
+
+    return parsed.verbs;
+  } catch {
+    return [];
+  }
+};
+
+const addCompletedVerb = (verbBase: string) => {
+  const today = getTodayString();
+  const currentCompleted = getCompletedVerbs();
+
+  if (!currentCompleted.includes(verbBase)) {
+    const newData: CompletedData = {
+      date: today,
+      verbs: [...currentCompleted, verbBase],
+    };
+    localStorage.setItem(COMPLETED_VERBS_KEY, JSON.stringify(newData));
+  }
+};
 
 type Mode = 'conjugation' | 'typing';
 
@@ -27,6 +72,7 @@ function App() {
   const [verbs, setVerbs] = useState<VerbEntry[]>([]);
   const [currentVerb, setCurrentVerb] = useState<VerbEntry | null>(null);
   const [loading, setLoading] = useState(true);
+  const [completedVerbs, setCompletedVerbs] = useState<string[]>([]);
   const [answers, setAnswers] = useState<Record<ConjugationType, string>>({
     base: '',
     present: '',
@@ -59,7 +105,40 @@ function App() {
       }
       setLoading(false);
     });
+    // Load completed verbs from localStorage
+    setCompletedVerbs(getCompletedVerbs());
   }, []);
+
+  // Check for all correct answers
+  useEffect(() => {
+    if (!currentVerb) return;
+
+    // Check if all fields have been answered and are correct
+    const allFieldsAnswered = CONJUGATION_FIELDS.every((field) => {
+      const result = results[field.key];
+      return result !== null;
+    });
+
+    if (!allFieldsAnswered) return;
+
+    const allCorrect = CONJUGATION_FIELDS.every((field) => {
+      const result = results[field.key];
+      return result?.isCorrect === true;
+    });
+
+    if (allCorrect && !completedVerbs.includes(currentVerb.base)) {
+      // Celebrate with confetti!
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      // Add to completed verbs
+      addCompletedVerb(currentVerb.base);
+      setCompletedVerbs(getCompletedVerbs());
+    }
+  }, [results, currentVerb, completedVerbs]);
 
   const selectRandomVerb = (verbList: VerbEntry[]) => {
     const randomIndex = Math.floor(Math.random() * verbList.length);
