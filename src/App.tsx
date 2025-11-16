@@ -1,11 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { InputRow } from './components/InputRow';
+import { TypingPractice } from './components/TypingPractice';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
 import './App.css';
 
+type Mode = 'conjugation' | 'typing';
+
 function App() {
+  const [mode, setMode] = useState<Mode>('conjugation');
+
   const inputRefs = useRef<Record<ConjugationType, HTMLInputElement | null>>({
     base: null,
     present: null,
@@ -207,14 +212,45 @@ function App() {
     );
   }
 
+  // タイピング練習モード
+  if (mode === 'typing') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* モード切り替えボタン */}
+        <div className="absolute top-4 right-4 z-10">
+          <button
+            onClick={() => setMode('conjugation')}
+            className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 shadow-sm"
+          >
+            活用トレーニングへ
+          </button>
+        </div>
+        <TypingPractice
+          verb={currentVerb}
+          onComplete={() => {
+            handleNext();
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
-          <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-800 mb-3 sm:mb-4">
-            韓国語活用トレーニング
-          </h1>
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+              韓国語活用トレーニング
+            </h1>
+            <button
+              onClick={() => setMode('typing')}
+              className="px-3 py-1.5 text-sm bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white"
+            >
+              タイピング練習
+            </button>
+          </div>
 
           {/* Question Section */}
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-gray-200">
