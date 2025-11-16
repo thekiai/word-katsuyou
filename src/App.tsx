@@ -62,6 +62,39 @@ const getTodayCompletedCount = (): number => {
   }).reduce((sum, verb) => sum + verb.count, 0);
 };
 
+const getPracticeDates = (): Set<string> => {
+  const progress = getProgress();
+  const dates = new Set<string>();
+
+  Object.values(progress.verbs).forEach(verb => {
+    if (verb.lastCompleted) {
+      const date = verb.lastCompleted.split('T')[0];
+      dates.add(date);
+    }
+  });
+
+  return dates;
+};
+
+const getStreakDays = (): number => {
+  const dates = getPracticeDates();
+  let streak = 0;
+  let currentDate = new Date();
+
+  // 今日から遡って連続日数をカウント
+  while (true) {
+    const dateString = currentDate.toISOString().split('T')[0];
+    if (dates.has(dateString)) {
+      streak++;
+      currentDate.setDate(currentDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+};
+
 type Mode = 'home' | 'conjugation' | 'typing';
 
 function App() {
@@ -273,6 +306,8 @@ function App() {
   if (mode === 'home') {
     const totalCount = getTotalCompletedCount();
     const todayCount = getTodayCompletedCount();
+    const streakDays = getStreakDays();
+    const practiceDates = getPracticeDates();
 
     // 動詞を完了回数でソート
     const sortedVerbs = [...verbs].sort((a, b) => {
@@ -291,16 +326,68 @@ function App() {
             </h1>
 
             {/* 統計情報 */}
+            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 mb-4">
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div>
+                  <p className="text-gray-600 text-xs mb-1">総練習</p>
+                  <p className="text-lg font-bold text-gray-800">{totalCount}回</p>
+                </div>
+                <div>
+                  <p className="text-gray-600 text-xs mb-1">今日</p>
+                  <p className="text-lg font-bold text-gray-800">{todayCount}回</p>
+                </div>
+                <div>
+                  <p className="text-gray-600 text-xs mb-1">連続</p>
+                  <p className="text-lg font-bold text-green-600">{streakDays}日</p>
+                </div>
+              </div>
+            </div>
+
+            {/* カレンダー */}
             <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div>
-                  <p className="text-gray-600 text-xs mb-1">総練習回数</p>
-                  <p className="text-xl font-bold text-gray-800">{totalCount}回</p>
-                </div>
-                <div>
-                  <p className="text-gray-600 text-xs mb-1">今日の練習</p>
-                  <p className="text-xl font-bold text-gray-800">{todayCount}回</p>
-                </div>
+              <p className="text-center text-sm text-gray-600 mb-3">
+                {new Date().getFullYear()}年 {new Date().getMonth() + 1}月
+              </p>
+              <div className="grid grid-cols-7 gap-1">
+                {['日', '月', '火', '水', '木', '金', '土'].map((day) => (
+                  <div key={day} className="text-center text-xs text-gray-500 py-1">
+                    {day}
+                  </div>
+                ))}
+                {(() => {
+                  const now = new Date();
+                  const year = now.getFullYear();
+                  const month = now.getMonth();
+                  const firstDay = new Date(year, month, 1).getDay();
+                  const daysInMonth = new Date(year, month + 1, 0).getDate();
+                  const cells = [];
+
+                  // 空白セル
+                  for (let i = 0; i < firstDay; i++) {
+                    cells.push(<div key={`empty-${i}`} />);
+                  }
+
+                  // 日付セル
+                  for (let day = 1; day <= daysInMonth; day++) {
+                    const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const isPracticed = practiceDates.has(dateString);
+
+                    cells.push(
+                      <div
+                        key={day}
+                        className={`text-center text-sm py-2 rounded ${
+                          isPracticed
+                            ? 'bg-green-400 text-white font-semibold'
+                            : 'text-gray-600'
+                        }`}
+                      >
+                        {day}
+                      </div>
+                    );
+                  }
+
+                  return cells;
+                })()}
               </div>
             </div>
           </div>
