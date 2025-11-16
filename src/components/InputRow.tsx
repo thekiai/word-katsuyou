@@ -86,14 +86,28 @@ export const InputRow = forwardRef<HTMLInputElement, InputRowProps>(({
         <label className="font-semibold text-base text-gray-700">
           {label}
         </label>
-        {showResult && (showAnswerOnly || !isCorrect) && (
-          <span className="text-base text-gray-600 font-semibold">
-            {correctAnswer}
-          </span>
-        )}
-        {showResult && !showAnswerOnly && isCorrect && (
-          <CheckCircle className="w-5 h-5 text-green-600" />
-        )}
+        <div className="flex items-center gap-2">
+          {showResult && (showAnswerOnly || !isCorrect) && (
+            <>
+              <span className="text-base text-gray-600 font-semibold">
+                {correctAnswer}
+              </span>
+              <SpeakButton onClick={handleSpeakClick} isSpeaking={isAnswerSpeaking} />
+            </>
+          )}
+          {showResult && !showAnswerOnly && isCorrect && (
+            <CheckCircle className="w-5 h-5 text-green-600" />
+          )}
+          {onShowAnswer && !showResult && (
+            <button
+              type="button"
+              onClick={onShowAnswer}
+              className="text-xs text-gray-400 hover:text-gray-600 underline underline-offset-2 transition-colors whitespace-nowrap"
+            >
+              答え
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-2 mb-2">
@@ -117,18 +131,6 @@ export const InputRow = forwardRef<HTMLInputElement, InputRowProps>(({
             </button>
           )}
         </div>
-        {showResult && (
-          <SpeakButton onClick={handleSpeakClick} isSpeaking={isAnswerSpeaking} />
-        )}
-        {onShowAnswer && !showResult && (
-          <button
-            type="button"
-            onClick={onShowAnswer}
-            className="text-xs text-gray-400 hover:text-gray-600 underline underline-offset-2 transition-colors whitespace-nowrap flex-shrink-0"
-          >
-            答えを見る
-          </button>
-        )}
       </div>
 
       {exampleJa && (
