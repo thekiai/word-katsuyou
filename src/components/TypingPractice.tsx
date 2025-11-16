@@ -46,7 +46,6 @@ export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps)
   const [isPlayingFullText, setIsPlayingFullText] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const isFirstMount = useRef(true);
   const { speak, isSpeaking, currentText } = useSpeechSynthesis();
 
   const currentExample = examples[currentIndex];
@@ -350,12 +349,6 @@ export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps)
               // フォーカス時のスクロールを防止
               const scrollY = window.scrollY;
               setTimeout(() => window.scrollTo(0, scrollY), 0);
-
-              // 初回マウント時のみ音声を再生（モバイル対応）
-              if (isFirstMount.current) {
-                isFirstMount.current = false;
-                speak(targetText);
-              }
             }}
             className="w-full max-w-2xl px-3 py-2 md:px-4 md:py-3 text-lg md:text-xl lg:text-2xl text-center border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             placeholder="ここに入力..."
