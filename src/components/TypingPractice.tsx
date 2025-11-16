@@ -94,8 +94,14 @@ export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps)
   useEffect(() => {
     setUserInput(''); // 入力をクリア
 
+    // 現在のスクロール位置を保存
+    const scrollY = window.scrollY;
+
     // フォーカス時にスクロールしないようにする
     inputRef.current?.focus({ preventScroll: true });
+
+    // スクロール位置を強制的に戻す
+    window.scrollTo(0, scrollY);
 
     // 少し遅延させて、Strict Modeの2重実行を回避
     const timer = setTimeout(() => {
@@ -339,6 +345,11 @@ export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps)
             type="text"
             value={userInput}
             onChange={handleInputChange}
+            onFocus={() => {
+              // フォーカス時のスクロールを防止
+              const scrollY = window.scrollY;
+              setTimeout(() => window.scrollTo(0, scrollY), 0);
+            }}
             className="w-full max-w-2xl px-3 py-2 md:px-4 md:py-3 text-lg md:text-xl lg:text-2xl text-center border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             placeholder="ここに入力..."
             autoComplete="off"
