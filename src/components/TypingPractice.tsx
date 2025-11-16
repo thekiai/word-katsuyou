@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Hangul from 'hangul-js';
 import { Volume2, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -12,32 +12,34 @@ type TypingPracticeProps = {
 };
 
 export const TypingPractice = ({ verb, verbs, onComplete }: TypingPracticeProps) => {
-  // 全ての例文を取得
-  const examples = verbs
-    ? // ランダムモード: 全動詞の全例文をシャッフル
-      verbs.flatMap((v) => [
-        { text: v.present.example, label: `現在形（${v.meaningJa}）`, meaning: v.present.exampleJa, verb: v.base },
-        { text: v.past.example, label: `過去形（${v.meaningJa}）`, meaning: v.past.exampleJa, verb: v.base },
-        { text: v.future.example, label: `未来形（${v.meaningJa}）`, meaning: v.future.exampleJa, verb: v.base },
-        { text: v.go.example, label: `連用（고）（${v.meaningJa}）`, meaning: v.go.exampleJa, verb: v.base },
-        { text: v.seo.example, label: `連用（서）（${v.meaningJa}）`, meaning: v.seo.exampleJa, verb: v.base },
-        { text: v.negative_an.example, label: `否定（안）（${v.meaningJa}）`, meaning: v.negative_an.exampleJa, verb: v.base },
-        { text: v.negative_jian.example, label: `否定（지 않아요）（${v.meaningJa}）`, meaning: v.negative_jian.exampleJa, verb: v.base },
-        { text: v.possible.example, label: `可能（${v.meaningJa}）`, meaning: v.possible.exampleJa, verb: v.base },
-      ]).sort(() => Math.random() - 0.5)
-    : // 通常モード: 1つの動詞の例文を順番に
-      verb
-      ? [
-          { text: verb.present.example, label: '現在形', meaning: verb.present.exampleJa },
-          { text: verb.past.example, label: '過去形', meaning: verb.past.exampleJa },
-          { text: verb.future.example, label: '未来形', meaning: verb.future.exampleJa },
-          { text: verb.go.example, label: '連用（고）', meaning: verb.go.exampleJa },
-          { text: verb.seo.example, label: '連用（서）', meaning: verb.seo.exampleJa },
-          { text: verb.negative_an.example, label: '否定（안）', meaning: verb.negative_an.exampleJa },
-          { text: verb.negative_jian.example, label: '否定（지 않아요）', meaning: verb.negative_jian.exampleJa },
-          { text: verb.possible.example, label: '可能', meaning: verb.possible.exampleJa },
-        ]
-      : [];
+  // 全ての例文を取得（useMemoで再レンダリング時に再シャッフルされないようにする）
+  const examples = useMemo(() => {
+    return verbs
+      ? // ランダムモード: 全動詞の全例文をシャッフル
+        verbs.flatMap((v) => [
+          { text: v.present.example, label: `現在形（${v.meaningJa}）`, meaning: v.present.exampleJa, verb: v.base },
+          { text: v.past.example, label: `過去形（${v.meaningJa}）`, meaning: v.past.exampleJa, verb: v.base },
+          { text: v.future.example, label: `未来形（${v.meaningJa}）`, meaning: v.future.exampleJa, verb: v.base },
+          { text: v.go.example, label: `連用（고）（${v.meaningJa}）`, meaning: v.go.exampleJa, verb: v.base },
+          { text: v.seo.example, label: `連用（서）（${v.meaningJa}）`, meaning: v.seo.exampleJa, verb: v.base },
+          { text: v.negative_an.example, label: `否定（안）（${v.meaningJa}）`, meaning: v.negative_an.exampleJa, verb: v.base },
+          { text: v.negative_jian.example, label: `否定（지 않아요）（${v.meaningJa}）`, meaning: v.negative_jian.exampleJa, verb: v.base },
+          { text: v.possible.example, label: `可能（${v.meaningJa}）`, meaning: v.possible.exampleJa, verb: v.base },
+        ]).sort(() => Math.random() - 0.5)
+      : // 通常モード: 1つの動詞の例文を順番に
+        verb
+        ? [
+            { text: verb.present.example, label: '現在形', meaning: verb.present.exampleJa },
+            { text: verb.past.example, label: '過去形', meaning: verb.past.exampleJa },
+            { text: verb.future.example, label: '未来形', meaning: verb.future.exampleJa },
+            { text: verb.go.example, label: '連用（고）', meaning: verb.go.exampleJa },
+            { text: verb.seo.example, label: '連用（서）', meaning: verb.seo.exampleJa },
+            { text: verb.negative_an.example, label: '否定（안）', meaning: verb.negative_an.exampleJa },
+            { text: verb.negative_jian.example, label: '否定（지 않아요）', meaning: verb.negative_jian.exampleJa },
+            { text: verb.possible.example, label: '可能', meaning: verb.possible.exampleJa },
+          ]
+        : [];
+  }, [verb, verbs]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
