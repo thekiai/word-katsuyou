@@ -55,7 +55,11 @@ export const ActivityGraph = ({ practiceDates }: ActivityGraphProps) => {
 
   // 日付が練習日かどうかを判定
   const isPracticeDate = (date: Date): boolean => {
-    const dateString = date.toISOString().split('T')[0];
+    // ローカルタイムゾーンで日付文字列を生成
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
     return practiceDates.has(dateString);
   };
 
@@ -134,10 +138,10 @@ export const ActivityGraph = ({ practiceDates }: ActivityGraphProps) => {
                         <img
                           src={hanamaruImg}
                           alt="はなまる"
-                          className="absolute inset-0 w-full h-full object-contain opacity-70"
+                          className="absolute inset-0 w-full h-full object-contain opacity-70 z-10"
                         />
                       )}
-                      <span className="relative z-10">{date.getDate()}</span>
+                      <span className="relative">{date.getDate()}</span>
                     </div>
                   );
                 })}

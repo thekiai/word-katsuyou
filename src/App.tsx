@@ -66,7 +66,13 @@ const getTodayCompletedCount = (): number => {
 
   return Object.values(progress.verbs).filter(verb => {
     if (!verb.lastCompleted) return false;
-    return verb.lastCompleted === today;
+    // 古い形式（ISO文字列）と新しい形式（YYYY-MM-DD）の両方に対応
+    let dateString = verb.lastCompleted;
+    if (dateString.includes('T')) {
+      const date = new Date(dateString);
+      dateString = getLocalDateString(date);
+    }
+    return dateString === today;
   }).reduce((sum, verb) => sum + verb.count, 0);
 };
 
@@ -76,7 +82,14 @@ const getPracticeDates = (): Set<string> => {
 
   Object.values(progress.verbs).forEach(verb => {
     if (verb.lastCompleted) {
-      dates.add(verb.lastCompleted);
+      // 古い形式（ISO文字列）と新しい形式（YYYY-MM-DD）の両方に対応
+      let dateString = verb.lastCompleted;
+      if (dateString.includes('T')) {
+        // 古い形式の場合、ローカル日付に変換
+        const date = new Date(dateString);
+        dateString = getLocalDateString(date);
+      }
+      dates.add(dateString);
     }
   });
 
