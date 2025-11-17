@@ -74,7 +74,10 @@ export const ActivityGraph = ({ practiceDates }: ActivityGraphProps) => {
 
   // 未来の日付かどうか
   const isFuture = (date: Date): boolean => {
-    return date > today;
+    // 時刻を無視して日付だけで比較
+    const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    return dateOnly > todayOnly;
   };
 
   const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
