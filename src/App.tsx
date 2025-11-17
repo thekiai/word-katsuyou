@@ -310,21 +310,6 @@ function App() {
     const streakDays = getStreakDays();
     const practiceDates = getPracticeDates();
 
-    // サンプルデータを追加（デモ用）
-    if (practiceDates.size === 0) {
-      const today = new Date();
-      // 過去3週間分のランダムな日付を追加
-      for (let i = 0; i < 21; i++) {
-        // 70%の確率で練習した日を生成
-        if (Math.random() > 0.3) {
-          const date = new Date(today);
-          date.setDate(today.getDate() - i);
-          const dateString = date.toISOString().split('T')[0];
-          practiceDates.add(dateString);
-        }
-      }
-    }
-
     // 動詞を完了回数でソート
     const sortedVerbs = [...verbs].sort((a, b) => {
       const countA = getVerbCount(a.base);
