@@ -35,13 +35,21 @@ const getVerbCount = (verbBase: string): number => {
   return progress.verbs[verbBase]?.count || 0;
 };
 
+// ローカルタイムゾーンで日付文字列を取得
+const getLocalDateString = (date: Date = new Date()): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const incrementVerbCount = (verbBase: string) => {
   const progress = getProgress();
   const currentCount = progress.verbs[verbBase]?.count || 0;
 
   progress.verbs[verbBase] = {
     count: currentCount + 1,
-    lastCompleted: new Date().toISOString(),
+    lastCompleted: getLocalDateString(),
   };
 
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
@@ -54,12 +62,11 @@ const getTotalCompletedCount = (): number => {
 
 const getTodayCompletedCount = (): number => {
   const progress = getProgress();
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalDateString();
 
   return Object.values(progress.verbs).filter(verb => {
     if (!verb.lastCompleted) return false;
-    const completedDate = verb.lastCompleted.split('T')[0];
-    return completedDate === today;
+    return verb.lastCompleted === today;
   }).reduce((sum, verb) => sum + verb.count, 0);
 };
 
@@ -69,8 +76,7 @@ const getPracticeDates = (): Set<string> => {
 
   Object.values(progress.verbs).forEach(verb => {
     if (verb.lastCompleted) {
-      const date = verb.lastCompleted.split('T')[0];
-      dates.add(date);
+      dates.add(verb.lastCompleted);
     }
   });
 
@@ -84,7 +90,7 @@ const getStreakDays = (): number => {
 
   // 今日から遡って連続日数をカウント
   while (true) {
-    const dateString = currentDate.toISOString().split('T')[0];
+    const dateString = getLocalDateString(currentDate);
     if (dates.has(dateString)) {
       streak++;
       currentDate.setDate(currentDate.getDate() - 1);
