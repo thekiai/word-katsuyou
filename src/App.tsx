@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { InputRow } from './components/InputRow';
 import { TypingPractice } from './components/TypingPractice';
+import { ActivityGraph } from './components/ActivityGraph';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
@@ -309,6 +310,21 @@ function App() {
     const streakDays = getStreakDays();
     const practiceDates = getPracticeDates();
 
+    // サンプルデータを追加（デモ用）
+    if (practiceDates.size === 0) {
+      const today = new Date();
+      // 過去3週間分のランダムな日付を追加
+      for (let i = 0; i < 21; i++) {
+        // 70%の確率で練習した日を生成
+        if (Math.random() > 0.3) {
+          const date = new Date(today);
+          date.setDate(today.getDate() - i);
+          const dateString = date.toISOString().split('T')[0];
+          practiceDates.add(dateString);
+        }
+      }
+    }
+
     // 動詞を完了回数でソート
     const sortedVerbs = [...verbs].sort((a, b) => {
       const countA = getVerbCount(a.base);
@@ -343,53 +359,8 @@ function App() {
               </div>
             </div>
 
-            {/* カレンダー */}
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-              <p className="text-center text-sm text-gray-600 mb-3">
-                {new Date().getFullYear()}年 {new Date().getMonth() + 1}月
-              </p>
-              <div className="grid grid-cols-7 gap-1">
-                {['日', '月', '火', '水', '木', '金', '土'].map((day) => (
-                  <div key={day} className="text-center text-xs text-gray-500 py-1">
-                    {day}
-                  </div>
-                ))}
-                {(() => {
-                  const now = new Date();
-                  const year = now.getFullYear();
-                  const month = now.getMonth();
-                  const firstDay = new Date(year, month, 1).getDay();
-                  const daysInMonth = new Date(year, month + 1, 0).getDate();
-                  const cells = [];
-
-                  // 空白セル
-                  for (let i = 0; i < firstDay; i++) {
-                    cells.push(<div key={`empty-${i}`} />);
-                  }
-
-                  // 日付セル
-                  for (let day = 1; day <= daysInMonth; day++) {
-                    const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    const isPracticed = practiceDates.has(dateString);
-
-                    cells.push(
-                      <div
-                        key={day}
-                        className={`text-center text-sm py-2 rounded ${
-                          isPracticed
-                            ? 'bg-green-400 text-white font-semibold'
-                            : 'text-gray-600'
-                        }`}
-                      >
-                        {day}
-                      </div>
-                    );
-                  }
-
-                  return cells;
-                })()}
-              </div>
-            </div>
+            {/* 練習の記録 */}
+            <ActivityGraph practiceDates={practiceDates} />
           </div>
         </div>
 
