@@ -239,6 +239,14 @@ function App() {
     }));
   };
 
+  // 韓国語の音声読み上げ
+  const speakKorean = (text: string) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ko-KR';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  };
+
   const handleGradeField = (key: ConjugationType) => {
     if (!currentVerb) return;
 
@@ -253,6 +261,11 @@ function App() {
       correctAnswer,
       isCorrect: userAnswer === correctAnswer,
     };
+
+    // 正解時に韓国語音声を再生
+    if (result.isCorrect) {
+      speakKorean(correctAnswer);
+    }
 
     setResults((prev) => ({
       ...prev,
