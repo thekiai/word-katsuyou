@@ -181,9 +181,9 @@ function App() {
     }
   }, [results, currentVerb]);
 
-  const selectRandomVerb = (verbList: VerbEntry[]) => {
-    const randomIndex = Math.floor(Math.random() * verbList.length);
-    setCurrentVerb(verbList[randomIndex]);
+  // 動詞を選択してstateをリセット
+  const selectVerb = (verb: VerbEntry) => {
+    setCurrentVerb(verb);
     setAnswers({
       base: '',
       present: '',
@@ -206,6 +206,11 @@ function App() {
       negative_jian: null,
       possible: null,
     });
+  };
+
+  const selectRandomVerb = (verbList: VerbEntry[]) => {
+    const randomIndex = Math.floor(Math.random() * verbList.length);
+    selectVerb(verbList[randomIndex]);
   };
 
   const handleAnswerChange = (key: ConjugationType, value: string) => {
@@ -378,7 +383,7 @@ function App() {
                 <button
                   key={verb.base}
                   onClick={() => {
-                    setCurrentVerb(verb);
+                    selectVerb(verb);
                     setMode('conjugation');
                   }}
                   className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-white hover:shadow-sm transition-colors text-left"
@@ -424,7 +429,7 @@ function App() {
                     setSelectedVerbMode('single');
                     const selectedVerb = verbs.find(v => v.base === e.target.value);
                     if (selectedVerb) {
-                      setCurrentVerb(selectedVerb);
+                      selectVerb(selectedVerb);
                     }
                   }
                 }}
@@ -485,29 +490,7 @@ function App() {
                 onChange={(e) => {
                   const selectedVerb = verbs.find(v => v.base === e.target.value);
                   if (selectedVerb) {
-                    setCurrentVerb(selectedVerb);
-                    setAnswers({
-                      base: '',
-                      present: '',
-                      past: '',
-                      future: '',
-                      go: '',
-                      seo: '',
-                      negative_an: '',
-                      negative_jian: '',
-                      possible: '',
-                    });
-                    setResults({
-                      base: null,
-                      present: null,
-                      past: null,
-                      future: null,
-                      go: null,
-                      seo: null,
-                      negative_an: null,
-                      negative_jian: null,
-                      possible: null,
-                    });
+                    selectVerb(selectedVerb);
                   }
                 }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
