@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import hanamaruImg from '../assets/hanamaru.png';
 
 type ActivityGraphProps = {
   practiceDates: Set<string>; // YYYY-MM-DD形式の日付
@@ -8,12 +9,12 @@ export const ActivityGraph = ({ practiceDates }: ActivityGraphProps) => {
   const today = new Date();
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // 最初の練習日を取得（なければ4週間前から）
+  // 最初の練習日を取得（なければ今週の日曜日から）
   const getStartDate = (): Date => {
     if (practiceDates.size === 0) {
-      const fourWeeksAgo = new Date(today);
-      fourWeeksAgo.setDate(today.getDate() - 28);
-      return fourWeeksAgo;
+      const thisWeekSunday = new Date(today);
+      thisWeekSunday.setDate(today.getDate() - today.getDay());
+      return thisWeekSunday;
     }
 
     const dates = Array.from(practiceDates).map(dateStr => new Date(dateStr));
@@ -131,7 +132,7 @@ export const ActivityGraph = ({ practiceDates }: ActivityGraphProps) => {
                     >
                       {practiced && !future && (
                         <img
-                          src="/hanamaru.png"
+                          src={hanamaruImg}
                           alt="はなまる"
                           className="absolute inset-0 w-full h-full object-contain opacity-70"
                         />
