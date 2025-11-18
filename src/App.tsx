@@ -99,9 +99,10 @@ const getPracticeDates = (): Set<string> => {
 const getStreakDays = (): number => {
   const dates = getPracticeDates();
   let streak = 0;
-  let currentDate = new Date();
+  const currentDate = new Date();
+  // 昨日から遡って連続日数をカウント（今日は含めない）
+  currentDate.setDate(currentDate.getDate() - 1);
 
-  // 今日から遡って連続日数をカウント
   while (true) {
     const dateString = getLocalDateString(currentDate);
     if (dates.has(dateString)) {
@@ -296,8 +297,21 @@ function App() {
 
 
   const handleNext = () => {
-    if (verbs.length > 0) {
-      selectRandomVerb(verbs);
+    if (verbs.length > 0 && currentVerb) {
+      // 練習していない順にソート
+      const sortedVerbs = [...verbs].sort((a, b) => {
+        const countA = getVerbCount(a.base);
+        const countB = getVerbCount(b.base);
+        return countA - countB;
+      });
+
+      // 現在の動詞のインデックスを見つける
+      const currentIndex = sortedVerbs.findIndex(v => v.base === currentVerb.base);
+
+      // 次の動詞を選択（最後の場合は最初に戻る）
+      const nextIndex = (currentIndex + 1) % sortedVerbs.length;
+      selectVerb(sortedVerbs[nextIndex]);
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -347,11 +361,11 @@ function App() {
     const streakDays = getStreakDays();
     const practiceDates = getPracticeDates();
 
-    // 動詞を完了回数でソート
+    // 動詞を完了回数でソート（練習していない順）
     const sortedVerbs = [...verbs].sort((a, b) => {
       const countA = getVerbCount(a.base);
       const countB = getVerbCount(b.base);
-      return countB - countA; // 降順
+      return countA - countB; // 昇順（練習回数が少ない順）
     });
 
     return (
@@ -359,9 +373,17 @@ function App() {
         {/* Header */}
         <div className="bg-white shadow-sm border-b border-gray-200">
           <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-4">
-              韓国語活用トレーニング
-            </h1>
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+                韓国語活用トレーニング
+              </h1>
+              <button
+                onClick={() => setMode('typing')}
+                className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
+              >
+                タイピング練習
+              </button>
+            </div>
 
             {/* 統計情報 */}
             <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 mb-4">
@@ -388,25 +410,6 @@ function App() {
 
         {/* Main Content */}
         <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
-          {/* アクションボタン */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-4 sm:mb-6">
-            <button
-              onClick={() => {
-                selectRandomVerb(verbs);
-                setMode('conjugation');
-              }}
-              className="flex-1 py-3 bg-gray-500 hover:bg-gray-600 rounded-lg font-medium transition-colors text-white"
-            >
-              ランダムに練習
-            </button>
-            <button
-              onClick={() => setMode('typing')}
-              className="flex-1 py-3 bg-gray-500 hover:bg-gray-600 rounded-lg font-medium transition-colors text-white"
-            >
-              タイピング練習
-            </button>
-          </div>
-
           {/* 動詞リスト */}
           <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
             {sortedVerbs.map((verb) => {
@@ -422,7 +425,6 @@ function App() {
                 >
                   <div>
                     <span className="font-semibold text-base text-gray-800">{verb.meaningJa}</span>
-                    <span className="text-gray-500 text-sm ml-2">({verb.base})</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {count > 0 && (
@@ -469,10 +471,9 @@ function App() {
               >
                 <option value="random">🎲 ランダム（全動詞）</option>
                 {verbs.map((verb) => {
-                  const count = getVerbCount(verb.base);
                   return (
                     <option key={verb.base} value={verb.base}>
-                      {count > 0 ? `⭐${count} ` : ''}{verb.meaningJa}
+                      {verb.meaningJa}
                     </option>
                   );
                 })}
@@ -528,10 +529,9 @@ function App() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
               >
                 {verbs.map((verb) => {
-                  const count = getVerbCount(verb.base);
                   return (
                     <option key={verb.base} value={verb.base}>
-                      {count > 0 ? `⭐${count} ` : ''}{verb.meaningJa}
+                      {verb.meaningJa}
                     </option>
                   );
                 })}
@@ -548,7 +548,7 @@ function App() {
               </button>
               <button
                 onClick={() => setMode('typing')}
-                className="px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
+                className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
               >
                 タイピング練習
               </button>
@@ -606,7 +606,7 @@ function App() {
             onClick={handleNext}
             className="text-gray-600 hover:text-gray-800 underline cursor-pointer font-medium transition-colors"
           >
-            &gt;&gt;次の問題へ（ランダム選択）
+            &gt;&gt;次の問題へ
           </button>
         </div>
       </div>

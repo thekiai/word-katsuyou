@@ -96,7 +96,8 @@ export const ActivityGraph = ({ practiceDates }: ActivityGraphProps) => {
       <div className="flex justify-center">
         <div>
           {/* 曜日ヘッダー */}
-          <div className="flex gap-1 mb-1 pl-8">
+          <div className="flex gap-1 mb-1">
+            <div className="w-8 flex-shrink-0"></div>
             {weekDays.map((day) => (
               <div key={day} className="w-7 text-center text-xs text-gray-400 flex-shrink-0">
                 {day}
