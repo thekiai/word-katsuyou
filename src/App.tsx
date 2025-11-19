@@ -126,8 +126,12 @@ const getStreakDays = (): number => {
   const dates = getPracticeDates();
   let streak = 0;
   const currentDate = new Date();
-  // 昨日から遡って連続日数をカウント（今日は含めない）
-  currentDate.setDate(currentDate.getDate() - 1);
+  const today = getLocalDateString(currentDate);
+
+  // 今日練習している場合は今日から、していない場合は昨日から計算
+  if (!dates.has(today)) {
+    currentDate.setDate(currentDate.getDate() - 1);
+  }
 
   while (true) {
     const dateString = getLocalDateString(currentDate);
