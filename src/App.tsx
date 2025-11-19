@@ -335,8 +335,9 @@ function App() {
       const nextKey = CONJUGATION_FIELDS[currentIndex + 1].key;
       const nextInput = inputRefs.current[nextKey];
       if (nextInput) {
-        // モバイルでキーボードを維持するため、preventScrollなしでフォーカス
-        nextInput.focus({ preventScroll: true });
+        nextInput.focus();
+        // 次の入力フォームが見えるようにスクロール
+        nextInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
   };
