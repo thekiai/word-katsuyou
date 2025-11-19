@@ -18,15 +18,21 @@ type VerbProgress = {
 
 type ProgressData = {
   verbs: Record<string, VerbProgress>;
+  practiceDates?: string[]; // 全ての練習日（重複なし）
 };
 
 const getProgress = (): ProgressData => {
   try {
     const data = localStorage.getItem(PROGRESS_KEY);
-    if (!data) return { verbs: {} };
-    return JSON.parse(data);
+    if (!data) return { verbs: {}, practiceDates: [] };
+    const parsed = JSON.parse(data);
+    // 古いデータ形式の場合はpracticeDatesを初期化
+    if (!parsed.practiceDates) {
+      parsed.practiceDates = [];
+    }
+    return parsed;
   } catch {
-    return { verbs: {} };
+    return { verbs: {}, practiceDates: [] };
   }
 };
 
@@ -46,11 +52,20 @@ const getLocalDateString = (date: Date = new Date()): string => {
 const incrementVerbCount = (verbBase: string) => {
   const progress = getProgress();
   const currentCount = progress.verbs[verbBase]?.count || 0;
+  const today = getLocalDateString();
 
   progress.verbs[verbBase] = {
     count: currentCount + 1,
-    lastCompleted: getLocalDateString(),
+    lastCompleted: today,
   };
+
+  // 練習日を追加（重複しないように）
+  if (!progress.practiceDates) {
+    progress.practiceDates = [];
+  }
+  if (!progress.practiceDates.includes(today)) {
+    progress.practiceDates.push(today);
+  }
 
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
 };
@@ -80,12 +95,23 @@ const getPracticeDates = (): Set<string> => {
   const progress = getProgress();
   const dates = new Set<string>();
 
+  // 新しい形式: practiceDates配列から取得
+  if (progress.practiceDates && progress.practiceDates.length > 0) {
+    progress.practiceDates.forEach(dateString => {
+      // 古い形式（ISO文字列）の場合は変換
+      if (dateString.includes('T')) {
+        const date = new Date(dateString);
+        dateString = getLocalDateString(date);
+      }
+      dates.add(dateString);
+    });
+  }
+
+  // 後方互換性: 古いデータからも取得（マイグレーション）
   Object.values(progress.verbs).forEach(verb => {
     if (verb.lastCompleted) {
-      // 古い形式（ISO文字列）と新しい形式（YYYY-MM-DD）の両方に対応
       let dateString = verb.lastCompleted;
       if (dateString.includes('T')) {
-        // 古い形式の場合、ローカル日付に変換
         const date = new Date(dateString);
         dateString = getLocalDateString(date);
       }
