@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import { InputRow } from './components/InputRow';
 import { TypingPractice } from './components/TypingPractice';
 import { ActivityGraph } from './components/ActivityGraph';
+import { FlashcardHome } from './components/flashcard';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
@@ -146,7 +147,7 @@ const getStreakDays = (): number => {
   return streak;
 };
 
-type Mode = 'home' | 'conjugation' | 'typing';
+type Mode = 'home' | 'conjugation' | 'typing' | 'flashcard';
 
 function App() {
   const [mode, setMode] = useState<Mode>('home');
@@ -395,12 +396,20 @@ function App() {
               <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
                 韓国語活用トレーニング
               </h1>
-              <button
-                onClick={() => setMode('typing')}
-                className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
-              >
-                タイピング練習
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setMode('flashcard')}
+                  className="px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
+                >
+                  単語帳
+                </button>
+                <button
+                  onClick={() => setMode('typing')}
+                  className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
+                >
+                  タイピング
+                </button>
+              </div>
             </div>
 
             {/* 統計情報 */}
@@ -461,6 +470,11 @@ function App() {
         </div>
       </div>
     );
+  }
+
+  // 単語帳モード
+  if (mode === 'flashcard') {
+    return <FlashcardHome onBack={() => setMode('home')} />;
   }
 
   // タイピング練習モード
