@@ -106,7 +106,7 @@ export const ActivityGraph = ({ practiceDates }: ActivityGraphProps) => {
           </div>
 
           {/* 週ごとのカレンダー（縦スクロール） */}
-          <div ref={scrollRef} className="overflow-y-auto max-h-32 pr-4">
+          <div ref={scrollRef} className="overflow-y-auto max-h-24 pr-4">
             <div className="flex flex-col gap-1" style={{ minWidth: 'max-content' }}>
           {weeks.map((week, weekIndex) => {
             // 週の最初の日の月を表示
