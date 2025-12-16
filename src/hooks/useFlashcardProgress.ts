@@ -22,6 +22,34 @@ import {
 const STORAGE_KEY_PROGRESS = 'flashcard-progress';
 const STORAGE_KEY_SESSIONS = 'flashcard-sessions';
 const STORAGE_KEY_TODAY = 'flashcard-today-stats';
+const STORAGE_KEY_VERB_PROGRESS = 'verbProgress'; // 共通の練習日記録用
+
+// ローカルタイムゾーンで日付文字列を取得（App.tsxと同じ形式）
+const getLocalDateString = (date: Date = new Date()): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// 共通の練習日ストレージに今日を追加
+const addToPracticeDates = (dateString: string) => {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY_VERB_PROGRESS);
+    const progress = data ? JSON.parse(data) : { verbs: {}, practiceDates: [] };
+
+    if (!progress.practiceDates) {
+      progress.practiceDates = [];
+    }
+
+    if (!progress.practiceDates.includes(dateString)) {
+      progress.practiceDates.push(dateString);
+      localStorage.setItem(STORAGE_KEY_VERB_PROGRESS, JSON.stringify(progress));
+    }
+  } catch (e) {
+    console.error('Failed to save practice date:', e);
+  }
+};
 
 type TodayData = {
   date: string;
@@ -202,6 +230,9 @@ export function useFlashcardProgress(settings: FlashcardSettings = DEFAULT_SETTI
 
       setTodayData(newTodayData);
       saveTodayData(newTodayData);
+
+      // 共通の練習日記録に追加（カレンダーにはなまる表示用）
+      addToPracticeDates(getLocalDateString());
 
       // 更新後のマップから次のカードを取得
       const nextCard = getNextCardFromMap(newMap, newTodayData);
