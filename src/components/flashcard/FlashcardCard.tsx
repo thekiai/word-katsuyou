@@ -3,7 +3,7 @@
  */
 
 import { useState } from 'react';
-import { Volume2 } from 'lucide-react';
+import { Volume2, ExternalLink } from 'lucide-react';
 import { Word } from '../../data/topikWords';
 import { CardProgress, AnswerGrade } from '../../types/flashcard';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
@@ -41,6 +41,12 @@ export const FlashcardCard = ({
     speak(word.korean);
   };
 
+  const openGoogleSearch = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const query = encodeURIComponent(`${word.korean} 意味`);
+    window.open(`https://www.google.com/search?q=${query}`, '_blank');
+  };
+
   const stateLabel = {
     new: '新規',
     learning: '学習中',
@@ -74,6 +80,15 @@ export const FlashcardCard = ({
           ${!isFlipped ? 'hover:scale-[1.02]' : ''}
         `}
       >
+        {/* Google検索ボタン */}
+        <button
+          onClick={openGoogleSearch}
+          className="absolute top-3 right-3 p-1.5 text-gray-300 hover:text-gray-500 transition-colors"
+          title="Googleで検索"
+        >
+          <ExternalLink className="w-4 h-4" />
+        </button>
+
         {/* 韓国語 */}
         <div className="flex items-center gap-3 mb-4">
           <button
