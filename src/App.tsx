@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { InputRow } from './components/InputRow';
 import { TypingPractice } from './components/TypingPractice';
@@ -147,10 +148,9 @@ const getStreakDays = (): number => {
   return streak;
 };
 
-type Mode = 'home' | 'conjugation' | 'typing' | 'flashcard';
-
 function App() {
-  const [mode, setMode] = useState<Mode>('home');
+  const navigate = useNavigate();
+  const location = useLocation();
   const [selectedVerbMode, setSelectedVerbMode] = useState<'single' | 'random'>('single');
 
   const inputRefs = useRef<Record<ConjugationType, HTMLInputElement | null>>({
@@ -374,7 +374,7 @@ function App() {
   }
 
   // ホームページ
-  if (mode === 'home') {
+  if (location.pathname === '/') {
     const totalCount = getTotalCompletedCount();
     const todayCount = getTodayCompletedCount();
     const streakDays = getStreakDays();
@@ -398,13 +398,13 @@ function App() {
               </h1>
               <div className="flex gap-2">
                 <button
-                  onClick={() => setMode('flashcard')}
+                  onClick={() => navigate('/words')}
                   className="px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
                 >
                   単語帳
                 </button>
                 <button
-                  onClick={() => setMode('typing')}
+                  onClick={() => navigate('/typing')}
                   className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
                 >
                   タイピング
@@ -446,7 +446,7 @@ function App() {
                   key={verb.base}
                   onClick={() => {
                     selectVerb(verb);
-                    setMode('conjugation');
+                    navigate('/conjugation');
                   }}
                   className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-white hover:shadow-sm transition-colors text-left"
                 >
@@ -473,12 +473,12 @@ function App() {
   }
 
   // 単語帳モード
-  if (mode === 'flashcard') {
-    return <FlashcardHome onBack={() => setMode('home')} />;
+  if (location.pathname === '/words') {
+    return <FlashcardHome onBack={() => navigate('/')} />;
   }
 
   // タイピング練習モード
-  if (mode === 'typing') {
+  if (location.pathname === '/typing') {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* ヘッダー */}
@@ -515,13 +515,13 @@ function App() {
             {/* モード切り替えボタン */}
             <div className="flex gap-2">
               <button
-                onClick={() => setMode('home')}
+                onClick={() => navigate('/')}
                 className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
               >
                 ホーム
               </button>
               <button
-                onClick={() => setMode('conjugation')}
+                onClick={() => navigate('/conjugation')}
                 className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
               >
                 活用トレーニング
@@ -573,13 +573,13 @@ function App() {
             {/* モード切り替えボタン */}
             <div className="flex gap-2">
               <button
-                onClick={() => setMode('home')}
+                onClick={() => navigate('/')}
                 className="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
               >
                 ホーム
               </button>
               <button
-                onClick={() => setMode('typing')}
+                onClick={() => navigate('/typing')}
                 className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
               >
                 タイピング練習
