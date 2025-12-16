@@ -4,36 +4,33 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { useFlashcardProgress } from '../../hooks/useFlashcardProgress';
 import { getWordById } from '../../data/topikWords';
-import { AnswerGrade, CardProgress, TodayStats } from '../../types/flashcard';
+import { AnswerGrade } from '../../types/flashcard';
 import { FlashcardCard } from './FlashcardCard';
 
 type FlashcardStudyProps = {
   onBack: () => void;
-  getNextCard: () => CardProgress | null;
-  answerCard: (wordId: number, grade: AnswerGrade) => { updated: CardProgress; nextCard: CardProgress | null };
-  getTodayStats: () => TodayStats;
-  getButtonPreview: (wordId: number, grade: AnswerGrade) => string;
 };
 
-export const FlashcardStudy = ({
-  onBack,
-  getNextCard,
-  answerCard,
-  getTodayStats,
-  getButtonPreview,
-}: FlashcardStudyProps) => {
-  const [currentCard, setCurrentCard] = useState<CardProgress | null>(null);
-  const [cardKey, setCardKey] = useState(0);
-  const [isInitialized, setIsInitialized] = useState(false);
+export const FlashcardStudy = ({ onBack }: FlashcardStudyProps) => {
+  const {
+    isLoading,
+    getNextCard,
+    answerCard,
+    getTodayStats,
+    getButtonPreview,
+  } = useFlashcardProgress();
 
-  // 初回マウント時に最初のカードを取得
+  const [currentCard, setCurrentCard] = useState(getNextCard());
+  const [cardKey, setCardKey] = useState(0);
+
+  // カードが変わったらキーを更新してアニメーションをリセット
   useEffect(() => {
-    if (!isInitialized) {
+    if (!isLoading) {
       setCurrentCard(getNextCard());
-      setIsInitialized(true);
     }
-  }, [isInitialized, getNextCard]);
+  }, [isLoading, getNextCard]);
 
   const handleAnswer = useCallback(
     (grade: AnswerGrade) => {
@@ -58,11 +55,19 @@ export const FlashcardStudy = ({
     [currentCard, getButtonPreview]
   );
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-500">読み込み中...</div>
+      </div>
+    );
+  }
+
   const stats = getTodayStats();
   const word = currentCard ? getWordById(currentCard.wordId) : null;
 
   // 学習完了
-  if (isInitialized && (!currentCard || !word)) {
+  if (!currentCard || !word) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
         <div className="text-center">
@@ -80,15 +85,6 @@ export const FlashcardStudy = ({
             ホームに戻る
           </button>
         </div>
-      </div>
-    );
-  }
-
-  // 初期化中
-  if (!isInitialized || !currentCard || !word) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-500">読み込み中...</div>
       </div>
     );
   }
