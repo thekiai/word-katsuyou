@@ -16,10 +16,26 @@ export const FlashcardHome = ({ onBack }: FlashcardHomeProps) => {
   const [isStudying, setIsStudying] = useState(false);
   const [showWordList, setShowWordList] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const { isLoading, getTodayStats, getOverallStats, resetProgress } = useFlashcardProgress();
+  const {
+    isLoading,
+    getNextCard,
+    answerCard,
+    getTodayStats,
+    getOverallStats,
+    getButtonPreview,
+    resetProgress,
+  } = useFlashcardProgress();
 
   if (isStudying) {
-    return <FlashcardStudy onBack={() => setIsStudying(false)} />;
+    return (
+      <FlashcardStudy
+        onBack={() => setIsStudying(false)}
+        getNextCard={getNextCard}
+        answerCard={answerCard}
+        getTodayStats={getTodayStats}
+        getButtonPreview={getButtonPreview}
+      />
+    );
   }
 
   if (showWordList) {
