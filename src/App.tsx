@@ -4,7 +4,7 @@ import confetti from 'canvas-confetti';
 import { InputRow } from './components/InputRow';
 import { TypingPractice } from './components/TypingPractice';
 import { ActivityGraph } from './components/ActivityGraph';
-import { FlashcardHome } from './components/flashcard';
+import { FlashcardHome, ReverseFlashcardHome } from './components/flashcard';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
@@ -401,7 +401,13 @@ function App() {
                   onClick={() => navigate('/words')}
                   className="px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
                 >
-                  単語帳
+                  韓→日
+                </button>
+                <button
+                  onClick={() => navigate('/words-reverse')}
+                  className="px-3 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
+                >
+                  日→韓
                 </button>
                 <button
                   onClick={() => navigate('/typing')}
@@ -472,9 +478,14 @@ function App() {
     );
   }
 
-  // 単語帳モード
+  // 単語帳モード（韓国語→日本語）
   if (location.pathname === '/words') {
     return <FlashcardHome onBack={() => navigate('/')} />;
+  }
+
+  // 単語帳モード（日本語→韓国語）
+  if (location.pathname === '/words-reverse') {
+    return <ReverseFlashcardHome onBack={() => navigate('/')} />;
   }
 
   // タイピング練習モード
