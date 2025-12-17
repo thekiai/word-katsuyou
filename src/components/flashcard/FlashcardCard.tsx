@@ -47,12 +47,6 @@ export const FlashcardCard = ({
     window.open(`https://www.google.com/search?q=${query}`, '_blank');
   };
 
-  const openPigImageSearch = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const query = encodeURIComponent(`${word.korean} 意味 ブタさんと韓国語`);
-    window.open(`https://www.google.com/search?tbm=isch&q=${query}`, '_blank');
-  };
-
   const stateLabel = {
     new: '新規',
     learning: '学習中',
@@ -93,15 +87,6 @@ export const FlashcardCard = ({
           title="Googleで検索"
         >
           <ExternalLink className="w-4 h-4" />
-        </button>
-
-        {/* ブタさん画像検索ボタン */}
-        <button
-          onClick={openPigImageSearch}
-          className="absolute bottom-3 right-3 p-1.5 hover:scale-125 transition-transform"
-          title="ブタさんで画像検索"
-        >
-          <span className="text-lg">🐖</span>
         </button>
 
         {/* 韓国語 */}
