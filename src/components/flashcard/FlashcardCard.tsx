@@ -126,18 +126,18 @@ export const FlashcardCard = ({
         <div className="mt-6 flex gap-4 justify-center animate-fade-in">
           <button
             onClick={() => handleAnswer('again')}
-            className="flex-1 max-w-[140px] py-4 px-6 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium transition-colors"
+            className="flex-1 max-w-[140px] py-4 px-6 bg-gray-400 hover:bg-gray-500 text-white rounded-xl font-medium transition-colors"
           >
-            <div className="text-lg">Again</div>
+            <div className="text-lg">もう一回</div>
             <div className="text-xs opacity-80 mt-1">
               {getPreview('again')}
             </div>
           </button>
           <button
             onClick={() => handleAnswer('good')}
-            className="flex-1 max-w-[140px] py-4 px-6 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition-colors"
+            className="flex-1 max-w-[140px] py-4 px-6 bg-green-400 hover:bg-green-500 text-white rounded-xl font-medium transition-colors"
           >
-            <div className="text-lg">Good</div>
+            <div className="text-lg">OK</div>
             <div className="text-xs opacity-80 mt-1">
               {getPreview('good')}
             </div>

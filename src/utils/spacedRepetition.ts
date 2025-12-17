@@ -336,10 +336,10 @@ export function getIntervalPreview(
  */
 function formatInterval(minutes: number): string {
   if (minutes < 60) {
-    return `${minutes}分`;
+    return `${minutes}分後`;
   }
   if (minutes < 1440) {
-    return `${Math.round(minutes / 60)}時間`;
+    return `${Math.round(minutes / 60)}時間後`;
   }
-  return `${Math.round(minutes / 1440)}日`;
+  return `${Math.round(minutes / 1440)}日後`;
 }
