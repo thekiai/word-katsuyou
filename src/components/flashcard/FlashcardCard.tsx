@@ -83,7 +83,7 @@ export const FlashcardCard = ({
         {/* Google検索ボタン */}
         <button
           onClick={openGoogleSearch}
-          className="absolute top-3 right-3 p-1.5 text-gray-300 hover:text-gray-500 transition-colors"
+          className="absolute bottom-3 right-3 p-1.5 text-gray-300 hover:text-gray-500 transition-colors"
           title="Googleで検索"
         >
           <ExternalLink className="w-4 h-4" />
