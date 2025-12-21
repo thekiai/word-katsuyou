@@ -3,7 +3,7 @@
  */
 
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { Volume2, StickyNote } from 'lucide-react';
+import { Volume2, StickyNote, ClipboardPaste } from 'lucide-react';
 import { Word, topikWords } from '../../data/topikWords';
 import { CardProgress, AnswerGrade } from '../../types/flashcard';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
@@ -47,6 +47,16 @@ export const ReverseFlashcardCard = ({
     e.stopPropagation();
     setMemo(word.id, memoText);
     setShowMemo(false);
+  };
+
+  const handlePasteFromClipboard = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const text = await navigator.clipboard.readText();
+      setMemoText((prev) => prev + text);
+    } catch (err) {
+      console.error('クリップボードの読み取りに失敗しました:', err);
+    }
   };
 
   // カードが変わったらリセット＆フォーカス
@@ -172,6 +182,14 @@ export const ReverseFlashcardCard = ({
               autoFocus
             />
             <div className="flex gap-2 mt-3">
+              <button
+                onClick={handlePasteFromClipboard}
+                className="py-2 px-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors flex items-center gap-1"
+                title="クリップボードから貼り付け"
+              >
+                <ClipboardPaste className="w-4 h-4" />
+                <span className="text-sm">貼付</span>
+              </button>
               <button
                 onClick={handleMemoClick}
                 className="flex-1 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
