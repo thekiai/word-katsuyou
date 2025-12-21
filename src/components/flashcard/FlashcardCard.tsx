@@ -3,7 +3,7 @@
  */
 
 import { useState } from 'react';
-import { Volume2, ExternalLink, StickyNote } from 'lucide-react';
+import { Volume2, StickyNote } from 'lucide-react';
 import { Word } from '../../data/topikWords';
 import { CardProgress, AnswerGrade } from '../../types/flashcard';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
@@ -61,8 +61,14 @@ export const FlashcardCard = ({
 
   const openGoogleSearch = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const query = encodeURIComponent(`${word.korean} 意味`);
+    const query = encodeURIComponent(`${word.korean} ${word.japanese} 例文`);
     window.open(`https://www.google.com/search?q=${query}`, '_blank');
+  };
+
+  const openImageSearch = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const query = encodeURIComponent(word.korean);
+    window.open(`https://www.google.com/search?tbm=isch&q=${query}`, '_blank');
   };
 
   const stateLabel = {
@@ -98,15 +104,22 @@ export const FlashcardCard = ({
           ${!isFlipped ? 'hover:scale-[1.02]' : ''}
         `}
       >
-        {/* Google検索ボタン（答え表示時のみ） */}
+        {/* 検索リンク（答え表示時のみ） */}
         {isFlipped && (
-          <button
-            onClick={openGoogleSearch}
-            className="absolute bottom-3 right-3 p-1.5 text-gray-300 hover:text-gray-500 transition-colors"
-            title="Googleで検索"
-          >
-            <ExternalLink className="w-4 h-4" />
-          </button>
+          <div className="absolute bottom-3 right-3 flex gap-3">
+            <button
+              onClick={openImageSearch}
+              className="text-xs text-gray-400 hover:text-blue-500 underline transition-colors"
+            >
+              画像 ↗
+            </button>
+            <button
+              onClick={openGoogleSearch}
+              className="text-xs text-gray-400 hover:text-blue-500 underline transition-colors"
+            >
+              例文 ↗
+            </button>
+          </div>
         )}
 
         {/* メモボタン（答え表示時のみ） */}
