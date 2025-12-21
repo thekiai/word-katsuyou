@@ -3,10 +3,11 @@
  */
 
 import { useState } from 'react';
-import { Volume2, ExternalLink } from 'lucide-react';
+import { Volume2, ExternalLink, StickyNote } from 'lucide-react';
 import { Word } from '../../data/topikWords';
 import { CardProgress, AnswerGrade } from '../../types/flashcard';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
+import { useWordMemo } from '../../hooks/useWordMemo';
 
 type FlashcardCardProps = {
   word: Word;
@@ -22,7 +23,24 @@ export const FlashcardCard = ({
   getPreview,
 }: FlashcardCardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [showMemo, setShowMemo] = useState(false);
+  const [memoText, setMemoText] = useState('');
   const { speak, isSpeaking } = useSpeechSynthesis();
+  const { getMemo, setMemo, hasMemo } = useWordMemo();
+
+  const handleMemoClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!showMemo) {
+      setMemoText(getMemo(word.id));
+    }
+    setShowMemo(!showMemo);
+  };
+
+  const handleMemoSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMemo(word.id, memoText);
+    setShowMemo(false);
+  };
 
   const handleFlip = () => {
     if (!isFlipped) {
@@ -80,14 +98,62 @@ export const FlashcardCard = ({
           ${!isFlipped ? 'hover:scale-[1.02]' : ''}
         `}
       >
-        {/* Google検索ボタン */}
-        <button
-          onClick={openGoogleSearch}
-          className="absolute bottom-3 right-3 p-1.5 text-gray-300 hover:text-gray-500 transition-colors"
-          title="Googleで検索"
-        >
-          <ExternalLink className="w-4 h-4" />
-        </button>
+        {/* Google検索ボタン（答え表示時のみ） */}
+        {isFlipped && (
+          <button
+            onClick={openGoogleSearch}
+            className="absolute bottom-3 right-3 p-1.5 text-gray-300 hover:text-gray-500 transition-colors"
+            title="Googleで検索"
+          >
+            <ExternalLink className="w-4 h-4" />
+          </button>
+        )}
+
+        {/* メモボタン（答え表示時のみ） */}
+        {isFlipped && (
+          <button
+            onClick={handleMemoClick}
+            className={`absolute bottom-3 left-3 p-1.5 transition-colors ${
+              hasMemo(word.id)
+                ? 'text-yellow-500 hover:text-yellow-600'
+                : 'text-gray-300 hover:text-gray-500'
+            }`}
+            title="メモ"
+          >
+            <StickyNote className="w-4 h-4" />
+          </button>
+        )}
+
+        {/* メモ編集UI */}
+        {isFlipped && showMemo && (
+          <div
+            className="absolute inset-0 bg-white rounded-2xl p-4 flex flex-col z-10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-sm text-gray-500 mb-2">メモ: {word.korean}</div>
+            <textarea
+              value={memoText}
+              onChange={(e) => setMemoText(e.target.value)}
+              placeholder="メモを入力..."
+              className="flex-1 w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:border-blue-500"
+              autoFocus
+            />
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={handleMemoClick}
+                className="flex-1 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
+              >
+                キャンセル
+              </button>
+              <button
+                onClick={handleMemoSave}
+                className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              >
+                保存
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* 韓国語 */}
         <div className="flex items-center gap-3 mb-4">
@@ -113,6 +179,12 @@ export const FlashcardCard = ({
             <div className="text-2xl text-gray-700 mt-4">
               {word.japanese}
             </div>
+            {/* メモ表示 */}
+            {hasMemo(word.id) && !showMemo && (
+              <div className="mt-3 text-sm text-yellow-600 bg-yellow-50 rounded-lg px-3 py-2">
+                {getMemo(word.id)}
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-gray-400 mt-4">
