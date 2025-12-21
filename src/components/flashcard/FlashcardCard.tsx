@@ -25,6 +25,7 @@ export const FlashcardCard = ({
   const [isFlipped, setIsFlipped] = useState(false);
   const [showMemo, setShowMemo] = useState(false);
   const [memoText, setMemoText] = useState('');
+  const [hasPasted, setHasPasted] = useState(false);
   const { speak, isSpeaking } = useSpeechSynthesis();
   const { getMemo, setMemo, hasMemo } = useWordMemo();
 
@@ -32,6 +33,7 @@ export const FlashcardCard = ({
     e.stopPropagation();
     if (!showMemo) {
       setMemoText(getMemo(word.id));
+      setHasPasted(false);
     }
     setShowMemo(!showMemo);
   };
@@ -47,6 +49,7 @@ export const FlashcardCard = ({
     try {
       const text = await navigator.clipboard.readText();
       setMemoText((prev) => prev + text);
+      setHasPasted(true);
     } catch (err) {
       console.error('クリップボードの読み取りに失敗しました:', err);
     }
@@ -162,14 +165,23 @@ export const FlashcardCard = ({
               autoFocus
             />
             <div className="flex gap-2 mt-3">
-              <button
-                onClick={handlePasteFromClipboard}
-                className="py-2 px-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors flex items-center gap-1"
-                title="クリップボードから貼り付け"
-              >
-                <ClipboardPaste className="w-4 h-4" />
-                <span className="text-sm">貼付</span>
-              </button>
+              {hasPasted ? (
+                <button
+                  onClick={handleMemoSave}
+                  className="py-2 px-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm"
+                >
+                  保存
+                </button>
+              ) : (
+                <button
+                  onClick={handlePasteFromClipboard}
+                  className="py-2 px-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors flex items-center gap-1"
+                  title="クリップボードから貼り付け"
+                >
+                  <ClipboardPaste className="w-4 h-4" />
+                  <span className="text-sm">貼付</span>
+                </button>
+              )}
               <button
                 onClick={handleMemoClick}
                 className="flex-1 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
