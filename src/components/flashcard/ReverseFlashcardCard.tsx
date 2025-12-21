@@ -9,6 +9,9 @@ import { CardProgress, AnswerGrade } from '../../types/flashcard';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
 import { useWordMemo } from '../../hooks/useWordMemo';
 
+// 最後に貼り付けたテキストを記憶（セッション中）
+let lastPastedText = '';
+
 type ReverseFlashcardCardProps = {
   word: Word;
   progress: CardProgress;
@@ -26,21 +29,78 @@ export const ReverseFlashcardCard = ({
   const [isCorrect, setIsCorrect] = useState(false);
   const [showMemo, setShowMemo] = useState(false);
   const [memoText, setMemoText] = useState('');
+  const [clipboardText, setClipboardText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const { speak, isSpeaking } = useSpeechSynthesis();
   const { getMemo, setMemo, hasMemo } = useWordMemo();
+
+  // 韓国語が含まれているかチェック
+  const hasKorean = (text: string) => /[\uAC00-\uD7AF]/.test(text);
+
+  // 画像URLかどうかチェック
+  const isImageUrl = (text: string) => {
+    const trimmed = text.trim();
+    return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i.test(trimmed) ||
+           /^https?:\/\/(i\.)?imgur\.com\//i.test(trimmed) ||
+           /^https?:\/\/.*\/(image|img|photo)\//i.test(trimmed);
+  };
+
+  // メモをレンダリング（画像URLは画像として表示）
+  const renderMemo = (memo: string) => {
+    const lines = memo.split('\n');
+    return lines.map((line, index) => {
+      const trimmed = line.trim();
+      if (isImageUrl(trimmed)) {
+        return (
+          <img
+            key={index}
+            src={trimmed}
+            alt="メモ画像"
+            className="max-w-full max-h-32 rounded mt-1"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        );
+      }
+      return trimmed ? <div key={index}>{trimmed}</div> : null;
+    });
+  };
 
   // 同じ日本語の意味を持つ単語が他にあるかチェック
   const hasDuplicateMeaning = useMemo(() => {
     return topikWords.filter(w => w.japanese === word.japanese).length > 1;
   }, [word.japanese]);
 
-  const handleMemoClick = (e: React.MouseEvent) => {
+  const handleMemoClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!showMemo) {
+      // クリップボードをチェック
+      try {
+        const text = await navigator.clipboard.readText();
+        if ((hasKorean(text) || isImageUrl(text)) && text !== lastPastedText) {
+          // クリップボードに韓国語または画像URLがあり、まだ貼り付けていなければ即座に保存
+          const currentMemo = getMemo(word.id);
+          const newMemo = currentMemo ? currentMemo + '\n' + text : text;
+          setMemo(word.id, newMemo);
+          lastPastedText = text; // 貼り付けたテキストを記憶
+          return; // メモ編集画面を開かない
+        }
+      } catch {
+        // クリップボード読み取り失敗時は通常のメモ編集画面を開く
+      }
       setMemoText(getMemo(word.id));
+      setClipboardText('');
     }
     setShowMemo(!showMemo);
+  };
+
+  const handlePasteFromClipboard = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (clipboardText) {
+      setMemoText((prev) => (prev ? prev + '\n' + clipboardText : clipboardText));
+      setClipboardText('');
+    }
   };
 
   const handleMemoSave = (e: React.MouseEvent) => {
@@ -151,6 +211,15 @@ export const ReverseFlashcardCard = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-sm text-gray-500 mb-2">メモ: {word.korean}</div>
+            {/* クリップボード貼り付けボタン */}
+            {clipboardText && (
+              <button
+                onClick={handlePasteFromClipboard}
+                className="mb-2 py-2 px-3 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 text-sm text-left truncate"
+              >
+                📋 貼り付け: {clipboardText.slice(0, 30)}{clipboardText.length > 30 ? '...' : ''}
+              </button>
+            )}
             <textarea
               value={memoText}
               onChange={(e) => setMemoText(e.target.value)}
@@ -247,7 +316,7 @@ export const ReverseFlashcardCard = ({
             {/* メモ表示 */}
             {hasMemo(word.id) && !showMemo && (
               <div className="mt-3 text-sm text-yellow-600 bg-yellow-50 rounded-lg px-3 py-2">
-                {getMemo(word.id)}
+                {renderMemo(getMemo(word.id))}
               </div>
             )}
           </div>
