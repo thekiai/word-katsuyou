@@ -3,7 +3,7 @@
  */
 
 import { useState } from 'react';
-import { BookOpen, BarChart2, Trash2 } from 'lucide-react';
+import { BookOpen, BarChart2, Trash2, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { useReverseFlashcardProgress } from '../../hooks/useReverseFlashcardProgress';
 import { ReverseFlashcardStudy } from './ReverseFlashcardStudy';
 import { CommonHeader } from '../CommonHeader';
@@ -11,6 +11,7 @@ import { CommonHeader } from '../CommonHeader';
 export const ReverseFlashcardHome = () => {
   const [isStudying, setIsStudying] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showAlgorithmInfo, setShowAlgorithmInfo] = useState(false);
   const { isLoading, getTodayStats, getOverallStats, resetProgress } = useReverseFlashcardProgress();
 
   if (isStudying) {
@@ -157,6 +158,52 @@ export const ReverseFlashcardHome = () => {
               </span>
             </div>
           </div>
+        </div>
+
+        {/* アルゴリズム説明 */}
+        <div className="bg-white rounded-2xl shadow-lg mb-6 overflow-hidden">
+          <button
+            onClick={() => setShowAlgorithmInfo(!showAlgorithmInfo)}
+            className="w-full p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors"
+          >
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <HelpCircle className="w-5 h-5 text-gray-600" />
+            </div>
+            <span className="text-lg font-medium text-gray-800">学習の仕組み</span>
+            <span className="ml-auto text-gray-400">
+              {showAlgorithmInfo ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </span>
+          </button>
+          {showAlgorithmInfo && (
+            <div className="px-4 pb-4 text-sm text-gray-600 space-y-3">
+              <p>
+                間隔反復（Spaced Repetition）アルゴリズムを使用しています。
+                覚えた単語は徐々に復習間隔が長くなり、忘れやすい単語は短い間隔で繰り返します。
+              </p>
+              <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+                <div className="flex items-start gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
+                  <div><strong>新規:</strong> まだ学習していない単語</div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-2 h-2 rounded-full bg-orange-500 mt-1.5 flex-shrink-0" />
+                  <div><strong>学習中:</strong> 10分後 → 1日後 → 3日後</div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-400 mt-1.5 flex-shrink-0" />
+                  <div><strong>復習中:</strong> 7日後から開始、正解ごとに約2.5倍に延長</div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500 mt-1.5 flex-shrink-0" />
+                  <div><strong>定着:</strong> 復習間隔が21日以上になった単語</div>
+                </div>
+              </div>
+              <div className="bg-cyan-50 rounded-lg p-3">
+                <p><strong>正解:</strong> 覚えていた → 次回の復習間隔が延長</p>
+                <p><strong>不正解:</strong> 忘れた → 10分後に再学習</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* リセットボタン */}
