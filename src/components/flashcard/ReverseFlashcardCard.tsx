@@ -5,21 +5,24 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { Volume2, StickyNote, ClipboardPaste } from 'lucide-react';
 import { Word, topikWords } from '../../data/topikWords';
+import { topikWords2 } from '../../data/topikWords2';
 import { CardProgress, AnswerGrade } from '../../types/flashcard';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
-import { useWordMemo } from '../../hooks/useWordMemo';
+import { useWordMemo, WordLevel } from '../../hooks/useWordMemo';
 
 type ReverseFlashcardCardProps = {
   word: Word;
   progress: CardProgress;
   onAnswer: (grade: AnswerGrade) => void;
   getPreview: (grade: AnswerGrade) => string;
+  level?: WordLevel;
 };
 
 export const ReverseFlashcardCard = ({
   word,
   progress,
   onAnswer,
+  level = 'beginner',
 }: ReverseFlashcardCardProps) => {
   const [userInput, setUserInput] = useState('');
   const [isChecked, setIsChecked] = useState(false);
@@ -29,12 +32,13 @@ export const ReverseFlashcardCard = ({
   const [hasPasted, setHasPasted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { speak, isSpeaking } = useSpeechSynthesis();
-  const { getMemo, setMemo, hasMemo } = useWordMemo();
+  const { getMemo, setMemo, hasMemo } = useWordMemo(level);
 
   // 同じ日本語の意味を持つ単語が他にあるかチェック
   const hasDuplicateMeaning = useMemo(() => {
-    return topikWords.filter(w => w.japanese === word.japanese).length > 1;
-  }, [word.japanese]);
+    const wordList = level === 'beginner' ? topikWords : topikWords2;
+    return wordList.filter(w => w.japanese === word.japanese).length > 1;
+  }, [word.japanese, level]);
 
   const handleMemoClick = (e: React.MouseEvent) => {
     e.stopPropagation();

@@ -7,13 +7,14 @@ import { Volume2, StickyNote, ClipboardPaste } from 'lucide-react';
 import { Word } from '../../data/topikWords';
 import { CardProgress, AnswerGrade } from '../../types/flashcard';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
-import { useWordMemo } from '../../hooks/useWordMemo';
+import { useWordMemo, WordLevel } from '../../hooks/useWordMemo';
 
 type FlashcardCardProps = {
   word: Word;
   progress: CardProgress;
   onAnswer: (grade: AnswerGrade) => void;
   getPreview: (grade: AnswerGrade) => string;
+  level?: WordLevel;
 };
 
 export const FlashcardCard = ({
@@ -21,13 +22,14 @@ export const FlashcardCard = ({
   progress,
   onAnswer,
   getPreview,
+  level = 'beginner',
 }: FlashcardCardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showMemo, setShowMemo] = useState(false);
   const [memoText, setMemoText] = useState('');
   const [hasPasted, setHasPasted] = useState(false);
   const { speak, isSpeaking } = useSpeechSynthesis();
-  const { getMemo, setMemo, hasMemo } = useWordMemo();
+  const { getMemo, setMemo, hasMemo } = useWordMemo(level);
 
   const handleMemoClick = (e: React.MouseEvent) => {
     e.stopPropagation();

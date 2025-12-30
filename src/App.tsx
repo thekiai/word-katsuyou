@@ -5,7 +5,7 @@ import { InputRow } from './components/InputRow';
 import { TypingPractice } from './components/TypingPractice';
 import { ActivityGraph } from './components/ActivityGraph';
 import { CommonHeader } from './components/CommonHeader';
-import { FlashcardHome, ReverseFlashcardHome } from './components/flashcard';
+import { FlashcardHome, ReverseFlashcardHome, IntermediateFlashcardHome, ReverseIntermediateFlashcardHome } from './components/flashcard';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
@@ -378,8 +378,8 @@ function App() {
             <ActivityGraph practiceDates={practiceDates} />
           </div>
 
-          {/* 4つの機能ボタン */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* 活用・タイピング */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
             <button
               onClick={() => navigate('/conjugation')}
               className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
@@ -394,20 +394,48 @@ function App() {
               <span className="text-3xl mb-2">⌨️</span>
               <span className="font-medium text-gray-800">タイピング</span>
             </button>
-            <button
-              onClick={() => navigate('/words')}
-              className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-            >
-              <span className="text-3xl mb-2">🇰🇷</span>
-              <span className="font-medium text-gray-800">韓→日</span>
-            </button>
-            <button
-              onClick={() => navigate('/words-reverse')}
-              className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-            >
-              <span className="text-3xl mb-2">🇯🇵</span>
-              <span className="font-medium text-gray-800">日→韓</span>
-            </button>
+          </div>
+
+          {/* 初級単語 */}
+          <div className="mb-3">
+            <p className="text-xs text-gray-500 mb-2 px-1">初級単語（1,671語）</p>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => navigate('/words')}
+                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <span className="text-2xl mb-1">🇰🇷</span>
+                <span className="font-medium text-gray-800 text-sm">韓→日</span>
+              </button>
+              <button
+                onClick={() => navigate('/words-reverse')}
+                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <span className="text-2xl mb-1">🇯🇵</span>
+                <span className="font-medium text-gray-800 text-sm">日→韓</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 中級単語 */}
+          <div>
+            <p className="text-xs text-gray-500 mb-2 px-1">中級単語（2,662語）</p>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => navigate('/words-intermediate')}
+                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <span className="text-2xl mb-1">🇰🇷</span>
+                <span className="font-medium text-gray-800 text-sm">韓→日</span>
+              </button>
+              <button
+                onClick={() => navigate('/words-intermediate-reverse')}
+                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <span className="text-2xl mb-1">🇯🇵</span>
+                <span className="font-medium text-gray-800 text-sm">日→韓</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -422,6 +450,16 @@ function App() {
   // 単語帳モード（日本語→韓国語）
   if (location.pathname === '/words-reverse') {
     return <ReverseFlashcardHome />;
+  }
+
+  // 中級単語帳モード（韓国語→日本語）
+  if (location.pathname === '/words-intermediate') {
+    return <IntermediateFlashcardHome />;
+  }
+
+  // 中級単語帳モード（日本語→韓国語）
+  if (location.pathname === '/words-intermediate-reverse') {
+    return <ReverseIntermediateFlashcardHome />;
   }
 
   // タイピング練習モード

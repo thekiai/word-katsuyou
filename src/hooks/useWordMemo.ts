@@ -4,24 +4,29 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-const STORAGE_KEY = 'word-memos';
-
 type MemoData = Record<number, string>;
 
-export function useWordMemo() {
+export type WordLevel = 'beginner' | 'intermediate';
+
+function getStorageKey(level: WordLevel): string {
+  return level === 'beginner' ? 'word-memos' : 'word-memos-intermediate';
+}
+
+export function useWordMemo(level: WordLevel = 'beginner') {
   const [memos, setMemos] = useState<MemoData>({});
+  const storageKey = getStorageKey(level);
 
   // localStorageから読み込み
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
         setMemos(JSON.parse(saved));
       }
     } catch (e) {
       console.error('Failed to load word memos:', e);
     }
-  }, []);
+  }, [storageKey]);
 
   // メモを取得
   const getMemo = useCallback((wordId: number): string => {
@@ -37,10 +42,10 @@ export function useWordMemo() {
       } else {
         delete updated[wordId];
       }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      localStorage.setItem(storageKey, JSON.stringify(updated));
       return updated;
     });
-  }, []);
+  }, [storageKey]);
 
   // メモがあるかチェック
   const hasMemo = useCallback((wordId: number): boolean => {
