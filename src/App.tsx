@@ -477,43 +477,56 @@ function App() {
     );
   }
 
+  // 正解数を計算
+  const correctCount = CONJUGATION_FIELDS.filter(
+    (field) => results[field.key]?.isCorrect
+  ).length;
+  const totalFields = CONJUGATION_FIELDS.length;
+  const allCorrect = correctCount === totalFields;
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
-      <CommonHeader title="活用トレーニング" />
+      <CommonHeader
+        title="活用トレーニング"
+        rightContent={
+          <span className="text-sm text-gray-500">
+            {correctCount}/{totalFields}
+          </span>
+        }
+      />
 
-      {/* 動詞選択 & 問題表示 */}
-      <div className="max-w-md mx-auto px-4 py-3">
-        <select
-          value={currentVerb.base}
-          onChange={(e) => {
-            const selectedVerb = verbs.find(v => v.base === e.target.value);
-            if (selectedVerb) {
-              selectVerb(selectedVerb);
-            }
-          }}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm bg-white mb-3"
-        >
-          {verbs.map((verb) => {
-            return (
-              <option key={verb.base} value={verb.base}>
-                {verb.meaningJa}
-              </option>
-            );
-          })}
-        </select>
+      {/* 問題カード */}
+      <div className="max-w-md mx-auto px-4 py-4">
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-4">
+          {/* 動詞選択 */}
+          <select
+            value={currentVerb.base}
+            onChange={(e) => {
+              const selectedVerb = verbs.find(v => v.base === e.target.value);
+              if (selectedVerb) {
+                selectVerb(selectedVerb);
+              }
+            }}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm bg-gray-50 mb-4"
+          >
+            {verbs.map((verb) => {
+              const count = getVerbCount(verb.base);
+              return (
+                <option key={verb.base} value={verb.base}>
+                  {verb.meaningJa} {count > 0 ? `(${count}回)` : ''}
+                </option>
+              );
+            })}
+          </select>
 
-        {/* Question Section */}
-        <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-          <p className="text-gray-900 text-center text-xl sm:text-2xl font-bold">
+          {/* 問題表示 */}
+          <p className="text-gray-900 text-center text-2xl font-bold">
             {currentVerb.meaningJa}
           </p>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-md mx-auto px-4 py-4 sm:py-6 mt-2">
-        {/* Input Section */}
-        <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+        {/* 入力フィールド */}
+        <div className="space-y-3 mb-6">
           {CONJUGATION_FIELDS.map((field) => {
             const result = results[field.key];
             const correctAnswer = field.key === 'base'
@@ -546,15 +559,17 @@ function App() {
           })}
         </div>
 
-        {/* Next Problem Link */}
-        <div className="mb-4 sm:mb-6 text-center">
-          <button
-            onClick={handleNext}
-            className="text-gray-600 hover:text-gray-800 underline cursor-pointer font-medium transition-colors"
-          >
-            &gt;&gt;次の問題へ
-          </button>
-        </div>
+        {/* 次へボタン */}
+        <button
+          onClick={handleNext}
+          className={`w-full py-4 rounded-xl font-medium text-lg transition-colors ${
+            allCorrect
+              ? 'bg-green-500 hover:bg-green-600 text-white'
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+          }`}
+        >
+          次の問題へ
+        </button>
       </div>
     </div>
   );
