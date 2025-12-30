@@ -3,27 +3,24 @@
  */
 
 import { useState } from 'react';
-import { BookOpen, BarChart2, Trash2, ArrowLeft, List } from 'lucide-react';
+import { BookOpen, BarChart2, Trash2, List } from 'lucide-react';
 import { useFlashcardProgress } from '../../hooks/useFlashcardProgress';
 import { FlashcardStudy } from './FlashcardStudy';
 import { WordList } from './WordList';
+import { CommonHeader } from '../CommonHeader';
 
-type FlashcardHomeProps = {
-  onBack?: () => void;
-};
-
-export const FlashcardHome = ({ onBack }: FlashcardHomeProps) => {
+export const FlashcardHome = () => {
   const [isStudying, setIsStudying] = useState(false);
   const [showWordList, setShowWordList] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const { isLoading, getTodayStats, getOverallStats, resetProgress } = useFlashcardProgress();
 
   if (isStudying) {
-    return <FlashcardStudy onBack={() => setIsStudying(false)} />;
+    return <FlashcardStudy />;
   }
 
   if (showWordList) {
-    return <WordList onBack={() => setShowWordList(false)} />;
+    return <WordList />;
   }
 
   if (isLoading) {
@@ -47,28 +44,10 @@ export const FlashcardHome = ({ onBack }: FlashcardHomeProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pt-8">
-      <div className="max-w-md mx-auto">
-        {/* ヘッダー */}
-        <div className="flex items-center justify-between mb-6">
-          {onBack && (
-            <button
-              onClick={onBack}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-6 h-6 text-gray-600" />
-            </button>
-          )}
-          <div className={`text-center ${onBack ? '' : 'w-full'}`}>
-            <h1 className="text-2xl font-bold text-gray-800">
-              TOPIK 単語帳
-            </h1>
-            <p className="text-gray-500 text-sm">
-              {overallStats.total.toLocaleString()} 語収録
-            </p>
-          </div>
-          {onBack && <div className="w-10" />}
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <CommonHeader title="単語帳（韓→日）" />
+
+      <div className="max-w-md mx-auto p-4">
 
         {/* 今日の学習カード */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">

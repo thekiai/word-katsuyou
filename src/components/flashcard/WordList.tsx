@@ -3,17 +3,14 @@
  */
 
 import { useState, useMemo } from 'react';
-import { ArrowLeft, Search, Volume2 } from 'lucide-react';
+import { Search, Volume2 } from 'lucide-react';
 import { topikWords } from '../../data/topikWords';
 import { useFlashcardProgress } from '../../hooks/useFlashcardProgress';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
 import { CardState } from '../../types/flashcard';
+import { CommonHeader } from '../CommonHeader';
 
-type WordListProps = {
-  onBack: () => void;
-};
-
-export const WordList = ({ onBack }: WordListProps) => {
+export const WordList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterState, setFilterState] = useState<CardState | 'all'>('all');
   const { progressMap } = useFlashcardProgress();
@@ -82,23 +79,18 @@ export const WordList = ({ onBack }: WordListProps) => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* ヘッダー */}
-      <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-4 mb-4">
-            <button
-              onClick={onBack}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-6 h-6 text-gray-600" />
-            </button>
-            <h1 className="text-xl font-bold text-gray-800">
-              単語一覧
-            </h1>
-            <span className="text-gray-500 text-sm">
-              {filteredWords.length} / {topikWords.length} 語
-            </span>
-          </div>
+      <CommonHeader
+        title="単語一覧"
+        rightContent={
+          <span className="text-sm text-gray-500">
+            {filteredWords.length} / {topikWords.length} 語
+          </span>
+        }
+      />
+
+      {/* 検索・フィルター */}
+      <div className="sticky top-[52px] bg-white border-b border-gray-200 z-10">
+        <div className="max-w-md mx-auto px-4 py-3">
 
           {/* 検索バー */}
           <div className="relative mb-4">

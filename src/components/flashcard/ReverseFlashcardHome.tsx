@@ -3,21 +3,18 @@
  */
 
 import { useState } from 'react';
-import { BookOpen, BarChart2, Trash2, ArrowLeft } from 'lucide-react';
+import { BookOpen, BarChart2, Trash2 } from 'lucide-react';
 import { useReverseFlashcardProgress } from '../../hooks/useReverseFlashcardProgress';
 import { ReverseFlashcardStudy } from './ReverseFlashcardStudy';
+import { CommonHeader } from '../CommonHeader';
 
-type ReverseFlashcardHomeProps = {
-  onBack?: () => void;
-};
-
-export const ReverseFlashcardHome = ({ onBack }: ReverseFlashcardHomeProps) => {
+export const ReverseFlashcardHome = () => {
   const [isStudying, setIsStudying] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const { isLoading, getTodayStats, getOverallStats, resetProgress } = useReverseFlashcardProgress();
 
   if (isStudying) {
-    return <ReverseFlashcardStudy onBack={() => setIsStudying(false)} />;
+    return <ReverseFlashcardStudy />;
   }
 
   if (isLoading) {
@@ -41,28 +38,10 @@ export const ReverseFlashcardHome = ({ onBack }: ReverseFlashcardHomeProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pt-8">
-      <div className="max-w-md mx-auto">
-        {/* ヘッダー */}
-        <div className="flex items-center justify-between mb-6">
-          {onBack && (
-            <button
-              onClick={onBack}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-6 h-6 text-gray-600" />
-            </button>
-          )}
-          <div className={`text-center ${onBack ? '' : 'w-full'}`}>
-            <h1 className="text-2xl font-bold text-gray-800">
-              日→韓 単語帳
-            </h1>
-            <p className="text-gray-500 text-sm">
-              {overallStats.total.toLocaleString()} 語収録
-            </p>
-          </div>
-          {onBack && <div className="w-10" />}
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <CommonHeader title="単語帳（日→韓）" />
+
+      <div className="max-w-md mx-auto p-4">
 
         {/* 今日の学習カード */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">

@@ -3,17 +3,15 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useReverseFlashcardProgress } from '../../hooks/useReverseFlashcardProgress';
 import { getWordById } from '../../data/topikWords';
 import { AnswerGrade } from '../../types/flashcard';
 import { ReverseFlashcardCard } from './ReverseFlashcardCard';
+import { CommonHeader } from '../CommonHeader';
 
-type ReverseFlashcardStudyProps = {
-  onBack: () => void;
-};
-
-export const ReverseFlashcardStudy = ({ onBack }: ReverseFlashcardStudyProps) => {
+export const ReverseFlashcardStudy = () => {
+  const navigate = useNavigate();
   const {
     isLoading,
     getNextCard,
@@ -79,7 +77,7 @@ export const ReverseFlashcardStudy = ({ onBack }: ReverseFlashcardStudyProps) =>
             本日 {stats.completedToday} 枚のカードを学習しました
           </p>
           <button
-            onClick={onBack}
+            onClick={() => navigate('/')}
             className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
           >
             ホームに戻る
@@ -95,35 +93,28 @@ export const ReverseFlashcardStudy = ({ onBack }: ReverseFlashcardStudyProps) =>
     stats.newCardsRemaining;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col p-4 pt-8">
-      {/* ヘッダー */}
-      <div className="max-w-md mx-auto w-full mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={onBack}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ArrowLeft className="w-6 h-6 text-gray-600" />
-          </button>
-          <div className="text-sm text-gray-500">
-            残り {remaining} 枚
-          </div>
-          <div className="w-10" /> {/* spacer */}
-        </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <CommonHeader
+        title="単語帳（日→韓）"
+        rightContent={
+          <span className="text-sm text-gray-500">残り {remaining} 枚</span>
+        }
+      />
 
-        {/* 統計バー */}
-        <div className="flex gap-2 text-sm">
+      {/* 統計バー */}
+      <div className="max-w-md mx-auto w-full px-4 py-2">
+        <div className="flex gap-3 text-sm justify-center">
           <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-blue-500" />
-            <span className="text-gray-600">新規 {stats.newCardsRemaining}</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+            <span className="text-gray-600">{stats.newCardsRemaining}</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-orange-500" />
-            <span className="text-gray-600">学習 {stats.learningCardsRemaining}</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-orange-500" />
+            <span className="text-gray-600">{stats.learningCardsRemaining}</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-green-500" />
-            <span className="text-gray-600">復習 {stats.reviewCardsRemaining}</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
+            <span className="text-gray-600">{stats.reviewCardsRemaining}</span>
           </div>
         </div>
       </div>

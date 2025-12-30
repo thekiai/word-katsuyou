@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { InputRow } from './components/InputRow';
 import { TypingPractice } from './components/TypingPractice';
 import { ActivityGraph } from './components/ActivityGraph';
+import { CommonHeader } from './components/CommonHeader';
 import { FlashcardHome, ReverseFlashcardHome } from './components/flashcard';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
@@ -70,27 +71,6 @@ const incrementVerbCount = (verbBase: string) => {
   }
 
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-};
-
-const getTotalCompletedCount = (): number => {
-  const progress = getProgress();
-  return Object.values(progress.verbs).reduce((sum, verb) => sum + verb.count, 0);
-};
-
-const getTodayCompletedCount = (): number => {
-  const progress = getProgress();
-  const today = getLocalDateString();
-
-  return Object.values(progress.verbs).filter(verb => {
-    if (!verb.lastCompleted) return false;
-    // 古い形式（ISO文字列）と新しい形式（YYYY-MM-DD）の両方に対応
-    let dateString = verb.lastCompleted;
-    if (dateString.includes('T')) {
-      const date = new Date(dateString);
-      dateString = getLocalDateString(date);
-    }
-    return dateString === today;
-  }).reduce((sum, verb) => sum + verb.count, 0);
 };
 
 const getPracticeDates = (): Set<string> => {
@@ -375,103 +355,66 @@ function App() {
 
   // ホームページ
   if (location.pathname === '/') {
-    const totalCount = getTotalCompletedCount();
-    const todayCount = getTodayCompletedCount();
     const streakDays = getStreakDays();
     const practiceDates = getPracticeDates();
-
-    // 動詞を完了回数でソート（練習していない順）
-    const sortedVerbs = [...verbs].sort((a, b) => {
-      const countA = getVerbCount(a.base);
-      const countB = getVerbCount(b.base);
-      return countA - countB; // 昇順（練習回数が少ない順）
-    });
 
     return (
       <div className="min-h-screen bg-gray-50 text-gray-900">
         {/* Header */}
         <div className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-                韓国語活用トレーニング
-              </h1>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => navigate('/words')}
-                  className="px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
-                >
-                  韓→日
-                </button>
-                <button
-                  onClick={() => navigate('/words-reverse')}
-                  className="px-3 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium transition-colors text-white text-sm whitespace-nowrap"
-                >
-                  日→韓
-                </button>
-                <button
-                  onClick={() => navigate('/typing')}
-                  className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
-                >
-                  タイピング
-                </button>
-              </div>
-            </div>
-
-            {/* 統計情報 */}
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 mb-4">
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div>
-                  <p className="text-gray-600 text-xs mb-1">総練習</p>
-                  <p className="text-lg font-bold text-gray-800">{totalCount}回</p>
-                </div>
-                <div>
-                  <p className="text-gray-600 text-xs mb-1">今日</p>
-                  <p className="text-lg font-bold text-gray-800">{todayCount}回</p>
-                </div>
-                <div>
-                  <p className="text-gray-600 text-xs mb-1">連続</p>
-                  <p className="text-lg font-bold text-green-600">{streakDays}日</p>
-                </div>
-              </div>
-            </div>
-
-            {/* 練習の記録 */}
-            <ActivityGraph practiceDates={practiceDates} />
+          <div className="max-w-md mx-auto px-4 py-4">
+            <h1 className="text-xl font-bold text-gray-800 text-center">
+              韓国語トレーニング
+            </h1>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-md mx-auto px-4 py-4 sm:py-6">
-          {/* 動詞リスト */}
-          <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-            {sortedVerbs.map((verb) => {
-              const count = getVerbCount(verb.base);
-              return (
-                <button
-                  key={verb.base}
-                  onClick={() => {
-                    selectVerb(verb);
-                    navigate('/conjugation');
-                  }}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-white hover:shadow-sm transition-colors text-left"
-                >
-                  <div>
-                    <span className="font-semibold text-base text-gray-800">{verb.meaningJa}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {count > 0 && (
-                      <span className="text-yellow-500 text-sm font-semibold">
-                        {'⭐'.repeat(Math.min(count, 5))} {count}
-                      </span>
-                    )}
-                    {count === 0 && (
-                      <span className="text-gray-400 text-sm">-</span>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
+        <div className="max-w-md mx-auto px-4 py-6">
+          {/* 連続日数 */}
+          {streakDays > 0 && (
+            <div className="text-center mb-4">
+              <span className="text-2xl font-bold text-orange-500">
+                {streakDays}日連続
+              </span>
+            </div>
+          )}
+
+          {/* カレンダー */}
+          <div className="mb-6">
+            <ActivityGraph practiceDates={practiceDates} />
+          </div>
+
+          {/* 4つの機能ボタン */}
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => navigate('/conjugation')}
+              className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+            >
+              <span className="text-3xl mb-2">📝</span>
+              <span className="font-medium text-gray-800">活用</span>
+            </button>
+            <button
+              onClick={() => navigate('/typing')}
+              className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+            >
+              <span className="text-3xl mb-2">⌨️</span>
+              <span className="font-medium text-gray-800">タイピング</span>
+            </button>
+            <button
+              onClick={() => navigate('/words')}
+              className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+            >
+              <span className="text-3xl mb-2">🇰🇷</span>
+              <span className="font-medium text-gray-800">韓→日</span>
+            </button>
+            <button
+              onClick={() => navigate('/words-reverse')}
+              className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+            >
+              <span className="text-3xl mb-2">🇯🇵</span>
+              <span className="font-medium text-gray-800">日→韓</span>
+            </button>
           </div>
         </div>
       </div>
@@ -480,65 +423,46 @@ function App() {
 
   // 単語帳モード（韓国語→日本語）
   if (location.pathname === '/words') {
-    return <FlashcardHome onBack={() => navigate('/')} />;
+    return <FlashcardHome />;
   }
 
   // 単語帳モード（日本語→韓国語）
   if (location.pathname === '/words-reverse') {
-    return <ReverseFlashcardHome onBack={() => navigate('/')} />;
+    return <ReverseFlashcardHome />;
   }
 
   // タイピング練習モード
   if (location.pathname === '/typing') {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* ヘッダー */}
-        <div className="sticky top-0 bg-white shadow-sm border-b border-gray-200 z-20 px-4 py-3">
-          <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-            {/* 動詞選択 */}
-            <div className="flex-1 max-w-xs">
-              <select
-                value={selectedVerbMode === 'random' ? 'random' : currentVerb.base}
-                onChange={(e) => {
-                  if (e.target.value === 'random') {
-                    setSelectedVerbMode('random');
-                  } else {
-                    setSelectedVerbMode('single');
-                    const selectedVerb = verbs.find(v => v.base === e.target.value);
-                    if (selectedVerb) {
-                      selectVerb(selectedVerb);
-                    }
-                  }
-                }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
-              >
-                <option value="random">🎲 ランダム（全動詞）</option>
-                {verbs.map((verb) => {
-                  return (
-                    <option key={verb.base} value={verb.base}>
-                      {verb.meaningJa}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
+        <CommonHeader title="タイピング練習" />
 
-            {/* モード切り替えボタン */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => navigate('/')}
-                className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
-              >
-                ホーム
-              </button>
-              <button
-                onClick={() => navigate('/conjugation')}
-                className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
-              >
-                活用トレーニング
-              </button>
-            </div>
-          </div>
+        {/* 動詞選択 */}
+        <div className="max-w-md mx-auto px-4 py-3">
+          <select
+            value={selectedVerbMode === 'random' ? 'random' : currentVerb.base}
+            onChange={(e) => {
+              if (e.target.value === 'random') {
+                setSelectedVerbMode('random');
+              } else {
+                setSelectedVerbMode('single');
+                const selectedVerb = verbs.find(v => v.base === e.target.value);
+                if (selectedVerb) {
+                  selectVerb(selectedVerb);
+                }
+              }
+            }}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm bg-white"
+          >
+            <option value="random">ランダム（全動詞）</option>
+            {verbs.map((verb) => {
+              return (
+                <option key={verb.base} value={verb.base}>
+                  {verb.meaningJa}
+                </option>
+              );
+            })}
+          </select>
         </div>
 
         <TypingPractice
@@ -555,55 +479,34 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
-      {/* Header */}
-      <div className="sticky top-0 bg-white shadow-sm border-b border-gray-200 z-20">
-        <div className="max-w-md mx-auto px-4 py-3">
-          <div className="flex items-center justify-between gap-4 mb-3">
-            {/* 動詞選択 */}
-            <div className="flex-1">
-              <select
-                value={currentVerb.base}
-                onChange={(e) => {
-                  const selectedVerb = verbs.find(v => v.base === e.target.value);
-                  if (selectedVerb) {
-                    selectVerb(selectedVerb);
-                  }
-                }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
-              >
-                {verbs.map((verb) => {
-                  return (
-                    <option key={verb.base} value={verb.base}>
-                      {verb.meaningJa}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
+      <CommonHeader title="活用トレーニング" />
 
-            {/* モード切り替えボタン */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => navigate('/')}
-                className="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
-              >
-                ホーム
-              </button>
-              <button
-                onClick={() => navigate('/typing')}
-                className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors text-gray-700 text-sm whitespace-nowrap"
-              >
-                タイピング練習
-              </button>
-            </div>
-          </div>
+      {/* 動詞選択 & 問題表示 */}
+      <div className="max-w-md mx-auto px-4 py-3">
+        <select
+          value={currentVerb.base}
+          onChange={(e) => {
+            const selectedVerb = verbs.find(v => v.base === e.target.value);
+            if (selectedVerb) {
+              selectVerb(selectedVerb);
+            }
+          }}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm bg-white mb-3"
+        >
+          {verbs.map((verb) => {
+            return (
+              <option key={verb.base} value={verb.base}>
+                {verb.meaningJa}
+              </option>
+            );
+          })}
+        </select>
 
-          {/* Question Section */}
-          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-            <p className="text-gray-900 text-center text-xl sm:text-2xl font-bold">
-              {currentVerb.meaningJa}
-            </p>
-          </div>
+        {/* Question Section */}
+        <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+          <p className="text-gray-900 text-center text-xl sm:text-2xl font-bold">
+            {currentVerb.meaningJa}
+          </p>
         </div>
       </div>
 
