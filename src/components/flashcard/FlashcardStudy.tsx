@@ -67,21 +67,24 @@ export const FlashcardStudy = () => {
   // 学習完了
   if (!currentCard || !word) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-        <div className="text-center">
-          <div className="text-6xl mb-6">🎉</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            今日の学習完了！
-          </h2>
-          <p className="text-gray-600 mb-8">
-            本日 {stats.completedToday} 枚のカードを学習しました
-          </p>
-          <button
-            onClick={() => navigate('/')}
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
-          >
-            ホームに戻る
-          </button>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <CommonHeader subtitle="単語帳（韓→日）" />
+        <div className="flex-1 flex items-center justify-center p-4">
+          <div className="text-center">
+            <div className="text-6xl mb-6">🎉</div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              今日の学習完了！
+            </h2>
+            <p className="text-gray-600 mb-8">
+              本日 {stats.completedToday} 枚のカードを学習しました
+            </p>
+            <button
+              onClick={() => navigate('/')}
+              className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
+            >
+              ホームに戻る
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -95,7 +98,7 @@ export const FlashcardStudy = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <CommonHeader
-        title="単語帳（韓→日）"
+        subtitle="単語帳（韓→日）"
         rightContent={
           <span className="text-sm text-gray-500">残り {remaining} 枚</span>
         }

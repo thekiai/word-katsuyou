@@ -46,7 +46,7 @@ export const FlashcardHome = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="単語帳（韓→日）" />
+      <CommonHeader subtitle="単語帳（韓→日）" />
 
       <div className="max-w-md mx-auto p-4">
 

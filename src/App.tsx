@@ -360,14 +360,7 @@ function App() {
 
     return (
       <div className="min-h-screen bg-gray-50 text-gray-900">
-        {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-md mx-auto px-4 py-4">
-            <h1 className="text-xl font-bold text-gray-800 text-center">
-              韓国語トレーニング
-            </h1>
-          </div>
-        </div>
+        <CommonHeader />
 
         {/* Main Content */}
         <div className="max-w-md mx-auto px-4 py-6">
@@ -435,7 +428,7 @@ function App() {
   if (location.pathname === '/typing') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <CommonHeader title="タイピング練習" />
+        <CommonHeader subtitle="タイピング練習" />
 
         {/* 動詞選択 */}
         <div className="max-w-md mx-auto px-4 py-3">
@@ -487,7 +480,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <CommonHeader
-        title="活用トレーニング"
+        subtitle="活用トレーニング"
         rightContent={
           <span className="text-sm text-gray-500">
             {correctCount}/{totalFields}

@@ -80,7 +80,7 @@ export const WordList = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <CommonHeader
-        title="単語一覧"
+        subtitle="単語一覧"
         rightContent={
           <span className="text-sm text-gray-500">
             {filteredWords.length} / {topikWords.length} 語
