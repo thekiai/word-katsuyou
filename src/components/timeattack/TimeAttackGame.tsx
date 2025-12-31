@@ -287,17 +287,17 @@ export const TimeAttackGame = ({
         }
       />
 
-      <div className="flex-1 flex flex-col max-w-md mx-auto w-full px-4 py-3 overflow-hidden">
+      <div className="flex-1 flex flex-col max-w-md mx-auto w-full px-3 py-2 min-h-0">
         {/* スコア表示 */}
-        <div className="flex justify-between items-center mb-3">
+        <div className="flex justify-between items-center mb-2 flex-shrink-0">
           <div className="text-center">
-            <div className="text-sm text-gray-500">スコア</div>
-            <div className="text-2xl font-bold text-gray-800">{score}</div>
+            <div className="text-xs text-gray-500">スコア</div>
+            <div className="text-xl font-bold text-gray-800">{score}</div>
           </div>
           {mode === '10words' && (
             <div className="text-center">
-              <div className="text-sm text-gray-500">進捗</div>
-              <div className="text-lg font-bold text-gray-800">
+              <div className="text-xs text-gray-500">進捗</div>
+              <div className="text-base font-bold text-gray-800">
                 {correctCount}/10
               </div>
             </div>
@@ -306,7 +306,7 @@ export const TimeAttackGame = ({
 
         {/* 問題表示 */}
         <div
-          className={`bg-white rounded-2xl shadow-lg p-6 mb-3 text-center transition-colors ${
+          className={`bg-white rounded-xl shadow-lg p-4 mb-2 text-center transition-colors flex-shrink-0 ${
             feedback === 'correct'
               ? 'bg-green-50'
               : feedback === 'incorrect'
@@ -314,22 +314,22 @@ export const TimeAttackGame = ({
               : ''
           }`}
         >
-          <div className="flex items-center justify-center gap-3">
-            <div className="text-4xl font-bold text-gray-900">{questionText}</div>
+          <div className="flex items-center justify-center gap-2">
+            <div className="text-3xl font-bold text-gray-900">{questionText}</div>
             {direction === 'kr-jp' && (
               <button
                 onClick={() => speak(currentWord.korean)}
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
                 aria-label="音声を再生"
               >
-                <Volume2 className="w-6 h-6 text-gray-500" />
+                <Volume2 className="w-5 h-5 text-gray-500" />
               </button>
             )}
           </div>
         </div>
 
         {/* 4択ボタン */}
-        <div className="grid grid-cols-2 gap-3 flex-1">
+        <div className="grid grid-cols-2 gap-2 flex-1 min-h-0">
           {choices.map((choice, index) => {
             const isSelected = selectedAnswer === choice;
             const correctAnswer =
@@ -352,9 +352,9 @@ export const TimeAttackGame = ({
                 key={index}
                 onClick={() => handleAnswer(choice)}
                 disabled={feedback !== null}
-                className={`p-4 rounded-xl border-2 font-medium transition-all ${buttonStyle} ${
+                className={`rounded-xl border-2 font-medium transition-all flex items-center justify-center ${buttonStyle} ${
                   feedback === null ? 'active:scale-95' : ''
-                } ${direction === 'jp-kr' ? 'text-2xl' : 'text-lg'}`}
+                } ${direction === 'jp-kr' ? 'text-xl' : 'text-base'}`}
               >
                 {choice}
               </button>
