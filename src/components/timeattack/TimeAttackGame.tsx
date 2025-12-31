@@ -19,20 +19,37 @@ import {
 // AudioContextをグローバルに保持（モバイル対応）
 let audioContext: AudioContext | null = null;
 
-const getAudioContext = (): AudioContext => {
+// AudioContextを取得・初期化
+const initAudioContext = (): AudioContext => {
   if (!audioContext) {
     audioContext = new (window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
   }
-  // モバイルではsuspended状態の場合があるのでresumeする
+  // suspended状態の場合はresumeを試みる
   if (audioContext.state === 'suspended') {
     audioContext.resume();
   }
   return audioContext;
 };
 
+// オーディオをアンロック（ユーザー操作時に呼ぶ）
+export const unlockAudio = () => {
+  const ctx = initAudioContext();
+
+  // 無音を再生してアンロック（iOSでは必須）
+  try {
+    const buffer = ctx.createBuffer(1, 1, 22050);
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    source.start(0);
+  } catch {
+    // エラーは無視
+  }
+};
+
 // 効果音を再生
 const playSound = (type: 'correct' | 'incorrect') => {
-  const ctx = getAudioContext();
+  const ctx = initAudioContext();
   const gainNode = ctx.createGain();
   gainNode.connect(ctx.destination);
 
@@ -293,7 +310,11 @@ export const TimeAttackGame = ({
       : `${(elapsedTime / 1000).toFixed(1)}秒`;
 
   return (
-    <div className="fixed inset-0 bg-gray-50 flex flex-col overflow-hidden">
+    <div
+      className="fixed inset-0 bg-gray-50 flex flex-col overflow-hidden"
+      onTouchStart={unlockAudio}
+      onClick={unlockAudio}
+    >
       <CommonHeader
         title="タイムアタック"
         onBack={onFinish}
