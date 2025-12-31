@@ -358,10 +358,10 @@ export const TimeAttackGame = ({
 
             return (
               <button
-                key={index}
+                key={`${questionIndex}-${index}`}
                 onClick={() => handleAnswer(choice)}
                 disabled={feedback !== null}
-                className={`flex-1 rounded-xl border-2 font-medium transition-all flex items-center justify-center ${buttonStyle} ${
+                className={`flex-1 rounded-xl border-2 font-medium transition-all flex items-center justify-center focus:outline-none ${buttonStyle} ${
                   feedback === null ? 'active:scale-95' : ''
                 } ${direction === 'jp-kr' ? 'text-xl' : 'text-base'}`}
               >
