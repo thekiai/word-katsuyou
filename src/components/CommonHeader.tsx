@@ -4,7 +4,7 @@
  */
 
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 type CommonHeaderProps = {
   title?: string;
@@ -37,7 +37,7 @@ export const CommonHeader = ({ title, rightContent, onBack }: CommonHeaderProps)
                 className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
                 title="ホームに戻る"
               >
-                <Home className="w-5 h-5" />
+                <ArrowLeft className="w-5 h-5" />
               </button>
             )}
             {title && (
