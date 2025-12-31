@@ -27,6 +27,7 @@ type FlashcardHomeBaseProps = {
       total: number;
       new: number;
       learning: number;
+      relearning: number;
       young: number;
       mature: number;
     };
@@ -195,6 +196,12 @@ export const FlashcardHomeBase = ({
                   }}
                 />
                 <div
+                  className="bg-red-400"
+                  style={{
+                    width: `${(overallStats.relearning / overallStats.total) * 100}%`,
+                  }}
+                />
+                <div
                   className="bg-orange-400"
                   style={{
                     width: `${(overallStats.learning / overallStats.total) * 100}%`,
@@ -207,12 +214,6 @@ export const FlashcardHomeBase = ({
           {/* 凡例 */}
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-gray-300" />
-              <span className="text-gray-600">
-                未学習 ({overallStats.new})
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-orange-400" />
               <span className="text-gray-600">
                 学習中 ({overallStats.learning})
@@ -222,6 +223,12 @@ export const FlashcardHomeBase = ({
               <span className="w-3 h-3 rounded-full bg-blue-400" />
               <span className="text-gray-600">
                 復習中 ({overallStats.young})
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-red-400" />
+              <span className="text-gray-600">
+                再学習 ({overallStats.relearning})
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -255,11 +262,7 @@ export const FlashcardHomeBase = ({
               </p>
               <div className="bg-gray-50 rounded-lg p-3 space-y-2">
                 <div className="flex items-start gap-2">
-                  <span className="w-2 h-2 rounded-full bg-yellow-500 mt-1.5 flex-shrink-0" />
-                  <div><strong>新規:</strong> 今日新しく学習できる単語</div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="w-2 h-2 rounded-full bg-orange-500 mt-1.5 flex-shrink-0" />
+                  <span className="w-2 h-2 rounded-full bg-orange-400 mt-1.5 flex-shrink-0" />
                   <div><strong>学習中:</strong> 10分後 → 1日後 → 3日後</div>
                 </div>
                 <div className="flex items-start gap-2">
@@ -267,7 +270,7 @@ export const FlashcardHomeBase = ({
                   <div><strong>復習中:</strong> 7日後から開始、正解ごとに約2.5倍に延長</div>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0" />
+                  <span className="w-2 h-2 rounded-full bg-red-400 mt-1.5 flex-shrink-0" />
                   <div><strong>再学習:</strong> 復習で間違えた単語（10分後→1日後→元の半分の間隔で復習）</div>
                 </div>
                 <div className="flex items-start gap-2">

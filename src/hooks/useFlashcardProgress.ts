@@ -255,6 +255,7 @@ export function useFlashcardProgress(settings: FlashcardSettings = DEFAULT_SETTI
   const getOverallStats = useCallback(() => {
     let newCount = 0;
     let learningCount = 0;
+    let relearningCount = 0;
     let reviewCount = 0;
     let matureCount = 0; // interval >= 21日
 
@@ -267,8 +268,10 @@ export function useFlashcardProgress(settings: FlashcardSettings = DEFAULT_SETTI
           newCount++;
           break;
         case 'learning':
-        case 'relearning':
           learningCount++;
+          break;
+        case 'relearning':
+          relearningCount++;
           break;
         case 'review':
           if (p.interval >= 21) {
@@ -287,6 +290,7 @@ export function useFlashcardProgress(settings: FlashcardSettings = DEFAULT_SETTI
       total: totalWords,
       new: newCount,
       learning: learningCount,
+      relearning: relearningCount,
       young: reviewCount,
       mature: matureCount,
     };
