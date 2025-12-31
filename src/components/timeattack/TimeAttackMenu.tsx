@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { CommonHeader } from '../CommonHeader';
-import { TimeAttackGame, unlockAudio } from './TimeAttackGame';
+import { TimeAttackGame } from './TimeAttackGame';
 import {
   TimeAttackMode,
   TimeAttackLevel,
@@ -81,10 +81,7 @@ export const TimeAttackMenu = ({
           )}
 
           <button
-            onClick={() => {
-              unlockAudio();
-              setSelectedMode('10sec');
-            }}
+            onClick={() => setSelectedMode('10sec')}
             className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition-colors"
           >
             スタート
@@ -113,10 +110,7 @@ export const TimeAttackMenu = ({
           )}
 
           <button
-            onClick={() => {
-              unlockAudio();
-              setSelectedMode('10words');
-            }}
+            onClick={() => setSelectedMode('10words')}
             className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition-colors"
           >
             スタート
