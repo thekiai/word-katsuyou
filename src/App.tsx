@@ -131,6 +131,11 @@ const getStreakDays = (): number => {
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // 画面遷移時にスクロール位置をリセット
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   const [selectedVerbMode, setSelectedVerbMode] = useState<'single' | 'random'>('single');
 
   const inputRefs = useRef<Record<ConjugationType, HTMLInputElement | null>>({

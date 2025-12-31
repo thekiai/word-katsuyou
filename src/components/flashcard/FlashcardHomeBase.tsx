@@ -2,7 +2,7 @@
  * フラッシュカードホーム画面の共通コンポーネント
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BookOpen, BarChart2, Trash2, List, HelpCircle, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react';
 import { CommonHeader } from '../CommonHeader';
 import { DifficultWordsList } from './DifficultWordsList';
@@ -52,6 +52,11 @@ export const FlashcardHomeBase = ({
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showAlgorithmInfo, setShowAlgorithmInfo] = useState(false);
   const { isLoading, progressMap, getTodayStats, getOverallStats, resetProgress } = progressHook();
+
+  // 画面切り替え時にスクロール位置をリセット
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [isStudying, showWordList, showDifficultWords]);
 
   // カラースキーム設定
   const colors = {
