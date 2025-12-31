@@ -16,17 +16,31 @@ import {
   TimeAttackDirection,
 } from '../../hooks/useTimeAttackScore';
 
+// AudioContextをグローバルに保持（モバイル対応）
+let audioContext: AudioContext | null = null;
+
+const getAudioContext = (): AudioContext => {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+  }
+  // モバイルではsuspended状態の場合があるのでresumeする
+  if (audioContext.state === 'suspended') {
+    audioContext.resume();
+  }
+  return audioContext;
+};
+
 // 効果音を再生
 const playSound = (type: 'correct' | 'incorrect') => {
-  const audioContext = new (window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-  const gainNode = audioContext.createGain();
-  gainNode.connect(audioContext.destination);
+  const ctx = getAudioContext();
+  const gainNode = ctx.createGain();
+  gainNode.connect(ctx.destination);
 
   if (type === 'correct') {
     // 3音の上昇メロディ（ド→ミ→ソ♪）
-    const osc1 = audioContext.createOscillator();
-    const osc2 = audioContext.createOscillator();
-    const osc3 = audioContext.createOscillator();
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const osc3 = ctx.createOscillator();
     osc1.connect(gainNode);
     osc2.connect(gainNode);
     osc3.connect(gainNode);
@@ -36,30 +50,30 @@ const playSound = (type: 'correct' | 'incorrect') => {
     osc1.frequency.value = 523; // C5
     osc2.frequency.value = 659; // E5
     osc3.frequency.value = 784; // G5
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-    osc1.start(audioContext.currentTime);
-    osc1.stop(audioContext.currentTime + 0.1);
-    osc2.start(audioContext.currentTime + 0.1);
-    osc2.stop(audioContext.currentTime + 0.2);
-    osc3.start(audioContext.currentTime + 0.2);
-    osc3.stop(audioContext.currentTime + 0.35);
+    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+    osc1.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 0.1);
+    osc2.start(ctx.currentTime + 0.1);
+    osc2.stop(ctx.currentTime + 0.2);
+    osc3.start(ctx.currentTime + 0.2);
+    osc3.stop(ctx.currentTime + 0.35);
   } else {
     // 優しい下降音（ミ→ド）
-    const osc1 = audioContext.createOscillator();
-    const osc2 = audioContext.createOscillator();
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
     osc1.connect(gainNode);
     osc2.connect(gainNode);
     osc1.type = 'sine';
     osc2.type = 'sine';
     osc1.frequency.value = 330; // E4
     osc2.frequency.value = 262; // C4
-    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-    osc1.start(audioContext.currentTime);
-    osc1.stop(audioContext.currentTime + 0.12);
-    osc2.start(audioContext.currentTime + 0.12);
-    osc2.stop(audioContext.currentTime + 0.25);
+    gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+    osc1.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 0.12);
+    osc2.start(ctx.currentTime + 0.12);
+    osc2.stop(ctx.currentTime + 0.25);
   }
 };
 
