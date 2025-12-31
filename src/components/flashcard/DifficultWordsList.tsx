@@ -166,7 +166,7 @@ export const DifficultWordsList = ({
             ) : (
               <div className="space-y-2">
                 <RefreshCw className="w-12 h-12 mx-auto text-gray-300" />
-                <p>特訓したい単語はまだありません</p>
+                <p>特訓単語はまだありません</p>
                 <p className="text-sm">復習で間違えた単語が自動で追加されます</p>
               </div>
             )}

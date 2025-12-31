@@ -82,7 +82,7 @@ export const FlashcardHomeBase = ({
   if (showDifficultWords) {
     return (
       <DifficultWordsList
-        title="特訓したい単語"
+        title="特訓単語"
         words={words}
         progressMap={progressMap}
         storageKey={difficultWordsStorageKey}
@@ -310,7 +310,7 @@ export const FlashcardHomeBase = ({
           <div className="p-2 bg-gray-100 rounded-lg">
             <RefreshCw className="w-5 h-5 text-gray-600" />
           </div>
-          <span className="text-lg font-medium text-gray-800">特訓したい単語</span>
+          <span className="text-lg font-medium text-gray-800">特訓単語</span>
         </button>
 
         {/* リセットボタン */}
