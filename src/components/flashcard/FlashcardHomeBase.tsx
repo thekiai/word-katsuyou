@@ -45,14 +45,10 @@ export const FlashcardHomeBase = ({
   // カラースキーム設定
   const colors = {
     blue: {
-      iconBg: 'bg-blue-100',
-      iconText: 'text-blue-600',
       button: 'bg-blue-500 hover:bg-blue-600',
       infoBg: 'bg-blue-50',
     },
     cyan: {
-      iconBg: 'bg-cyan-100',
-      iconText: 'text-cyan-600',
       button: 'bg-cyan-500 hover:bg-cyan-600',
       infoBg: 'bg-cyan-50',
     },
@@ -95,8 +91,8 @@ export const FlashcardHomeBase = ({
         {/* 今日の学習カード */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className={`p-2 ${colors.iconBg} rounded-lg`}>
-              <BookOpen className={`w-5 h-5 ${colors.iconText}`} />
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <BookOpen className="w-5 h-5 text-gray-600" />
             </div>
             <h2 className="text-lg font-semibold text-gray-800">今日の学習</h2>
           </div>
@@ -140,8 +136,8 @@ export const FlashcardHomeBase = ({
         {/* 全体の進捗 */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <BarChart2 className="w-5 h-5 text-green-600" />
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <BarChart2 className="w-5 h-5 text-gray-600" />
             </div>
             <h2 className="text-lg font-semibold text-gray-800">学習進捗</h2>
           </div>
@@ -260,8 +256,8 @@ export const FlashcardHomeBase = ({
             onClick={() => setShowWordList(true)}
             className="w-full bg-white rounded-2xl shadow-lg p-4 mb-6 flex items-center gap-3 hover:bg-gray-50 transition-colors"
           >
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <List className="w-5 h-5 text-purple-600" />
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <List className="w-5 h-5 text-gray-600" />
             </div>
             <span className="text-lg font-medium text-gray-800">単語一覧</span>
             <span className="ml-auto text-gray-400 text-sm">
