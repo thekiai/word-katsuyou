@@ -15,6 +15,7 @@ export const ReverseFlashcardHome = () => {
       words={topikWords}
       difficultWordsStorageKey="difficult-words-beginner-reverse"
       level="beginner"
+      direction="jp-kr"
       progressHook={useReverseFlashcardProgress}
       StudyComponent={ReverseFlashcardStudy}
     />

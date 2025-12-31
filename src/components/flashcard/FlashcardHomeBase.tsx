@@ -3,11 +3,13 @@
  */
 
 import { useState, useEffect } from 'react';
-import { BookOpen, BarChart2, Trash2, List, HelpCircle, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react';
+import { BookOpen, BarChart2, Trash2, List, HelpCircle, ChevronDown, ChevronUp, RefreshCw, Timer } from 'lucide-react';
 import { CommonHeader } from '../CommonHeader';
 import { DifficultWordsList } from './DifficultWordsList';
+import { TimeAttackMenu } from '../timeattack/TimeAttackMenu';
 import { Word, CardProgress } from '../../types/flashcard';
 import { WordLevel } from '../../hooks/useWordMemo';
+import { TimeAttackLevel, TimeAttackDirection } from '../../hooks/useTimeAttackScore';
 
 type FlashcardHomeBaseProps = {
   title: string;
@@ -15,6 +17,7 @@ type FlashcardHomeBaseProps = {
   words: Word[];
   difficultWordsStorageKey: string;
   level: WordLevel;
+  direction: TimeAttackDirection;
   progressHook: () => {
     isLoading: boolean;
     progressMap: Map<number, CardProgress>;
@@ -43,6 +46,7 @@ export const FlashcardHomeBase = ({
   words,
   difficultWordsStorageKey,
   level,
+  direction,
   progressHook,
   StudyComponent,
   WordListComponent,
@@ -52,12 +56,16 @@ export const FlashcardHomeBase = ({
   const [showDifficultWords, setShowDifficultWords] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showAlgorithmInfo, setShowAlgorithmInfo] = useState(false);
+  const [showTimeAttack, setShowTimeAttack] = useState(false);
   const { isLoading, progressMap, getTodayStats, getOverallStats, resetProgress } = progressHook();
+
+  // タイムアタック用のレベル変換
+  const timeAttackLevel: TimeAttackLevel = level === 'beginner' ? 'beginner' : 'intermediate';
 
   // 画面切り替え時にスクロール位置をリセット
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [isStudying, showWordList, showDifficultWords]);
+  }, [isStudying, showWordList, showDifficultWords, showTimeAttack]);
 
   // カラースキーム設定
   const colors = {
@@ -88,6 +96,16 @@ export const FlashcardHomeBase = ({
         storageKey={difficultWordsStorageKey}
         level={level}
         onBack={() => setShowDifficultWords(false)}
+      />
+    );
+  }
+
+  if (showTimeAttack) {
+    return (
+      <TimeAttackMenu
+        level={timeAttackLevel}
+        direction={direction}
+        onBack={() => setShowTimeAttack(false)}
       />
     );
   }
@@ -285,6 +303,17 @@ export const FlashcardHomeBase = ({
             </div>
           )}
         </div>
+
+        {/* タイムアタック */}
+        <button
+          onClick={() => setShowTimeAttack(true)}
+          className="w-full bg-white rounded-2xl shadow-lg p-4 mb-6 flex items-center gap-3 hover:bg-gray-50 transition-colors"
+        >
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <Timer className="w-5 h-5 text-gray-600" />
+          </div>
+          <span className="text-lg font-medium text-gray-800">タイムアタック</span>
+        </button>
 
         {/* 単語一覧ボタン */}
         {WordListComponent && (

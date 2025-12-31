@@ -16,6 +16,7 @@ export const FlashcardHome = () => {
       words={topikWords}
       difficultWordsStorageKey="difficult-words-beginner"
       level="beginner"
+      direction="kr-jp"
       progressHook={useFlashcardProgress}
       StudyComponent={FlashcardStudy}
       WordListComponent={WordList}

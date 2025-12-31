@@ -16,6 +16,7 @@ export const IntermediateFlashcardHome = () => {
       words={topikWords2}
       difficultWordsStorageKey="difficult-words-intermediate"
       level="intermediate"
+      direction="kr-jp"
       progressHook={useIntermediateFlashcardProgress}
       StudyComponent={IntermediateFlashcardStudy}
       WordListComponent={IntermediateWordList}
