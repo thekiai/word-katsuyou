@@ -270,7 +270,7 @@ export const TimeAttackGame = ({
       : `${(elapsedTime / 1000).toFixed(1)}秒`;
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="fixed inset-0 bg-gray-50 flex flex-col overflow-hidden">
       <CommonHeader
         title="タイムアタック"
         onBack={onFinish}
