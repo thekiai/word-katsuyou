@@ -202,9 +202,9 @@ export const FlashcardHomeBase = ({
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
               <div className="h-full flex">
                 <div
-                  className="bg-green-500"
+                  className="bg-orange-400"
                   style={{
-                    width: `${(overallStats.mature / overallStats.total) * 100}%`,
+                    width: `${(overallStats.learning / overallStats.total) * 100}%`,
                   }}
                 />
                 <div
@@ -220,9 +220,9 @@ export const FlashcardHomeBase = ({
                   }}
                 />
                 <div
-                  className="bg-orange-400"
+                  className="bg-green-500"
                   style={{
-                    width: `${(overallStats.learning / overallStats.total) * 100}%`,
+                    width: `${(overallStats.mature / overallStats.total) * 100}%`,
                   }}
                 />
               </div>
