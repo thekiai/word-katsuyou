@@ -338,7 +338,7 @@ export const TimeAttackGame = ({
         </div>
 
         {/* 4択ボタン */}
-        <div className="grid grid-cols-2 gap-2 flex-1 min-h-0">
+        <div className="flex flex-col gap-2 flex-1 min-h-0">
           {choices.map((choice, index) => {
             const isSelected = selectedAnswer === choice;
             const correctAnswer =
@@ -361,7 +361,7 @@ export const TimeAttackGame = ({
                 key={index}
                 onClick={() => handleAnswer(choice)}
                 disabled={feedback !== null}
-                className={`rounded-xl border-2 font-medium transition-all flex items-center justify-center ${buttonStyle} ${
+                className={`flex-1 rounded-xl border-2 font-medium transition-all flex items-center justify-center ${buttonStyle} ${
                   feedback === null ? 'active:scale-95' : ''
                 } ${direction === 'jp-kr' ? 'text-xl' : 'text-base'}`}
               >
