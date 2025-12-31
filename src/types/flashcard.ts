@@ -64,7 +64,7 @@ export const DEFAULT_SETTINGS: FlashcardSettings = {
   startingEase: 2.5,
   maximumInterval: 365,
   relearningSteps: [10, 1440],  // 10分, 1日
-  newInterval: 0.6,
+  newInterval: 0.5,
   minimumInterval: 1,
   newCardsPerDay: 200,
   maxReviewsPerDay: 9999,

@@ -238,13 +238,17 @@ export const FlashcardHomeBase = ({
                   <div><strong>復習中:</strong> 7日後から開始、正解ごとに約2.5倍に延長</div>
                 </div>
                 <div className="flex items-start gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0" />
+                  <div><strong>再学習:</strong> 復習で間違えた単語（10分後→1日後→元の半分の間隔で復習）</div>
+                </div>
+                <div className="flex items-start gap-2">
                   <span className="w-2 h-2 rounded-full bg-green-500 mt-1.5 flex-shrink-0" />
                   <div><strong>定着:</strong> 復習間隔が21日以上になった単語</div>
                 </div>
               </div>
               <div className={`${colors.infoBg} rounded-lg p-3`}>
                 <p><strong>OK:</strong> 覚えていた → 次回の復習間隔が延長</p>
-                <p><strong>もう一回:</strong> 忘れた → 学習中に戻る</p>
+                <p><strong>もう一回:</strong> 忘れた → 10分後に再表示</p>
               </div>
             </div>
           )}
