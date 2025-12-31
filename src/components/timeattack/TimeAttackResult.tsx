@@ -13,7 +13,7 @@ import {
 } from '../../hooks/useTimeAttackScore';
 
 // 練習日を記録（トップページのはなまる用）
-const PROGRESS_KEY = 'korean-verb-progress';
+const PROGRESS_KEY = 'verbProgress';
 
 const recordPracticeDate = () => {
   const today = new Date();
