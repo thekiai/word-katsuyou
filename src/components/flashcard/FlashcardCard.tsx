@@ -226,9 +226,12 @@ export const FlashcardCard = ({
             </div>
             {/* メモ表示 */}
             {hasMemo(word.id) && !showMemo && (
-              <div className="mt-3 text-sm text-yellow-600 bg-yellow-50 rounded-lg px-3 py-2">
+              <button
+                onClick={handleMemoClick}
+                className="mt-3 text-sm text-yellow-600 bg-yellow-50 hover:bg-yellow-100 rounded-lg px-3 py-2 transition-colors"
+              >
                 {getMemo(word.id)}
-              </div>
+              </button>
             )}
           </div>
         ) : (
