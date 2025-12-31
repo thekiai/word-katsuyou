@@ -24,18 +24,25 @@ const recordPracticeDate = () => {
 
   try {
     const data = localStorage.getItem(PROGRESS_KEY);
-    const progress = data ? JSON.parse(data) : { verbs: {}, practiceDates: [] };
+    let progress: { verbs: Record<string, unknown>; practiceDates: string[] };
 
-    if (!progress.practiceDates) {
-      progress.practiceDates = [];
+    if (data) {
+      const parsed = JSON.parse(data);
+      progress = {
+        verbs: parsed.verbs || {},
+        practiceDates: Array.isArray(parsed.practiceDates) ? parsed.practiceDates : [],
+      };
+    } else {
+      progress = { verbs: {}, practiceDates: [] };
     }
 
     if (!progress.practiceDates.includes(dateString)) {
       progress.practiceDates.push(dateString);
-      localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
     }
-  } catch {
-    // エラーは無視
+
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+  } catch (e) {
+    console.error('Failed to record practice date:', e);
   }
 };
 
@@ -63,13 +70,15 @@ export const TimeAttackResult = ({
   const { saveScore, formatScore, getHighScore } = useTimeAttackScore();
   const [isNewRecord, setIsNewRecord] = useState(false);
 
+  // 練習日を記録（はなまる用）- マウント時に1回だけ実行
+  useEffect(() => {
+    recordPracticeDate();
+  }, []);
+
   // スコアを保存してハイスコア判定
   useEffect(() => {
     const newRecord = saveScore(mode, level, direction, score);
     setIsNewRecord(newRecord);
-
-    // 練習日を記録（はなまる用）
-    recordPracticeDate();
 
     // ハイスコア更新時は紙吹雪
     if (newRecord) {
