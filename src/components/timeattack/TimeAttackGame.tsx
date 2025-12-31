@@ -2,7 +2,7 @@
  * タイムアタック ゲーム画面
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Volume2 } from 'lucide-react';
 import { CommonHeader } from '../CommonHeader';
 import { TimeAttackResult } from './TimeAttackResult';
@@ -96,6 +96,9 @@ export const TimeAttackGame = ({
   // 音声合成
   const { speak } = useSpeechSynthesis();
 
+  // 前回の単語IDを追跡（音声の重複再生防止）
+  const lastSpokenWordId = useRef<number | null>(null);
+
   // ゲーム状態
   const [gameState, setGameState] = useState<GameState>('playing');
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -149,7 +152,9 @@ export const TimeAttackGame = ({
     if (currentWord) {
       generateChoices(currentWord);
       // 韓→日の場合のみ自動再生（日→韓だと答えがバレる）
-      if (direction === 'kr-jp') {
+      // 同じ単語で重複再生しないようにチェック
+      if (direction === 'kr-jp' && lastSpokenWordId.current !== currentWord.id) {
+        lastSpokenWordId.current = currentWord.id;
         speak(currentWord.korean);
       }
     }
@@ -247,6 +252,7 @@ export const TimeAttackGame = ({
           setStartTime(Date.now());
           setFeedback(null);
           setSelectedAnswer(null);
+          lastSpokenWordId.current = null;
         }}
         onBack={onFinish}
       />
@@ -264,7 +270,7 @@ export const TimeAttackGame = ({
       : `${(elapsedTime / 1000).toFixed(1)}秒`;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       <CommonHeader
         title="タイムアタック"
         onBack={onFinish}
@@ -281,9 +287,9 @@ export const TimeAttackGame = ({
         }
       />
 
-      <div className="flex-1 flex flex-col max-w-md mx-auto w-full px-4 py-6">
+      <div className="flex-1 flex flex-col max-w-md mx-auto w-full px-4 py-3 overflow-hidden">
         {/* スコア表示 */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-3">
           <div className="text-center">
             <div className="text-sm text-gray-500">スコア</div>
             <div className="text-2xl font-bold text-gray-800">{score}</div>
@@ -300,7 +306,7 @@ export const TimeAttackGame = ({
 
         {/* 問題表示 */}
         <div
-          className={`bg-white rounded-2xl shadow-lg p-8 mb-6 text-center transition-colors ${
+          className={`bg-white rounded-2xl shadow-lg p-6 mb-3 text-center transition-colors ${
             feedback === 'correct'
               ? 'bg-green-50'
               : feedback === 'incorrect'
