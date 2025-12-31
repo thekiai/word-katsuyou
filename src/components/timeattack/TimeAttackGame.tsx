@@ -127,6 +127,9 @@ export const TimeAttackGame = ({
   const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
+  // 現在の問題で間違えたかどうか
+  const [hasWrongAnswer, setHasWrongAnswer] = useState(false);
+
   // 選択肢を生成
   const generateChoices = useCallback(
     (correctWord: Word) => {
@@ -196,7 +199,10 @@ export const TimeAttackGame = ({
       playSound(isCorrect ? 'correct' : 'incorrect');
 
       if (isCorrect) {
-        setScore((prev) => prev + 1);
+        // 間違えていなければスコア加算
+        if (!hasWrongAnswer) {
+          setScore((prev) => prev + 1);
+        }
         setCorrectCount((prev) => prev + 1);
 
         // 日→韓の場合は正解時に音声を再生
@@ -212,10 +218,12 @@ export const TimeAttackGame = ({
             setQuestionIndex((prev) => prev + 1);
             setFeedback(null);
             setSelectedAnswer(null);
+            setHasWrongAnswer(false);
           }
         }, 300);
       } else {
         setIncorrectCount((prev) => prev + 1);
+        setHasWrongAnswer(true);
 
         // 正解するまで同じ問題（そのまま）
         setTimeout(() => {
@@ -224,7 +232,7 @@ export const TimeAttackGame = ({
         }, 300);
       }
     },
-    [currentWord, direction, feedback, mode, questionIndex, generateChoices, speak]
+    [currentWord, direction, feedback, mode, questionIndex, generateChoices, speak, hasWrongAnswer]
   );
 
   // 結果画面
@@ -252,6 +260,7 @@ export const TimeAttackGame = ({
           setStartTime(Date.now());
           setFeedback(null);
           setSelectedAnswer(null);
+          setHasWrongAnswer(false);
           lastSpokenWordId.current = null;
         }}
         onBack={onFinish}
