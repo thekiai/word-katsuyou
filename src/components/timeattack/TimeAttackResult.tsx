@@ -12,6 +12,33 @@ import {
   TimeAttackDirection,
 } from '../../hooks/useTimeAttackScore';
 
+// 練習日を記録（トップページのはなまる用）
+const PROGRESS_KEY = 'korean-verb-progress';
+
+const recordPracticeDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  const dateString = `${year}-${month}-${day}`;
+
+  try {
+    const data = localStorage.getItem(PROGRESS_KEY);
+    const progress = data ? JSON.parse(data) : { verbs: {}, practiceDates: [] };
+
+    if (!progress.practiceDates) {
+      progress.practiceDates = [];
+    }
+
+    if (!progress.practiceDates.includes(dateString)) {
+      progress.practiceDates.push(dateString);
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+    }
+  } catch {
+    // エラーは無視
+  }
+};
+
 type TimeAttackResultProps = {
   mode: TimeAttackMode;
   level: TimeAttackLevel;
@@ -40,6 +67,9 @@ export const TimeAttackResult = ({
   useEffect(() => {
     const newRecord = saveScore(mode, level, direction, score);
     setIsNewRecord(newRecord);
+
+    // 練習日を記録（はなまる用）
+    recordPracticeDate();
 
     // ハイスコア更新時は紙吹雪
     if (newRecord) {
