@@ -128,20 +128,16 @@ function processReviewAnswer(
   settings: FlashcardSettings,
   now: Date
 ): CardProgress {
-  const { maximumInterval, minimumInterval, newInterval, relearningSteps } = settings;
+  const { maximumInterval } = settings;
 
   if (grade === 'again') {
-    // Relearningへ
-    const reducedInterval = Math.max(
-      minimumInterval,
-      Math.round(progress.interval * newInterval)
-    );
+    // 学習中に戻す（最初からやり直し）
     return {
       ...progress,
-      state: 'relearning',
+      state: 'learning',
       learningStep: 0,
-      interval: reducedInterval,
-      dueDate: addMinutes(now, relearningSteps[0]).toISOString(),
+      interval: 0,
+      dueDate: addMinutes(now, settings.learningSteps[0]).toISOString(),
       easeFactor: Math.max(1.3, progress.easeFactor - 0.2),
       lapses: progress.lapses + 1,
       repetitions: 0,

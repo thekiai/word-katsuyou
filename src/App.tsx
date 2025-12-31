@@ -466,7 +466,7 @@ function App() {
   if (location.pathname === '/typing') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <CommonHeader subtitle="タイピング練習" />
+        <CommonHeader title="タイピング練習" />
 
         {/* 動詞選択 */}
         <div className="max-w-md mx-auto px-4 py-3">
@@ -518,7 +518,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <CommonHeader
-        subtitle="活用トレーニング"
+        title="活用トレーニング"
         rightContent={
           <span className="text-sm text-gray-500">
             {correctCount}/{totalFields}

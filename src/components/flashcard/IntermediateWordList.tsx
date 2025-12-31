@@ -10,7 +10,11 @@ import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
 import { CardState } from '../../types/flashcard';
 import { CommonHeader } from '../CommonHeader';
 
-export const IntermediateWordList = () => {
+type IntermediateWordListProps = {
+  onBack?: () => void;
+};
+
+export const IntermediateWordList = ({ onBack }: IntermediateWordListProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterState, setFilterState] = useState<CardState | 'all'>('all');
   const { progressMap } = useIntermediateFlashcardProgress();
@@ -76,7 +80,8 @@ export const IntermediateWordList = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <CommonHeader
-        subtitle="中級単語一覧"
+        title="中級単語一覧"
+        onBack={onBack}
         rightContent={
           <span className="text-sm text-gray-500">
             {filteredWords.length} / {topikWords2.length} 語

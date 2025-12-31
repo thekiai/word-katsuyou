@@ -15,7 +15,7 @@ export const ReverseFlashcardHome = () => {
   const { isLoading, getTodayStats, getOverallStats, resetProgress } = useReverseFlashcardProgress();
 
   if (isStudying) {
-    return <ReverseFlashcardStudy />;
+    return <ReverseFlashcardStudy onBack={() => setIsStudying(false)} />;
   }
 
   if (isLoading) {
@@ -40,7 +40,7 @@ export const ReverseFlashcardHome = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader subtitle="単語帳（日→韓）" />
+      <CommonHeader title="単語帳（日→韓）" />
 
       <div className="max-w-md mx-auto p-4">
 
@@ -56,7 +56,7 @@ export const ReverseFlashcardHome = () => {
           {/* 統計 */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-yellow-500">
                 {todayStats.newCardsRemaining}
               </div>
               <div className="text-xs text-gray-500">新規</div>
@@ -68,7 +68,7 @@ export const ReverseFlashcardHome = () => {
               <div className="text-xs text-gray-500">学習中</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-blue-500">
                 {todayStats.reviewCardsRemaining}
               </div>
               <div className="text-xs text-gray-500">復習</div>
@@ -134,15 +134,9 @@ export const ReverseFlashcardHome = () => {
           {/* 凡例 */}
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-green-500" />
+              <span className="w-3 h-3 rounded-full bg-gray-300" />
               <span className="text-gray-600">
-                定着 ({overallStats.mature})
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-blue-400" />
-              <span className="text-gray-600">
-                復習中 ({overallStats.young})
+                未学習 ({overallStats.new})
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -152,9 +146,15 @@ export const ReverseFlashcardHome = () => {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-gray-300" />
+              <span className="w-3 h-3 rounded-full bg-blue-400" />
               <span className="text-gray-600">
-                未学習 ({overallStats.new})
+                復習中 ({overallStats.young})
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-green-500" />
+              <span className="text-gray-600">
+                定着 ({overallStats.mature})
               </span>
             </div>
           </div>
@@ -182,8 +182,8 @@ export const ReverseFlashcardHome = () => {
               </p>
               <div className="bg-gray-50 rounded-lg p-3 space-y-2">
                 <div className="flex items-start gap-2">
-                  <span className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
-                  <div><strong>新規:</strong> まだ学習していない単語</div>
+                  <span className="w-2 h-2 rounded-full bg-yellow-500 mt-1.5 flex-shrink-0" />
+                  <div><strong>新規:</strong> 今日新しく学習できる単語</div>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="w-2 h-2 rounded-full bg-orange-500 mt-1.5 flex-shrink-0" />
@@ -200,7 +200,7 @@ export const ReverseFlashcardHome = () => {
               </div>
               <div className="bg-cyan-50 rounded-lg p-3">
                 <p><strong>正解:</strong> 覚えていた → 次回の復習間隔が延長</p>
-                <p><strong>不正解:</strong> 忘れた → 10分後に再学習</p>
+                <p><strong>不正解:</strong> 忘れた → 学習中に戻る</p>
               </div>
             </div>
           )}

@@ -10,7 +10,11 @@ import { AnswerGrade } from '../../types/flashcard';
 import { ReverseFlashcardCard } from './ReverseFlashcardCard';
 import { CommonHeader } from '../CommonHeader';
 
-export const ReverseIntermediateFlashcardStudy = () => {
+type ReverseIntermediateFlashcardStudyProps = {
+  onBack?: () => void;
+};
+
+export const ReverseIntermediateFlashcardStudy = ({ onBack }: ReverseIntermediateFlashcardStudyProps) => {
   const navigate = useNavigate();
   const {
     isLoading,
@@ -66,7 +70,7 @@ export const ReverseIntermediateFlashcardStudy = () => {
   if (!currentCard || !word) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
-        <CommonHeader subtitle="中級単語（日→韓）" />
+        <CommonHeader title="中級単語（日→韓）" onBack={onBack} />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center">
             <div className="text-6xl mb-6">🎉</div>
@@ -77,10 +81,10 @@ export const ReverseIntermediateFlashcardStudy = () => {
               本日 {stats.completedToday} 枚のカードを学習しました
             </p>
             <button
-              onClick={() => navigate('/')}
+              onClick={onBack || (() => navigate('/'))}
               className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
             >
-              ホームに戻る
+              戻る
             </button>
           </div>
         </div>
@@ -96,7 +100,8 @@ export const ReverseIntermediateFlashcardStudy = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <CommonHeader
-        subtitle="中級単語（日→韓）"
+        title="中級単語（日→韓）"
+        onBack={onBack}
         rightContent={
           <span className="text-sm text-gray-500">残り {remaining} 枚</span>
         }

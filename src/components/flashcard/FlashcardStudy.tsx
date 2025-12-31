@@ -10,7 +10,11 @@ import { AnswerGrade } from '../../types/flashcard';
 import { FlashcardCard } from './FlashcardCard';
 import { CommonHeader } from '../CommonHeader';
 
-export const FlashcardStudy = () => {
+type FlashcardStudyProps = {
+  onBack?: () => void;
+};
+
+export const FlashcardStudy = ({ onBack }: FlashcardStudyProps) => {
   const navigate = useNavigate();
   const {
     isLoading,
@@ -68,7 +72,7 @@ export const FlashcardStudy = () => {
   if (!currentCard || !word) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
-        <CommonHeader subtitle="単語帳（韓→日）" />
+        <CommonHeader title="単語帳（韓→日）" onBack={onBack} />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center">
             <div className="text-6xl mb-6">🎉</div>
@@ -79,10 +83,10 @@ export const FlashcardStudy = () => {
               本日 {stats.completedToday} 枚のカードを学習しました
             </p>
             <button
-              onClick={() => navigate('/')}
+              onClick={onBack || (() => navigate('/'))}
               className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
             >
-              ホームに戻る
+              戻る
             </button>
           </div>
         </div>
@@ -98,7 +102,8 @@ export const FlashcardStudy = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <CommonHeader
-        subtitle="単語帳（韓→日）"
+        title="単語帳（韓→日）"
+        onBack={onBack}
         rightContent={
           <span className="text-sm text-gray-500">残り {remaining} 枚</span>
         }
