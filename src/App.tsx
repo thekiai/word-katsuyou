@@ -360,7 +360,7 @@ function App() {
 
     return (
       <div className="min-h-screen bg-gray-50 text-gray-900">
-        <CommonHeader />
+        <CommonHeader title="韓国語トレーニング" />
 
         {/* Main Content */}
         <div className="max-w-md mx-auto px-4 py-6">
