@@ -129,7 +129,7 @@ export const DifficultWordsList = ({
       {/* 表示切り替え */}
       <div className="sticky top-[52px] bg-white border-b border-gray-200 z-10">
         <div className="max-w-md mx-auto px-4 py-3">
-          <div className="flex gap-2">
+          <div className="flex gap-2 mb-2">
             <button
               onClick={() => setShowExcluded(false)}
               className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -151,6 +151,9 @@ export const DifficultWordsList = ({
               除外済み ({excludedCount})
             </button>
           </div>
+          {!showExcluded && (
+            <p className="text-xs text-gray-500">復習で「もう一回」を押した単語とその回数がここに表示されます</p>
+          )}
         </div>
       </div>
 
