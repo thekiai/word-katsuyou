@@ -111,7 +111,7 @@ export const IntermediateFlashcardStudy = ({ onBack }: IntermediateFlashcardStud
       <div className="max-w-md mx-auto w-full px-4 py-2">
         <div className="flex gap-3 text-sm justify-center">
           <div className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+            <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
             <span className="text-gray-600">{stats.newCardsRemaining}</span>
           </div>
           <div className="flex items-center gap-1">
@@ -119,7 +119,7 @@ export const IntermediateFlashcardStudy = ({ onBack }: IntermediateFlashcardStud
             <span className="text-gray-600">{stats.learningCardsRemaining}</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
             <span className="text-gray-600">{stats.reviewCardsRemaining}</span>
           </div>
         </div>
