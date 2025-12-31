@@ -345,25 +345,37 @@ export const TimeAttackGame = ({
               direction === 'kr-jp' ? currentWord.japanese : currentWord.korean;
             const isCorrectChoice = choice === correctAnswer;
 
-            let buttonStyle = 'bg-white border-gray-200 hover:border-gray-400';
+            let bgColor = 'bg-white';
+            let borderColor = 'border-gray-200';
+            let textColor = 'text-gray-900';
+
             if (feedback !== null) {
               if (feedback === 'correct' && isCorrectChoice) {
-                // 正解時のみ正解を緑で表示
-                buttonStyle = 'bg-green-500 border-green-500 text-white';
+                bgColor = 'bg-green-500';
+                borderColor = 'border-green-500';
+                textColor = 'text-white';
               } else if (isSelected && feedback === 'incorrect') {
-                // 不正解時は選択した答えのみ赤で表示（正解は見せない）
-                buttonStyle = 'bg-red-500 border-red-500 text-white';
+                bgColor = 'bg-red-500';
+                borderColor = 'border-red-500';
+                textColor = 'text-white';
               }
             }
 
             return (
               <button
-                key={`${questionIndex}-${index}`}
-                onClick={() => handleAnswer(choice)}
+                key={`${questionIndex}-${index}-${choice}`}
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  handleAnswer(choice);
+                }}
                 disabled={feedback !== null}
-                className={`flex-1 rounded-xl border-2 font-medium transition-all flex items-center justify-center focus:outline-none ${buttonStyle} ${
-                  feedback === null ? 'active:scale-95' : ''
-                } ${direction === 'jp-kr' ? 'text-xl' : 'text-base'}`}
+                className={`flex-1 rounded-xl border-2 font-medium flex items-center justify-center
+                  ${bgColor} ${borderColor} ${textColor}
+                  outline-none focus:outline-none focus:ring-0 focus:border-gray-200
+                  active:border-gray-200
+                  ${feedback === null ? 'active:scale-95' : ''}
+                  ${direction === 'jp-kr' ? 'text-xl' : 'text-base'}`}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 {choice}
               </button>
