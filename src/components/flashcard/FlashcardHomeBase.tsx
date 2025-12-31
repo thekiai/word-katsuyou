@@ -3,14 +3,21 @@
  */
 
 import { useState } from 'react';
-import { BookOpen, BarChart2, Trash2, List, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { BookOpen, BarChart2, Trash2, List, HelpCircle, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react';
 import { CommonHeader } from '../CommonHeader';
+import { DifficultWordsList } from './DifficultWordsList';
+import { Word, CardProgress } from '../../types/flashcard';
+import { WordLevel } from '../../hooks/useWordMemo';
 
 type FlashcardHomeBaseProps = {
   title: string;
   colorScheme: 'blue' | 'cyan';
+  words: Word[];
+  difficultWordsStorageKey: string;
+  level: WordLevel;
   progressHook: () => {
     isLoading: boolean;
+    progressMap: Map<number, CardProgress>;
     getTodayStats: () => {
       newCardsRemaining: number;
       learningCardsRemaining: number;
@@ -32,15 +39,19 @@ type FlashcardHomeBaseProps = {
 export const FlashcardHomeBase = ({
   title,
   colorScheme,
+  words,
+  difficultWordsStorageKey,
+  level,
   progressHook,
   StudyComponent,
   WordListComponent,
 }: FlashcardHomeBaseProps) => {
   const [isStudying, setIsStudying] = useState(false);
   const [showWordList, setShowWordList] = useState(false);
+  const [showDifficultWords, setShowDifficultWords] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showAlgorithmInfo, setShowAlgorithmInfo] = useState(false);
-  const { isLoading, getTodayStats, getOverallStats, resetProgress } = progressHook();
+  const { isLoading, progressMap, getTodayStats, getOverallStats, resetProgress } = progressHook();
 
   // カラースキーム設定
   const colors = {
@@ -60,6 +71,19 @@ export const FlashcardHomeBase = ({
 
   if (showWordList && WordListComponent) {
     return <WordListComponent onBack={() => setShowWordList(false)} />;
+  }
+
+  if (showDifficultWords) {
+    return (
+      <DifficultWordsList
+        title="特訓したい単語"
+        words={words}
+        progressMap={progressMap}
+        storageKey={difficultWordsStorageKey}
+        level={level}
+        onBack={() => setShowDifficultWords(false)}
+      />
+    );
   }
 
   if (isLoading) {
@@ -269,6 +293,17 @@ export const FlashcardHomeBase = ({
             </span>
           </button>
         )}
+
+        {/* 要復習ボタン */}
+        <button
+          onClick={() => setShowDifficultWords(true)}
+          className="w-full bg-white rounded-2xl shadow-lg p-4 mb-6 flex items-center gap-3 hover:bg-gray-50 transition-colors"
+        >
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <RefreshCw className="w-5 h-5 text-gray-600" />
+          </div>
+          <span className="text-lg font-medium text-gray-800">特訓したい単語</span>
+        </button>
 
         {/* リセットボタン */}
         <div className="text-center">
