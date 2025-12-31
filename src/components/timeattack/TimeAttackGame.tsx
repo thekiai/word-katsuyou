@@ -226,7 +226,7 @@ export const TimeAttackGame = ({
 
         // 次の問題へ
         setTimeout(() => {
-          if (mode === '10words' && questionIndex + 1 >= 10) {
+          if (mode === '10words' && correctCount + 1 >= 10) {
             setGameState('finished');
           } else {
             setQuestionIndex((prev) => prev + 1);
@@ -246,7 +246,7 @@ export const TimeAttackGame = ({
         }, 300);
       }
     },
-    [currentWord, direction, feedback, mode, questionIndex, generateChoices, speak, hasWrongAnswer]
+    [currentWord, direction, feedback, mode, questionIndex, correctCount, generateChoices, speak, hasWrongAnswer]
   );
 
   // 結果画面
@@ -311,16 +311,17 @@ export const TimeAttackGame = ({
       />
 
       <div className="flex-1 flex flex-col max-w-md mx-auto w-full px-3 py-2 min-h-0">
-        {/* スコア表示 */}
-        <div className="flex justify-between items-center mb-2 flex-shrink-0">
-          <div className="text-center">
-            <div className="text-xs text-gray-500">スコア</div>
-            <div className="text-xl font-bold text-gray-800">{score}</div>
-          </div>
-          {mode === '10words' && (
+        {/* スコア・進捗表示 */}
+        <div className="flex justify-center items-center mb-2 flex-shrink-0">
+          {mode === '10sec' ? (
+            <div className="text-center">
+              <div className="text-xs text-gray-500">スコア</div>
+              <div className="text-xl font-bold text-gray-800">{score}</div>
+            </div>
+          ) : (
             <div className="text-center">
               <div className="text-xs text-gray-500">進捗</div>
-              <div className="text-base font-bold text-gray-800">
+              <div className="text-xl font-bold text-gray-800">
                 {correctCount}/10
               </div>
             </div>
