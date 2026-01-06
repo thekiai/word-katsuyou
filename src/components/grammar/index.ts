@@ -7,3 +7,4 @@ export { GrammarFlashcardStudy } from './GrammarFlashcardStudy';
 export { GrammarFlashcardHome } from './GrammarFlashcardHome';
 export { BeginnerGrammarHome } from './BeginnerGrammarHome';
 export { IntermediateGrammarHome } from './IntermediateGrammarHome';
+export { GrammarList } from './GrammarList';

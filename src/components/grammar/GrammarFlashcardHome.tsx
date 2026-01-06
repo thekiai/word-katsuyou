@@ -3,9 +3,10 @@
  */
 
 import { useState, useEffect } from 'react';
-import { BookOpen, BarChart2, Trash2, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { BookOpen, BarChart2, Trash2, HelpCircle, ChevronDown, ChevronUp, List } from 'lucide-react';
 import { CommonHeader } from '../CommonHeader';
 import { GrammarFlashcardStudy } from './GrammarFlashcardStudy';
+import { GrammarList } from './GrammarList';
 import { GrammarItem, GrammarLevel } from '../../data/grammarData';
 
 type GrammarFlashcardHomeProps = {
@@ -43,14 +44,15 @@ export const GrammarFlashcardHome = ({
   level = 'beginner',
 }: GrammarFlashcardHomeProps) => {
   const [isStudying, setIsStudying] = useState(false);
+  const [showGrammarList, setShowGrammarList] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showAlgorithmInfo, setShowAlgorithmInfo] = useState(false);
-  const { isLoading, getTodayStats, getOverallStats, resetProgress } = useProgressHook();
+  const { isLoading, progressMap, getTodayStats, getOverallStats, resetProgress } = useProgressHook();
 
   // 画面切り替え時にスクロール位置をリセット
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [isStudying]);
+  }, [isStudying, showGrammarList]);
 
   if (isStudying) {
     return (
@@ -60,6 +62,17 @@ export const GrammarFlashcardHome = ({
         useProgressHook={useProgressHook}
         onBack={() => setIsStudying(false)}
         level={level}
+      />
+    );
+  }
+
+  if (showGrammarList) {
+    return (
+      <GrammarList
+        title={`${title}一覧`}
+        grammarData={grammarData}
+        progressMap={progressMap}
+        onBack={() => setShowGrammarList(false)}
       />
     );
   }
@@ -244,6 +257,20 @@ export const GrammarFlashcardHome = ({
             </div>
           )}
         </div>
+
+        {/* 文法一覧ボタン */}
+        <button
+          onClick={() => setShowGrammarList(true)}
+          className="w-full bg-white rounded-2xl shadow-lg p-4 mb-6 flex items-center gap-3 hover:bg-gray-50 transition-colors"
+        >
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <List className="w-5 h-5 text-gray-600" />
+          </div>
+          <span className="text-lg font-medium text-gray-800">文法一覧</span>
+          <span className="ml-auto text-gray-400 text-sm">
+            {grammarData.length} 項目
+          </span>
+        </button>
 
         {/* リセットボタン */}
         <div className="text-center">
