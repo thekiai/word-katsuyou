@@ -6,6 +6,7 @@ import { TypingPractice } from './components/TypingPractice';
 import { ActivityGraph } from './components/ActivityGraph';
 import { CommonHeader } from './components/CommonHeader';
 import { FlashcardHome, ReverseFlashcardHome, IntermediateFlashcardHome, ReverseIntermediateFlashcardHome } from './components/flashcard';
+import { BeginnerGrammarHome, IntermediateGrammarHome } from './components/grammar';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
@@ -423,7 +424,7 @@ function App() {
           </div>
 
           {/* 中級単語 */}
-          <div>
+          <div className="mb-4">
             <p className="text-xs text-gray-500 mb-2 px-1">中級単語（2,662語）</p>
             <div className="grid grid-cols-2 gap-3">
               <button
@@ -439,6 +440,29 @@ function App() {
               >
                 <span className="text-2xl mb-1">🇯🇵</span>
                 <span className="font-medium text-gray-800 text-sm">日→韓</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 文法 */}
+          <div>
+            <p className="text-xs text-gray-500 mb-2 px-1">文法</p>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => navigate('/grammar-beginner')}
+                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <span className="text-2xl mb-1">📖</span>
+                <span className="font-medium text-gray-800 text-sm">初級</span>
+                <span className="text-xs text-gray-400">84項目</span>
+              </button>
+              <button
+                onClick={() => navigate('/grammar-intermediate')}
+                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <span className="text-2xl mb-1">📚</span>
+                <span className="font-medium text-gray-800 text-sm">中級</span>
+                <span className="text-xs text-gray-400">148項目</span>
               </button>
             </div>
           </div>
@@ -465,6 +489,16 @@ function App() {
   // 中級単語帳モード（日本語→韓国語）
   if (location.pathname === '/words-intermediate-reverse') {
     return <ReverseIntermediateFlashcardHome />;
+  }
+
+  // 初級文法モード
+  if (location.pathname === '/grammar-beginner') {
+    return <BeginnerGrammarHome />;
+  }
+
+  // 中級文法モード
+  if (location.pathname === '/grammar-intermediate') {
+    return <IntermediateGrammarHome />;
   }
 
   // タイピング練習モード
