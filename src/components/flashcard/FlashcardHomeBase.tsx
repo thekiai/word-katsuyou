@@ -285,7 +285,7 @@ export const FlashcardHomeBase = ({
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="w-2 h-2 rounded-full bg-blue-400 mt-1.5 flex-shrink-0" />
-                  <div><strong>復習中:</strong> 7日後から開始、正解ごとに約2.5倍に延長</div>
+                  <div><strong>復習中:</strong> 7日 → 10日 → 14日 → 20日 → 28日 → 39日 → ...120日（最大）</div>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="w-2 h-2 rounded-full bg-red-400 mt-1.5 flex-shrink-0" />

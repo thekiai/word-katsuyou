@@ -73,8 +73,14 @@ export function useIntermediateFlashcardProgress(settings: FlashcardSettings = D
       if (savedProgress) {
         const parsed: CardProgress[] = JSON.parse(savedProgress);
         const map = new Map<number, CardProgress>();
-        parsed.forEach((p) => map.set(p.wordId, p));
+        // 既存データのeaseFactorを新しい設定値に更新
+        parsed.forEach((p) => {
+          const updated = { ...p, easeFactor: settings.startingEase };
+          map.set(p.wordId, updated);
+        });
         setProgressMap(map);
+        // 更新したデータを保存
+        localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(Array.from(map.values())));
       }
 
       const savedToday = localStorage.getItem(STORAGE_KEY_TODAY);

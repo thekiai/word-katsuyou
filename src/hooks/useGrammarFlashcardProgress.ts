@@ -87,8 +87,14 @@ export function useGrammarFlashcardProgress({
       if (savedProgress) {
         const parsed: CardProgress[] = JSON.parse(savedProgress);
         const map = new Map<number, CardProgress>();
-        parsed.forEach((p) => map.set(p.wordId, p));
+        // 既存データのeaseFactorを新しい設定値に更新
+        parsed.forEach((p) => {
+          const updated = { ...p, easeFactor: settings.startingEase };
+          map.set(p.wordId, updated);
+        });
         setProgressMap(map);
+        // 更新したデータを保存
+        localStorage.setItem(storageKeyProgress, JSON.stringify(Array.from(map.values())));
       }
 
       // 今日の統計の読み込み
@@ -104,7 +110,7 @@ export function useGrammarFlashcardProgress({
       console.error('Failed to load grammar flashcard progress:', e);
     }
     setIsLoading(false);
-  }, [storageKeyProgress, storageKeyToday]);
+  }, [storageKeyProgress, storageKeyToday, settings.startingEase]);
 
   // 進捗データの保存
   const saveProgress = useCallback((map: Map<number, CardProgress>) => {

@@ -56,13 +56,14 @@ export type FlashcardSettings = {
   maxReviewsPerDay: number;
 };
 
-// デフォルト設定（ベストプラクティスに基づく）
+// デフォルト設定（手厚く復習する設定）
+// Review間隔の推移: 7日 → 13日 → 23日 → 41日 → 74日 → 120日
 export const DEFAULT_SETTINGS: FlashcardSettings = {
   learningSteps: [10, 1440, 4320],  // 10分, 1日, 3日
   graduatingInterval: 7,
   easyInterval: 4,
-  startingEase: 2.5,
-  maximumInterval: 365,
+  startingEase: 1.4,              // 2.5 → 1.4（手厚く復習）
+  maximumInterval: 120,           // 365 → 120（4ヶ月に1回は必ず復習）
   relearningSteps: [10, 1440],  // 10分, 1日
   newInterval: 0.5,
   minimumInterval: 1,
