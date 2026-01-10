@@ -77,6 +77,39 @@ export const WordList = ({ onBack }: WordListProps) => {
     }
   };
 
+  // 次の出題予定日を人間が読みやすい形式で取得
+  const getNextDueInfo = (wordId: number): string | null => {
+    const progress = progressMap.get(wordId);
+    if (!progress || progress.state === 'new') {
+      return null;
+    }
+
+    const now = new Date();
+    const dueDate = new Date(progress.dueDate);
+    const diffMs = dueDate.getTime() - now.getTime();
+    const diffMinutes = Math.round(diffMs / (1000 * 60));
+    const diffHours = Math.round(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+    let dueStr: string;
+    if (diffMs <= 0) {
+      dueStr = '今すぐ';
+    } else if (diffMinutes < 60) {
+      dueStr = `${diffMinutes}分後`;
+    } else if (diffHours < 24) {
+      dueStr = `${diffHours}時間後`;
+    } else if (diffDays < 7) {
+      dueStr = `${diffDays}日後`;
+    } else {
+      const month = dueDate.getMonth() + 1;
+      const day = dueDate.getDate();
+      dueStr = `${month}/${day}`;
+    }
+
+    const intervalStr = progress.interval > 0 ? `(間隔:${progress.interval}日)` : '';
+    return `次回: ${dueStr} ${intervalStr}`;
+  };
+
   const handleSpeak = (korean: string) => {
     speak(korean);
   };
@@ -176,6 +209,7 @@ export const WordList = ({ onBack }: WordListProps) => {
             {filteredWords.map((word) => {
               const { label, color } = getStateLabel(word.id);
               const isPlaying = isSpeaking && currentText === word.korean;
+              const nextDueInfo = getNextDueInfo(word.id);
 
               return (
                 <div
@@ -200,6 +234,11 @@ export const WordList = ({ onBack }: WordListProps) => {
                     <div className="text-gray-600 text-sm truncate">
                       {word.japanese}
                     </div>
+                    {nextDueInfo && (
+                      <div className="text-xs text-blue-600 mt-1">
+                        {nextDueInfo}
+                      </div>
+                    )}
                   </div>
                   <span className={`px-2 py-1 rounded text-xs font-medium flex-shrink-0 ${color}`}>
                     {label}
