@@ -78,6 +78,12 @@ export const GrammarFlashcardCard = ({
     speak(grammar.exampleKo);
   };
 
+  const handleSearch = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const query = encodeURIComponent(`${grammar.korean} 意味`);
+    window.open(`https://www.google.com/search?q=${query}`, '_blank');
+  };
+
   const stateLabel = {
     new: '新規',
     learning: '学習中',
@@ -111,6 +117,18 @@ export const GrammarFlashcardCard = ({
           ${!isFlipped ? 'hover:scale-[1.02]' : ''}
         `}
       >
+        {/* 検索リンク（答え表示時のみ） */}
+        {isFlipped && (
+          <div className="absolute bottom-3 right-3 flex gap-3">
+            <button
+              onClick={handleSearch}
+              className="text-xs text-gray-400 hover:text-blue-500 underline transition-colors"
+            >
+              検索 ↗
+            </button>
+          </div>
+        )}
+
         {/* メモボタン（答え表示時のみ） */}
         {isFlipped && (
           <button
