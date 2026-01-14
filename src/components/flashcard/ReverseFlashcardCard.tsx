@@ -295,7 +295,7 @@ export const ReverseFlashcardCard = ({
             {hasMemo(word.id) && !showMemo && (
               <button
                 onClick={handleMemoClick}
-                className="mt-3 text-sm text-yellow-600 bg-yellow-50 hover:bg-yellow-100 rounded-lg px-3 py-2 transition-colors"
+                className="mt-3 text-sm text-yellow-600 bg-yellow-50 hover:bg-yellow-100 rounded-lg px-3 py-2 transition-colors text-left whitespace-pre-wrap"
               >
                 {getMemo(word.id)}
               </button>
