@@ -10,128 +10,13 @@ import { BeginnerGrammarHome, IntermediateGrammarHome } from './components/gramm
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
+import { useVerbProgress } from './hooks/useVerbProgress';
 import './App.css';
-
-// 動詞の進捗を管理する関数
-const PROGRESS_KEY = 'verbProgress';
-
-type VerbProgress = {
-  count: number; // 完了回数
-  lastCompleted?: string; // 最後に完了した日時
-};
-
-type ProgressData = {
-  verbs: Record<string, VerbProgress>;
-  practiceDates?: string[]; // 全ての練習日（重複なし）
-};
-
-const getProgress = (): ProgressData => {
-  try {
-    const data = localStorage.getItem(PROGRESS_KEY);
-    if (!data) return { verbs: {}, practiceDates: [] };
-    const parsed = JSON.parse(data);
-    // 古いデータ形式の場合はpracticeDatesを初期化
-    if (!parsed.practiceDates) {
-      parsed.practiceDates = [];
-    }
-    return parsed;
-  } catch {
-    return { verbs: {}, practiceDates: [] };
-  }
-};
-
-const getVerbCount = (verbBase: string): number => {
-  const progress = getProgress();
-  return progress.verbs[verbBase]?.count || 0;
-};
-
-// ローカルタイムゾーンで日付文字列を取得
-const getLocalDateString = (date: Date = new Date()): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
-const incrementVerbCount = (verbBase: string) => {
-  const progress = getProgress();
-  const currentCount = progress.verbs[verbBase]?.count || 0;
-  const today = getLocalDateString();
-
-  progress.verbs[verbBase] = {
-    count: currentCount + 1,
-    lastCompleted: today,
-  };
-
-  // 練習日を追加（重複しないように）
-  if (!progress.practiceDates) {
-    progress.practiceDates = [];
-  }
-  if (!progress.practiceDates.includes(today)) {
-    progress.practiceDates.push(today);
-  }
-
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-};
-
-const getPracticeDates = (): Set<string> => {
-  const progress = getProgress();
-  const dates = new Set<string>();
-
-  // 新しい形式: practiceDates配列から取得
-  if (progress.practiceDates && progress.practiceDates.length > 0) {
-    progress.practiceDates.forEach(dateString => {
-      // 古い形式（ISO文字列）の場合は変換
-      if (dateString.includes('T')) {
-        const date = new Date(dateString);
-        dateString = getLocalDateString(date);
-      }
-      dates.add(dateString);
-    });
-  }
-
-  // 後方互換性: 古いデータからも取得（マイグレーション）
-  Object.values(progress.verbs).forEach(verb => {
-    if (verb.lastCompleted) {
-      let dateString = verb.lastCompleted;
-      if (dateString.includes('T')) {
-        const date = new Date(dateString);
-        dateString = getLocalDateString(date);
-      }
-      dates.add(dateString);
-    }
-  });
-
-  return dates;
-};
-
-const getStreakDays = (): number => {
-  const dates = getPracticeDates();
-  let streak = 0;
-  const currentDate = new Date();
-  const today = getLocalDateString(currentDate);
-
-  // 今日練習している場合は今日から、していない場合は昨日から計算
-  if (!dates.has(today)) {
-    currentDate.setDate(currentDate.getDate() - 1);
-  }
-
-  while (true) {
-    const dateString = getLocalDateString(currentDate);
-    if (dates.has(dateString)) {
-      streak++;
-      currentDate.setDate(currentDate.getDate() - 1);
-    } else {
-      break;
-    }
-  }
-
-  return streak;
-};
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isLoading: verbProgressLoading, getVerbCount, incrementVerbCount, getPracticeDates, getStreakDays } = useVerbProgress();
 
   // 画面遷移時にスクロール位置をリセット
   useEffect(() => {
@@ -333,7 +218,7 @@ function App() {
     }
   };
 
-  if (loading) {
+  if (loading || verbProgressLoading) {
     return (
       <div className="min-h-screen bg-gray-50 text-gray-900">
         <div className="max-w-2xl mx-auto px-4 py-8">

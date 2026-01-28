@@ -11,11 +11,17 @@ import {
   TimeAttackLevel,
   TimeAttackDirection,
 } from '../../hooks/useTimeAttackScore';
+import { storage } from '../../db/storage';
 
 // 練習日を記録（トップページのはなまる用）
 const PROGRESS_KEY = 'verbProgress';
 
-const recordPracticeDate = () => {
+type ProgressData = {
+  verbs: Record<string, unknown>;
+  practiceDates: string[];
+};
+
+const recordPracticeDate = async () => {
   const today = new Date();
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -23,14 +29,13 @@ const recordPracticeDate = () => {
   const dateString = `${year}-${month}-${day}`;
 
   try {
-    const data = localStorage.getItem(PROGRESS_KEY);
-    let progress: { verbs: Record<string, unknown>; practiceDates: string[] };
+    const data = await storage.getItem<ProgressData>(PROGRESS_KEY);
+    let progress: ProgressData;
 
     if (data) {
-      const parsed = JSON.parse(data);
       progress = {
-        verbs: parsed.verbs || {},
-        practiceDates: Array.isArray(parsed.practiceDates) ? parsed.practiceDates : [],
+        verbs: data.verbs || {},
+        practiceDates: Array.isArray(data.practiceDates) ? data.practiceDates : [],
       };
     } else {
       progress = { verbs: {}, practiceDates: [] };
@@ -40,7 +45,7 @@ const recordPracticeDate = () => {
       progress.practiceDates.push(dateString);
     }
 
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+    storage.setItem(PROGRESS_KEY, progress);
   } catch (e) {
     console.error('Failed to record practice date:', e);
   }
@@ -77,17 +82,20 @@ export const TimeAttackResult = ({
 
   // スコアを保存してハイスコア判定
   useEffect(() => {
-    const newRecord = saveScore(mode, level, direction, score);
-    setIsNewRecord(newRecord);
+    const handleSaveScore = async () => {
+      const newRecord = await saveScore(mode, level, direction, score);
+      setIsNewRecord(newRecord);
 
-    // ハイスコア更新時は紙吹雪
-    if (newRecord) {
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.6 },
-      });
-    }
+      // ハイスコア更新時は紙吹雪
+      if (newRecord) {
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 },
+        });
+      }
+    };
+    handleSaveScore();
   }, [mode, level, direction, score, saveScore]);
 
   const previousHighScore = getHighScore(mode, level, direction);

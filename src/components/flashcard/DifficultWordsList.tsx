@@ -9,6 +9,7 @@ import { CardProgress } from '../../types/flashcard';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
 import { useWordMemo, WordLevel } from '../../hooks/useWordMemo';
 import { CommonHeader } from '../CommonHeader';
+import { storage } from '../../db/storage';
 
 type DifficultWordsListProps = {
   title: string;
@@ -52,25 +53,18 @@ export const DifficultWordsList = ({
     setEditingMemo('');
   };
 
-  // localStorageから除外リストを読み込み
+  // IndexedDBから除外リストを読み込み
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
+    storage.getItem<number[]>(storageKey).then((saved) => {
       if (saved) {
-        setExcludedIds(new Set(JSON.parse(saved)));
+        setExcludedIds(new Set(saved));
       }
-    } catch (e) {
-      console.error('Failed to load excluded words:', e);
-    }
+    });
   }, [storageKey]);
 
   // 除外リストを保存
   const saveExcludedIds = (ids: Set<number>) => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify([...ids]));
-    } catch (e) {
-      console.error('Failed to save excluded words:', e);
-    }
+    storage.setItem(storageKey, [...ids]);
   };
 
   // lapses数でソートした単語リスト

@@ -3,6 +3,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { storage } from '../db/storage';
 
 type MemoData = Record<number, string>;
 
@@ -16,16 +17,13 @@ export function useGrammarMemo(level: GrammarLevel = 'beginner') {
   const [memos, setMemos] = useState<MemoData>({});
   const storageKey = getStorageKey(level);
 
-  // localStorageから読み込み
+  // IndexedDBから読み込み
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
+    storage.getItem<MemoData>(storageKey).then((saved) => {
       if (saved) {
-        setMemos(JSON.parse(saved));
+        setMemos(saved);
       }
-    } catch (e) {
-      console.error('Failed to load grammar memos:', e);
-    }
+    });
   }, [storageKey]);
 
   // メモを取得
@@ -42,7 +40,7 @@ export function useGrammarMemo(level: GrammarLevel = 'beginner') {
       } else {
         delete updated[grammarId];
       }
-      localStorage.setItem(storageKey, JSON.stringify(updated));
+      storage.setItem(storageKey, updated);
       return updated;
     });
   }, [storageKey]);

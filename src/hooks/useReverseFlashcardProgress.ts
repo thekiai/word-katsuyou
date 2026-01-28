@@ -18,6 +18,7 @@ import {
   getTodayString,
   getIntervalPreview,
 } from '../utils/spacedRepetition';
+import { storage } from '../db/storage';
 
 // 逆方向用の別ストレージキー
 const STORAGE_KEY_PROGRESS = 'reverse-flashcard-progress';
@@ -32,11 +33,16 @@ const getLocalDateString = (date: Date = new Date()): string => {
   return `${year}-${month}-${day}`;
 };
 
+type ProgressData = {
+  verbs: Record<string, { count: number; lastCompleted?: string }>;
+  practiceDates?: string[];
+};
+
 // 共通の練習日ストレージに今日を追加
-const addToPracticeDates = (dateString: string) => {
+const addToPracticeDates = async (dateString: string) => {
   try {
-    const data = localStorage.getItem(STORAGE_KEY_VERB_PROGRESS);
-    const progress = data ? JSON.parse(data) : { verbs: {}, practiceDates: [] };
+    const data = await storage.getItem<ProgressData>(STORAGE_KEY_VERB_PROGRESS);
+    const progress = data || { verbs: {}, practiceDates: [] };
 
     if (!progress.practiceDates) {
       progress.practiceDates = [];
@@ -44,7 +50,7 @@ const addToPracticeDates = (dateString: string) => {
 
     if (!progress.practiceDates.includes(dateString)) {
       progress.practiceDates.push(dateString);
-      localStorage.setItem(STORAGE_KEY_VERB_PROGRESS, JSON.stringify(progress));
+      storage.setItem(STORAGE_KEY_VERB_PROGRESS, progress);
     }
   } catch (e) {
     console.error('Failed to save practice date:', e);
@@ -70,48 +76,46 @@ export function useReverseFlashcardProgress(settings: FlashcardSettings = DEFAUL
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // localStorageから読み込み
+  // IndexedDBから読み込み
   useEffect(() => {
-    try {
-      // 進捗データの読み込み
-      const savedProgress = localStorage.getItem(STORAGE_KEY_PROGRESS);
-      if (savedProgress) {
-        const parsed: CardProgress[] = JSON.parse(savedProgress);
-        const map = new Map<number, CardProgress>();
-        // 既存データのeaseFactorを新しい設定値に更新
-        parsed.forEach((p) => {
-          const updated = { ...p, easeFactor: settings.startingEase };
-          map.set(p.wordId, updated);
-        });
-        setProgressMap(map);
-        // 更新したデータを保存
-        localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(Array.from(map.values())));
-      }
-
-      // 今日の統計の読み込み
-      const savedToday = localStorage.getItem(STORAGE_KEY_TODAY);
-      if (savedToday) {
-        const parsed: TodayData = JSON.parse(savedToday);
-        // 日付が変わっていたらリセット
-        if (parsed.date === getTodayString()) {
-          setTodayData(parsed);
+    const loadData = async () => {
+      try {
+        // 進捗データの読み込み
+        const savedProgress = await storage.getItem<CardProgress[]>(STORAGE_KEY_PROGRESS);
+        if (savedProgress) {
+          const map = new Map<number, CardProgress>();
+          savedProgress.forEach((p) => {
+            const updated = { ...p, easeFactor: settings.startingEase };
+            map.set(p.wordId, updated);
+          });
+          setProgressMap(map);
+          storage.setItem(STORAGE_KEY_PROGRESS, Array.from(map.values()));
         }
+
+        // 今日の統計の読み込み
+        const savedToday = await storage.getItem<TodayData>(STORAGE_KEY_TODAY);
+        if (savedToday) {
+          if (savedToday.date === getTodayString()) {
+            setTodayData(savedToday);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load reverse flashcard progress:', e);
       }
-    } catch (e) {
-      console.error('Failed to load reverse flashcard progress:', e);
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+    loadData();
   }, []);
 
   // 進捗データの保存
   const saveProgress = useCallback((map: Map<number, CardProgress>) => {
     const array = Array.from(map.values());
-    localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(array));
+    storage.setItem(STORAGE_KEY_PROGRESS, array);
   }, []);
 
   // 今日の統計の保存
   const saveTodayData = useCallback((data: TodayData) => {
-    localStorage.setItem(STORAGE_KEY_TODAY, JSON.stringify(data));
+    storage.setItem(STORAGE_KEY_TODAY, data);
   }, []);
 
   // 学習キューを取得
@@ -312,8 +316,8 @@ export function useReverseFlashcardProgress(settings: FlashcardSettings = DEFAUL
       correctCount: 0,
       incorrectCount: 0,
     });
-    localStorage.removeItem(STORAGE_KEY_PROGRESS);
-    localStorage.removeItem(STORAGE_KEY_TODAY);
+    storage.removeItem(STORAGE_KEY_PROGRESS);
+    storage.removeItem(STORAGE_KEY_TODAY);
   }, []);
 
   return {
