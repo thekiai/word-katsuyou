@@ -194,12 +194,9 @@ export const DifficultWordsList = ({
                       {word.japanese}
                     </div>
                     {getMemo(word.id) && (
-                      <button
-                        onClick={() => handleEditMemo(word.id)}
-                        className="mt-1 text-xs text-yellow-600 bg-yellow-50 rounded px-2 py-1 hover:bg-yellow-100 text-left"
-                      >
+                      <div className="mt-1 text-xs text-yellow-600 bg-yellow-50 rounded px-2 py-1 text-left">
                         {getMemo(word.id)}
-                      </button>
+                      </div>
                     )}
                   </div>
                   <span className="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-600 flex-shrink-0">

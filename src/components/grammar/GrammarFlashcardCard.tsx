@@ -263,12 +263,9 @@ export const GrammarFlashcardCard = ({
 
             {/* メモ表示 */}
             {hasMemo(grammar.id) && !showMemo && (
-              <button
-                onClick={handleMemoClick}
-                className="mt-3 text-sm text-yellow-600 bg-yellow-50 hover:bg-yellow-100 rounded-lg px-3 py-2 transition-colors text-left whitespace-pre-wrap"
-              >
+              <div className="mt-3 text-sm text-yellow-600 bg-yellow-50 rounded-lg px-3 py-2 text-left whitespace-pre-wrap">
                 {getMemo(grammar.id)}
-              </button>
+              </div>
             )}
           </div>
         )}
