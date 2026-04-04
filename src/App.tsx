@@ -11,12 +11,55 @@ import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
 import { useVerbProgress } from './hooks/useVerbProgress';
+import { useHomeProgress, ProgressInfo } from './hooks/useHomeProgress';
 import './App.css';
+
+// 進捗バー付きのナビカードコンポーネント
+const NavCard = ({
+  onClick,
+  emoji,
+  label,
+  total,
+  learning,
+  young,
+  relearning,
+  mature,
+}: {
+  onClick: () => void;
+  emoji: string;
+  label: string;
+} & ProgressInfo) => {
+  const learned = learning + young + relearning + mature;
+  const pct = (n: number) => total > 0 ? (n / total) * 100 : 0;
+  return (
+    <button
+      onClick={onClick}
+      className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+    >
+      <span className="text-2xl mb-1">{emoji}</span>
+      <span className="font-medium text-gray-800 text-sm">{label}</span>
+      <div className="w-full mt-2">
+        <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+          <div className="h-full flex">
+            <div className="bg-orange-400" style={{ width: `${pct(learning)}%` }} />
+            <div className="bg-blue-400" style={{ width: `${pct(young)}%` }} />
+            <div className="bg-red-400" style={{ width: `${pct(relearning)}%` }} />
+            <div className="bg-green-500" style={{ width: `${pct(mature)}%` }} />
+          </div>
+        </div>
+        <div className="text-[10px] text-gray-400 mt-0.5 text-center">
+          {learned}/{total}
+        </div>
+      </div>
+    </button>
+  );
+};
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoading: verbProgressLoading, getVerbCount, incrementVerbCount, getPracticeDates, getStreakDays } = useVerbProgress();
+  const homeProgress = useHomeProgress();
 
   // 画面遷移時にスクロール位置をリセット
   useEffect(() => {
@@ -291,20 +334,8 @@ function App() {
           <div className="mb-3">
             <p className="text-xs text-gray-500 mb-2 px-1">初級単語（1,671語）</p>
             <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => navigate('/words')}
-                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-              >
-                <span className="text-2xl mb-1">🇰🇷</span>
-                <span className="font-medium text-gray-800 text-sm">韓→日</span>
-              </button>
-              <button
-                onClick={() => navigate('/words-reverse')}
-                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-              >
-                <span className="text-2xl mb-1">🇯🇵</span>
-                <span className="font-medium text-gray-800 text-sm">日→韓</span>
-              </button>
+              <NavCard onClick={() => navigate('/words')} emoji="🇰🇷" label="韓→日" {...homeProgress.wordsKoJa} />
+              <NavCard onClick={() => navigate('/words-reverse')} emoji="🇯🇵" label="日→韓" {...homeProgress.wordsJaKo} />
             </div>
           </div>
 
@@ -312,20 +343,8 @@ function App() {
           <div className="mb-4">
             <p className="text-xs text-gray-500 mb-2 px-1">中級単語（2,662語）</p>
             <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => navigate('/words-intermediate')}
-                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-              >
-                <span className="text-2xl mb-1">🇰🇷</span>
-                <span className="font-medium text-gray-800 text-sm">韓→日</span>
-              </button>
-              <button
-                onClick={() => navigate('/words-intermediate-reverse')}
-                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-              >
-                <span className="text-2xl mb-1">🇯🇵</span>
-                <span className="font-medium text-gray-800 text-sm">日→韓</span>
-              </button>
+              <NavCard onClick={() => navigate('/words-intermediate')} emoji="🇰🇷" label="韓→日" {...homeProgress.wordsIntKoJa} />
+              <NavCard onClick={() => navigate('/words-intermediate-reverse')} emoji="🇯🇵" label="日→韓" {...homeProgress.wordsIntJaKo} />
             </div>
           </div>
 
@@ -333,20 +352,8 @@ function App() {
           <div className="mb-3">
             <p className="text-xs text-gray-500 mb-2 px-1">初級文法（84項目）</p>
             <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => navigate('/grammar-beginner')}
-                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-              >
-                <span className="text-2xl mb-1">🇰🇷</span>
-                <span className="font-medium text-gray-800 text-sm">韓→日</span>
-              </button>
-              <button
-                onClick={() => navigate('/grammar-beginner-reverse')}
-                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-              >
-                <span className="text-2xl mb-1">🇯🇵</span>
-                <span className="font-medium text-gray-800 text-sm">日→韓</span>
-              </button>
+              <NavCard onClick={() => navigate('/grammar-beginner')} emoji="🇰🇷" label="韓→日" {...homeProgress.grammarBegKoJa} />
+              <NavCard onClick={() => navigate('/grammar-beginner-reverse')} emoji="🇯🇵" label="日→韓" {...homeProgress.grammarBegJaKo} />
             </div>
           </div>
 
@@ -354,20 +361,8 @@ function App() {
           <div>
             <p className="text-xs text-gray-500 mb-2 px-1">中級文法（148項目）</p>
             <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => navigate('/grammar-intermediate')}
-                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-              >
-                <span className="text-2xl mb-1">🇰🇷</span>
-                <span className="font-medium text-gray-800 text-sm">韓→日</span>
-              </button>
-              <button
-                onClick={() => navigate('/grammar-intermediate-reverse')}
-                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-              >
-                <span className="text-2xl mb-1">🇯🇵</span>
-                <span className="font-medium text-gray-800 text-sm">日→韓</span>
-              </button>
+              <NavCard onClick={() => navigate('/grammar-intermediate')} emoji="🇰🇷" label="韓→日" {...homeProgress.grammarIntKoJa} />
+              <NavCard onClick={() => navigate('/grammar-intermediate-reverse')} emoji="🇯🇵" label="日→韓" {...homeProgress.grammarIntJaKo} />
             </div>
           </div>
         </div>
