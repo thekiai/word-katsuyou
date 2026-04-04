@@ -27,10 +27,13 @@ export const ReverseGrammarFlashcardCard = ({
   const [userInput, setUserInput] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [copyInput, setCopyInput] = useState('');
+  const [copyDone, setCopyDone] = useState(false);
   const [showMemo, setShowMemo] = useState(false);
   const [memoText, setMemoText] = useState('');
   const [hasPasted, setHasPasted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const copyRef = useRef<HTMLInputElement>(null);
   const { speak, isSpeaking } = useSpeechSynthesis();
   const { getMemo, setMemo, hasMemo } = useGrammarMemo(level);
 
@@ -39,11 +42,13 @@ export const ReverseGrammarFlashcardCard = ({
     setUserInput('');
     setIsChecked(false);
     setIsCorrect(false);
+    setCopyInput('');
+    setCopyDone(false);
     inputRef.current?.focus();
   }, [grammar.id]);
 
   const handleCheck = () => {
-    const correct = userInput.trim() === grammar.korean;
+    const correct = userInput.trim() === grammar.exampleKo;
     setIsCorrect(correct);
     setIsChecked(true);
     speak(grammar.exampleKo);
@@ -230,7 +235,7 @@ export const ReverseGrammarFlashcardCard = ({
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="韓国語の文法を入力..."
+              placeholder="韓国語の例文を入力..."
               className="w-full px-4 py-3 text-xl text-center border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-500"
               autoComplete="off"
             />
@@ -260,14 +265,8 @@ export const ReverseGrammarFlashcardCard = ({
               </div>
             )}
 
-            {/* 正解の文法表現 */}
-            <div className="text-2xl font-bold text-blue-600 mt-3 mb-3">
-              {grammar.korean}
-            </div>
-
-            {/* 韓国語例文 */}
-            <div className="border-t border-gray-200 my-3" />
-            <div className="flex items-center justify-center gap-2 mb-1">
+            {/* 正解の韓国語例文 */}
+            <div className="flex items-center justify-center gap-2 mt-3 mb-3">
               <button
                 onClick={playAudio}
                 disabled={isSpeaking}
@@ -279,10 +278,53 @@ export const ReverseGrammarFlashcardCard = ({
               >
                 <Volume2 className="w-4 h-4" />
               </button>
-              <span className="text-lg text-gray-900">
+              <span className="text-xl font-bold text-gray-900">
                 {grammar.exampleKo}
               </span>
             </div>
+
+            {/* 文法表現 */}
+            <div className="border-t border-gray-200 my-3" />
+            <div className="mb-1">
+              <div className="text-sm text-gray-500 mb-1">文法</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {grammar.korean}
+              </div>
+            </div>
+
+            {/* 模写入力（不正解時） */}
+            {!isCorrect && !copyDone && (
+              <div className="mt-4 w-full">
+                <div className="text-sm text-gray-500 mb-2">正解を入力して覚えよう</div>
+                <input
+                  ref={copyRef}
+                  type="text"
+                  value={copyInput}
+                  onChange={(e) => {
+                    setCopyInput(e.target.value);
+                    if (e.target.value.trim() === grammar.exampleKo) {
+                      setCopyDone(true);
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && copyDone) {
+                      handleNext();
+                    }
+                  }}
+                  placeholder={grammar.exampleKo}
+                  className={`w-full px-4 py-3 text-lg text-center border-2 rounded-xl focus:outline-none ${
+                    copyInput.trim() && copyInput.trim() !== grammar.exampleKo.slice(0, copyInput.trim().length)
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-gray-300 focus:border-blue-500'
+                  }`}
+                  autoComplete="off"
+                  autoFocus
+                />
+              </div>
+            )}
+            {!isCorrect && copyDone && (
+              <div className="mt-4 text-green-600 font-medium">模写完了！</div>
+            )}
 
             {/* メモ表示 */}
             {hasMemo(grammar.id) && !showMemo && (
@@ -295,7 +337,7 @@ export const ReverseGrammarFlashcardCard = ({
       </div>
 
       {/* 次へボタン */}
-      {isChecked && (
+      {isChecked && (isCorrect || copyDone) && (
         <div className="mt-6 flex justify-center animate-fade-in">
           <button
             onClick={handleNext}
