@@ -64,9 +64,7 @@ export const ReverseGrammarFlashcardCard = ({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      if (!isChecked && userInput.trim()) {
-        handleCheck();
-      } else if (isChecked) {
+      if (isChecked && (isCorrect || copyDone)) {
         handleNext();
       }
     }
