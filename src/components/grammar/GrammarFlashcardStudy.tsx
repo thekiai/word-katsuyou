@@ -5,7 +5,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GrammarItem, GrammarLevel } from '../../data/grammarData';
-import { AnswerGrade } from '../../types/flashcard';
+import { AnswerGrade, CardProgress } from '../../types/flashcard';
 import { GrammarFlashcardCard, GrammarDirection } from './GrammarFlashcardCard';
 import { ReverseGrammarFlashcardCard } from './ReverseGrammarFlashcardCard';
 import { CommonHeader } from '../CommonHeader';
@@ -15,8 +15,8 @@ type GrammarFlashcardStudyProps = {
   grammarData: GrammarItem[];
   useProgressHook: () => {
     isLoading: boolean;
-    getNextCard: () => { wordId: number; state: string } | null;
-    answerCard: (id: number, grade: AnswerGrade) => { nextCard: { wordId: number; state: string } | null };
+    getNextCard: () => CardProgress | null;
+    answerCard: (id: number, grade: AnswerGrade) => { nextCard: CardProgress | null };
     getTodayStats: () => {
       newCardsRemaining: number;
       learningCardsRemaining: number;
@@ -48,15 +48,17 @@ export const GrammarFlashcardStudy = ({
     getButtonPreview,
   } = useProgressHook();
 
-  const [currentCard, setCurrentCard] = useState(getNextCard());
+  const [currentCard, setCurrentCard] = useState<CardProgress | null>(null);
   const [cardKey, setCardKey] = useState(0);
+  const [initialized, setInitialized] = useState(false);
 
-  // カードが変わったらキーを更新してアニメーションをリセット
+  // 初回のみ次のカードを取得
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && !initialized) {
       setCurrentCard(getNextCard());
+      setInitialized(true);
     }
-  }, [isLoading, getNextCard]);
+  }, [isLoading, initialized, getNextCard]);
 
   const handleAnswer = useCallback(
     (grade: AnswerGrade) => {
@@ -64,11 +66,7 @@ export const GrammarFlashcardStudy = ({
 
       const { nextCard } = answerCard(currentCard.wordId, grade);
       setCardKey((k) => k + 1);
-
-      // 少し遅延して次のカードを表示（アニメーション用）
-      setTimeout(() => {
-        setCurrentCard(nextCard);
-      }, 100);
+      setCurrentCard(nextCard);
     },
     [currentCard, answerCard]
   );
@@ -164,7 +162,7 @@ export const GrammarFlashcardStudy = ({
           <ReverseGrammarFlashcardCard
             key={cardKey}
             grammar={grammar}
-            progress={currentCard as any}
+            progress={currentCard!}
             onAnswer={handleAnswer}
             level={level}
           />
@@ -172,7 +170,7 @@ export const GrammarFlashcardStudy = ({
           <GrammarFlashcardCard
             key={cardKey}
             grammar={grammar}
-            progress={currentCard as any}
+            progress={currentCard!}
             onAnswer={handleAnswer}
             getPreview={handlePreview}
             level={level}

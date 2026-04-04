@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useReverseFlashcardProgress } from '../../hooks/useReverseFlashcardProgress';
 import { getWordById } from '../../data/topikWords';
-import { AnswerGrade } from '../../types/flashcard';
+import { AnswerGrade, CardProgress } from '../../types/flashcard';
 import { ReverseFlashcardCard } from './ReverseFlashcardCard';
 import { CommonHeader } from '../CommonHeader';
 
@@ -24,15 +24,16 @@ export const ReverseFlashcardStudy = ({ onBack }: ReverseFlashcardStudyProps) =>
     getButtonPreview,
   } = useReverseFlashcardProgress();
 
-  const [currentCard, setCurrentCard] = useState(getNextCard());
+  const [currentCard, setCurrentCard] = useState<CardProgress | null>(null);
   const [cardKey, setCardKey] = useState(0);
+  const [initialized, setInitialized] = useState(false);
 
-  // カードが変わったらキーを更新してアニメーションをリセット
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && !initialized) {
       setCurrentCard(getNextCard());
+      setInitialized(true);
     }
-  }, [isLoading, getNextCard]);
+  }, [isLoading, initialized, getNextCard]);
 
   const handleAnswer = useCallback(
     (grade: AnswerGrade) => {
@@ -40,11 +41,7 @@ export const ReverseFlashcardStudy = ({ onBack }: ReverseFlashcardStudyProps) =>
 
       const { nextCard } = answerCard(currentCard.wordId, grade);
       setCardKey((k) => k + 1);
-
-      // 少し遅延して次のカードを表示（アニメーション用）
-      setTimeout(() => {
-        setCurrentCard(nextCard);
-      }, 100);
+      setCurrentCard(nextCard);
     },
     [currentCard, answerCard]
   );

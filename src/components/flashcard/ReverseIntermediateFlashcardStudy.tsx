@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useReverseIntermediateFlashcardProgress } from '../../hooks/useReverseIntermediateFlashcardProgress';
 import { getWordById2 } from '../../data/topikWords2';
-import { AnswerGrade } from '../../types/flashcard';
+import { AnswerGrade, CardProgress } from '../../types/flashcard';
 import { ReverseFlashcardCard } from './ReverseFlashcardCard';
 import { CommonHeader } from '../CommonHeader';
 
@@ -24,14 +24,16 @@ export const ReverseIntermediateFlashcardStudy = ({ onBack }: ReverseIntermediat
     getButtonPreview,
   } = useReverseIntermediateFlashcardProgress();
 
-  const [currentCard, setCurrentCard] = useState(getNextCard());
+  const [currentCard, setCurrentCard] = useState<CardProgress | null>(null);
   const [cardKey, setCardKey] = useState(0);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && !initialized) {
       setCurrentCard(getNextCard());
+      setInitialized(true);
     }
-  }, [isLoading, getNextCard]);
+  }, [isLoading, initialized, getNextCard]);
 
   const handleAnswer = useCallback(
     (grade: AnswerGrade) => {
@@ -39,10 +41,7 @@ export const ReverseIntermediateFlashcardStudy = ({ onBack }: ReverseIntermediat
 
       const { nextCard } = answerCard(currentCard.wordId, grade);
       setCardKey((k) => k + 1);
-
-      setTimeout(() => {
-        setCurrentCard(nextCard);
-      }, 100);
+      setCurrentCard(nextCard);
     },
     [currentCard, answerCard]
   );
