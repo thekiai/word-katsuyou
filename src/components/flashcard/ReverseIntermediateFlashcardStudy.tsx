@@ -2,7 +2,7 @@
  * 中級逆方向フラッシュカード学習画面（日本語 → 韓国語）
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useReverseIntermediateFlashcardProgress } from '../../hooks/useReverseIntermediateFlashcardProgress';
 import { getWordById2 } from '../../data/topikWords2';
@@ -28,6 +28,11 @@ export const ReverseIntermediateFlashcardStudy = ({ onBack }: ReverseIntermediat
   const [cardKey, setCardKey] = useState(0);
   const [initialized, setInitialized] = useState(false);
 
+  const getNextCardRef = useRef(getNextCard);
+  getNextCardRef.current = getNextCard;
+  const currentCardRef = useRef(currentCard);
+  currentCardRef.current = currentCard;
+
   useEffect(() => {
     if (!isLoading && !initialized) {
       setCurrentCard(getNextCard());
@@ -38,8 +43,8 @@ export const ReverseIntermediateFlashcardStudy = ({ onBack }: ReverseIntermediat
   useEffect(() => {
     if (!initialized) return;
     const timer = setInterval(() => {
-      if (!currentCard) {
-        const next = getNextCard();
+      if (!currentCardRef.current) {
+        const next = getNextCardRef.current();
         if (next) {
           setCurrentCard(next);
           setCardKey((k) => k + 1);
@@ -47,7 +52,7 @@ export const ReverseIntermediateFlashcardStudy = ({ onBack }: ReverseIntermediat
       }
     }, 10000);
     return () => clearInterval(timer);
-  }, [initialized, currentCard, getNextCard]);
+  }, [initialized]);
 
   const handleAnswer = useCallback(
     (grade: AnswerGrade) => {

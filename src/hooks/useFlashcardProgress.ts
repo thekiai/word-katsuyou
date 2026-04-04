@@ -159,12 +159,12 @@ export function useFlashcardProgress(settings: FlashcardSettings = DEFAULT_SETTI
     const stats = getTodayStats();
 
     // 優先度: Learning/Relearning → Review → New
-    if (queue.learningCards.length > 0) {
-      return queue.learningCards[0];
-    }
-
     if (queue.relearningCards.length > 0) {
       return queue.relearningCards[0];
+    }
+
+    if (queue.learningCards.length > 0) {
+      return queue.learningCards[0];
     }
 
     if (queue.dueCards.length > 0) {
@@ -197,13 +197,13 @@ export function useFlashcardProgress(settings: FlashcardSettings = DEFAULT_SETTI
       const queue = getStudyQueue(allProgress, settings);
       const remainingNew = Math.max(0, settings.newCardsPerDay - newTodayData.newCardsStudied);
 
-      // 優先度: Learning → Relearning → Review → New
-      if (queue.learningCards.length > 0) {
-        return queue.learningCards[0];
-      }
-
+      // 優先度: Relearning → Learning → Review → New
       if (queue.relearningCards.length > 0) {
         return queue.relearningCards[0];
+      }
+
+      if (queue.learningCards.length > 0) {
+        return queue.learningCards[0];
       }
 
       if (queue.dueCards.length > 0) {

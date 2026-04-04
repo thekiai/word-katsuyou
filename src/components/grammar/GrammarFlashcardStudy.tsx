@@ -2,7 +2,7 @@
  * 文法フラッシュカード学習画面
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GrammarItem, GrammarLevel } from '../../data/grammarData';
 import { AnswerGrade, CardProgress } from '../../types/flashcard';
@@ -52,6 +52,12 @@ export const GrammarFlashcardStudy = ({
   const [cardKey, setCardKey] = useState(0);
   const [initialized, setInitialized] = useState(false);
 
+  // 常に最新の関数を参照するためのref
+  const getNextCardRef = useRef(getNextCard);
+  getNextCardRef.current = getNextCard;
+  const currentCardRef = useRef(currentCard);
+  currentCardRef.current = currentCard;
+
   // 初回のみ次のカードを取得
   useEffect(() => {
     if (!isLoading && !initialized) {
@@ -60,12 +66,12 @@ export const GrammarFlashcardStudy = ({
     }
   }, [isLoading, initialized, getNextCard]);
 
-  // 再学習/学習カードがdueになったら表示する
+  // 再学習/学習カードがdueになったら表示する（常時ポーリング）
   useEffect(() => {
     if (!initialized) return;
     const timer = setInterval(() => {
-      if (!currentCard) {
-        const next = getNextCard();
+      if (!currentCardRef.current) {
+        const next = getNextCardRef.current();
         if (next) {
           setCurrentCard(next);
           setCardKey((k) => k + 1);
@@ -73,7 +79,7 @@ export const GrammarFlashcardStudy = ({
       }
     }, 10000);
     return () => clearInterval(timer);
-  }, [initialized, currentCard, getNextCard]);
+  }, [initialized]);
 
   const handleAnswer = useCallback(
     (grade: AnswerGrade) => {
