@@ -60,6 +60,21 @@ export const GrammarFlashcardStudy = ({
     }
   }, [isLoading, initialized, getNextCard]);
 
+  // 再学習/学習カードがdueになったら表示する
+  useEffect(() => {
+    if (!initialized) return;
+    const timer = setInterval(() => {
+      if (!currentCard) {
+        const next = getNextCard();
+        if (next) {
+          setCurrentCard(next);
+          setCardKey((k) => k + 1);
+        }
+      }
+    }, 10000);
+    return () => clearInterval(timer);
+  }, [initialized, currentCard, getNextCard]);
+
   const handleAnswer = useCallback(
     (grade: AnswerGrade) => {
       if (!currentCard) return;
