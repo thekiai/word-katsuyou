@@ -4,7 +4,7 @@
  * ユーザーが韓国語の文法表現を入力して答え合わせ
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Volume2, StickyNote, ClipboardPaste } from 'lucide-react';
 import { GrammarItem, GrammarLevel } from '../../data/grammarData';
 import { CardProgress, AnswerGrade } from '../../types/flashcard';
@@ -258,11 +258,9 @@ export const ReverseGrammarFlashcardCard = ({
               {isCorrect ? '正解！' : '不正解...'}
             </div>
 
-            {/* ユーザーの回答 */}
+            {/* 差分表示 */}
             {!isCorrect && userInput.trim() && (
-              <div className="text-gray-500 mb-2">
-                あなたの回答: <span className="line-through">{userInput}</span>
-              </div>
+              <DiffDisplay userInput={userInput.trim()} correct={grammar.exampleKo} />
             )}
 
             {/* 正解の韓国語例文 */}
@@ -351,6 +349,54 @@ export const ReverseGrammarFlashcardCard = ({
           </button>
         </div>
       )}
+    </div>
+  );
+};
+
+// 文字単位の差分表示コンポーネント
+const DiffDisplay = ({ userInput, correct }: { userInput: string; correct: string }) => {
+  const diff = useMemo(() => {
+    const result: { char: string; type: 'match' | 'wrong' | 'missing' | 'extra' }[] = [];
+    const maxLen = Math.max(userInput.length, correct.length);
+
+    for (let i = 0; i < maxLen; i++) {
+      if (i < userInput.length && i < correct.length) {
+        result.push({
+          char: userInput[i],
+          type: userInput[i] === correct[i] ? 'match' : 'wrong',
+        });
+      } else if (i >= userInput.length) {
+        result.push({ char: correct[i], type: 'missing' });
+      } else {
+        result.push({ char: userInput[i], type: 'extra' });
+      }
+    }
+    return result;
+  }, [userInput, correct]);
+
+  const colorMap = {
+    match: 'text-green-600',
+    wrong: 'text-red-500 bg-red-50',
+    missing: 'text-blue-500 bg-blue-50',
+    extra: 'text-orange-500 bg-orange-50 line-through',
+  };
+
+  return (
+    <div className="mb-3">
+      <div className="text-sm text-gray-500 mb-1">あなたの回答</div>
+      <div className="text-lg leading-relaxed">
+        {diff.map((d, i) => (
+          <span key={i} className={`${colorMap[d.type]} ${d.type !== 'match' ? 'font-bold rounded px-0.5' : ''}`}>
+            {d.type === 'missing' ? d.char : d.char}
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-3 justify-center mt-2 text-[10px] text-gray-400">
+        <span><span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-1" />一致</span>
+        <span><span className="inline-block w-2 h-2 rounded-full bg-red-500 mr-1" />間違い</span>
+        <span><span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-1" />不足</span>
+        <span><span className="inline-block w-2 h-2 rounded-full bg-orange-500 mr-1" />余分</span>
+      </div>
     </div>
   );
 };
