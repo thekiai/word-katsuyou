@@ -11,12 +11,15 @@ import { CardProgress, AnswerGrade } from '../../types/flashcard';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
 import { useGrammarMemo } from '../../hooks/useGrammarMemo';
 
+export type GrammarDirection = 'ko-ja' | 'ja-ko';
+
 type GrammarFlashcardCardProps = {
   grammar: GrammarItem;
   progress: CardProgress;
   onAnswer: (grade: AnswerGrade) => void;
   getPreview: (grade: AnswerGrade) => string;
   level?: GrammarLevel;
+  direction?: GrammarDirection;
 };
 
 export const GrammarFlashcardCard = ({
@@ -25,6 +28,7 @@ export const GrammarFlashcardCard = ({
   onAnswer,
   getPreview,
   level = 'beginner',
+  direction = 'ko-ja',
 }: GrammarFlashcardCardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showMemo, setShowMemo] = useState(false);
@@ -193,81 +197,147 @@ export const GrammarFlashcardCard = ({
         )}
 
         {!isFlipped ? (
-          /* 表面: 韓国語例文 */
-          <>
-            <div className="flex items-center gap-3 mb-4">
-              <button
-                onClick={playAudio}
-                disabled={isSpeaking}
-                className={`p-2 rounded-full transition-colors ${
-                  isSpeaking
-                    ? 'bg-yellow-100 text-yellow-600'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                }`}
-              >
-                <Volume2 className="w-5 h-5" />
-              </button>
-            </div>
-            <p className="text-2xl font-bold text-gray-900 text-center leading-relaxed">
-              {grammar.exampleKo}
-            </p>
-            <div className="text-gray-400 mt-6">
-              タップして答えを見る
-            </div>
-          </>
-        ) : (
-          /* 裏面: 文法・日本語意味・例文訳 */
-          <div className="text-center animate-fade-in w-full">
-            {/* 文法表現 */}
-            <div className="mb-4">
-              <div className="text-sm text-gray-500 mb-1">文法</div>
-              <div className="text-3xl font-bold text-blue-600">
-                {grammar.korean}
-              </div>
-            </div>
-
-            {/* 日本語意味 */}
-            <div className="mb-4">
-              <div className="text-sm text-gray-500 mb-1">意味</div>
-              <div className="text-xl text-gray-800">
-                {grammar.japanese}
-              </div>
-            </div>
-
-            {/* 区切り線 */}
-            <div className="border-t border-gray-200 my-4" />
-
-            {/* 例文（韓国語 → 日本語） */}
-            <div>
-              <div className="text-sm text-gray-500 mb-2">例文</div>
-              <div className="flex items-center justify-center gap-2 mb-2">
+          direction === 'ko-ja' ? (
+            /* 表面（韓→日）: 韓国語例文 */
+            <>
+              <div className="flex items-center gap-3 mb-4">
                 <button
                   onClick={playAudio}
                   disabled={isSpeaking}
-                  className={`p-1.5 rounded-full transition-colors ${
+                  className={`p-2 rounded-full transition-colors ${
                     isSpeaking
                       ? 'bg-yellow-100 text-yellow-600'
                       : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
                   }`}
                 >
-                  <Volume2 className="w-4 h-4" />
+                  <Volume2 className="w-5 h-5" />
                 </button>
-                <span className="text-lg text-gray-900">
-                  {grammar.exampleKo}
-                </span>
               </div>
-              <div className="text-base text-gray-600">
-                {grammar.exampleJa}
+              <p className="text-2xl font-bold text-gray-900 text-center leading-relaxed">
+                {grammar.exampleKo}
+              </p>
+              <div className="text-gray-400 mt-6">
+                タップして答えを見る
               </div>
-            </div>
+            </>
+          ) : (
+            /* 表面（日→韓）: 日本語意味＋日本語例文 */
+            <>
+              <div className="mb-4">
+                <div className="text-sm text-gray-500 mb-1">意味</div>
+                <div className="text-2xl font-bold text-gray-900">
+                  {grammar.japanese}
+                </div>
+              </div>
+              <div className="border-t border-gray-200 my-4 w-full" />
+              <div>
+                <div className="text-sm text-gray-500 mb-2">例文</div>
+                <p className="text-lg text-gray-800 text-center leading-relaxed">
+                  {grammar.exampleJa}
+                </p>
+              </div>
+              <div className="text-gray-400 mt-6">
+                タップして答えを見る
+              </div>
+            </>
+          )
+        ) : (
+          direction === 'ko-ja' ? (
+            /* 裏面（韓→日）: 文法・日本語意味・例文訳 */
+            <div className="text-center animate-fade-in w-full">
+              {/* 文法表現 */}
+              <div className="mb-4">
+                <div className="text-sm text-gray-500 mb-1">文法</div>
+                <div className="text-3xl font-bold text-blue-600">
+                  {grammar.korean}
+                </div>
+              </div>
 
-            {/* メモ表示 */}
-            {hasMemo(grammar.id) && !showMemo && (
-              <div className="mt-3 text-sm text-yellow-600 bg-yellow-50 rounded-lg px-3 py-2 text-left whitespace-pre-wrap">
-                {getMemo(grammar.id)}
+              {/* 日本語意味 */}
+              <div className="mb-4">
+                <div className="text-sm text-gray-500 mb-1">意味</div>
+                <div className="text-xl text-gray-800">
+                  {grammar.japanese}
+                </div>
               </div>
-            )}
-          </div>
+
+              {/* 区切り線 */}
+              <div className="border-t border-gray-200 my-4" />
+
+              {/* 例文（韓国語 → 日本語） */}
+              <div>
+                <div className="text-sm text-gray-500 mb-2">例文</div>
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <button
+                    onClick={playAudio}
+                    disabled={isSpeaking}
+                    className={`p-1.5 rounded-full transition-colors ${
+                      isSpeaking
+                        ? 'bg-yellow-100 text-yellow-600'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                    }`}
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </button>
+                  <span className="text-lg text-gray-900">
+                    {grammar.exampleKo}
+                  </span>
+                </div>
+                <div className="text-base text-gray-600">
+                  {grammar.exampleJa}
+                </div>
+              </div>
+
+              {/* メモ表示 */}
+              {hasMemo(grammar.id) && !showMemo && (
+                <div className="mt-3 text-sm text-yellow-600 bg-yellow-50 rounded-lg px-3 py-2 text-left whitespace-pre-wrap">
+                  {getMemo(grammar.id)}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* 裏面（日→韓）: 韓国語文法・韓国語例文 */
+            <div className="text-center animate-fade-in w-full">
+              {/* 文法表現 */}
+              <div className="mb-4">
+                <div className="text-sm text-gray-500 mb-1">文法</div>
+                <div className="text-3xl font-bold text-blue-600">
+                  {grammar.korean}
+                </div>
+              </div>
+
+              {/* 区切り線 */}
+              <div className="border-t border-gray-200 my-4" />
+
+              {/* 例文（韓国語） */}
+              <div>
+                <div className="text-sm text-gray-500 mb-2">例文</div>
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <button
+                    onClick={playAudio}
+                    disabled={isSpeaking}
+                    className={`p-1.5 rounded-full transition-colors ${
+                      isSpeaking
+                        ? 'bg-yellow-100 text-yellow-600'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                    }`}
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </button>
+                  <span className="text-lg text-gray-900">
+                    {grammar.exampleKo}
+                  </span>
+                </div>
+              </div>
+
+              {/* メモ表示 */}
+              {hasMemo(grammar.id) && !showMemo && (
+                <div className="mt-3 text-sm text-yellow-600 bg-yellow-50 rounded-lg px-3 py-2 text-left whitespace-pre-wrap">
+                  {getMemo(grammar.id)}
+                </div>
+              )}
+            </div>
+          )
         )}
       </div>
 

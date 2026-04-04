@@ -6,7 +6,7 @@ import { TypingPractice } from './components/TypingPractice';
 import { ActivityGraph } from './components/ActivityGraph';
 import { CommonHeader } from './components/CommonHeader';
 import { FlashcardHome, ReverseFlashcardHome, IntermediateFlashcardHome, ReverseIntermediateFlashcardHome } from './components/flashcard';
-import { BeginnerGrammarHome, IntermediateGrammarHome } from './components/grammar';
+import { BeginnerGrammarHome, IntermediateGrammarHome, ReverseBeginnerGrammarHome, ReverseIntermediateGrammarHome } from './components/grammar';
 import { VerbEntry, ConjugationType, AnswerResult } from './types';
 import { loadVerbs } from './utils/parseCSV';
 import { CONJUGATION_FIELDS } from './constants';
@@ -329,25 +329,44 @@ function App() {
             </div>
           </div>
 
-          {/* 文法 */}
-          <div>
-            <p className="text-xs text-gray-500 mb-2 px-1">文法</p>
+          {/* 初級文法 */}
+          <div className="mb-3">
+            <p className="text-xs text-gray-500 mb-2 px-1">初級文法（84項目）</p>
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => navigate('/grammar-beginner')}
                 className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
               >
-                <span className="text-2xl mb-1">📖</span>
-                <span className="font-medium text-gray-800 text-sm">初級</span>
-                <span className="text-xs text-gray-400">84項目</span>
+                <span className="text-2xl mb-1">🇰🇷</span>
+                <span className="font-medium text-gray-800 text-sm">韓→日</span>
               </button>
+              <button
+                onClick={() => navigate('/grammar-beginner-reverse')}
+                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <span className="text-2xl mb-1">🇯🇵</span>
+                <span className="font-medium text-gray-800 text-sm">日→韓</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 中級文法 */}
+          <div>
+            <p className="text-xs text-gray-500 mb-2 px-1">中級文法（148項目）</p>
+            <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => navigate('/grammar-intermediate')}
                 className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
               >
-                <span className="text-2xl mb-1">📚</span>
-                <span className="font-medium text-gray-800 text-sm">中級</span>
-                <span className="text-xs text-gray-400">148項目</span>
+                <span className="text-2xl mb-1">🇰🇷</span>
+                <span className="font-medium text-gray-800 text-sm">韓→日</span>
+              </button>
+              <button
+                onClick={() => navigate('/grammar-intermediate-reverse')}
+                className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <span className="text-2xl mb-1">🇯🇵</span>
+                <span className="font-medium text-gray-800 text-sm">日→韓</span>
               </button>
             </div>
           </div>
@@ -381,9 +400,19 @@ function App() {
     return <BeginnerGrammarHome />;
   }
 
+  // 初級文法（日→韓）モード
+  if (location.pathname === '/grammar-beginner-reverse') {
+    return <ReverseBeginnerGrammarHome />;
+  }
+
   // 中級文法モード
   if (location.pathname === '/grammar-intermediate') {
     return <IntermediateGrammarHome />;
+  }
+
+  // 中級文法（日→韓）モード
+  if (location.pathname === '/grammar-intermediate-reverse') {
+    return <ReverseIntermediateGrammarHome />;
   }
 
   // タイピング練習モード

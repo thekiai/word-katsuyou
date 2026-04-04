@@ -8,6 +8,7 @@ import { CommonHeader } from '../CommonHeader';
 import { GrammarFlashcardStudy } from './GrammarFlashcardStudy';
 import { GrammarList } from './GrammarList';
 import { GrammarItem, GrammarLevel } from '../../data/grammarData';
+import { GrammarDirection } from './GrammarFlashcardCard';
 
 type GrammarFlashcardHomeProps = {
   title: string;
@@ -35,6 +36,7 @@ type GrammarFlashcardHomeProps = {
     getButtonPreview: (id: number, grade: any) => string;
   };
   level?: GrammarLevel;
+  direction?: GrammarDirection;
 };
 
 export const GrammarFlashcardHome = ({
@@ -42,6 +44,7 @@ export const GrammarFlashcardHome = ({
   grammarData,
   useProgressHook,
   level = 'beginner',
+  direction = 'ko-ja',
 }: GrammarFlashcardHomeProps) => {
   const [isStudying, setIsStudying] = useState(false);
   const [showGrammarList, setShowGrammarList] = useState(false);
@@ -62,6 +65,7 @@ export const GrammarFlashcardHome = ({
         useProgressHook={useProgressHook}
         onBack={() => setIsStudying(false)}
         level={level}
+        direction={direction}
       />
     );
   }
@@ -247,8 +251,17 @@ export const GrammarFlashcardHome = ({
               </p>
               <div className="bg-blue-50 rounded-lg p-3">
                 <p className="font-medium text-blue-700 mb-2">📝 学習方法</p>
-                <p><strong>表面:</strong> 韓国語の例文が表示されます</p>
-                <p><strong>裏面:</strong> 文法表現・日本語の意味・例文の訳</p>
+                {direction === 'ko-ja' ? (
+                  <>
+                    <p><strong>表面:</strong> 韓国語の例文が表示されます</p>
+                    <p><strong>裏面:</strong> 文法表現・日本語の意味・例文の訳</p>
+                  </>
+                ) : (
+                  <>
+                    <p><strong>表面:</strong> 日本語の意味・例文が表示されます</p>
+                    <p><strong>裏面:</strong> 韓国語の文法表現・韓国語の例文</p>
+                  </>
+                )}
               </div>
               <div className="bg-gray-50 rounded-lg p-3">
                 <p><strong>OK:</strong> 覚えていた → 次回の復習間隔が延長</p>

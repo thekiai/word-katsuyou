@@ -358,3 +358,21 @@ export function useIntermediateGrammarProgress() {
     grammarData: intermediateGrammar,
   });
 }
+
+// 初級文法（日→韓）用フック
+export function useReverseBeginnerGrammarProgress() {
+  return useGrammarFlashcardProgress({
+    storageKeyProgress: 'reverse-grammar-beginner-progress',
+    storageKeyToday: 'reverse-grammar-beginner-today',
+    grammarData: beginnerGrammar,
+  });
+}
+
+// 中級文法（日→韓）用フック
+export function useReverseIntermediateGrammarProgress() {
+  return useGrammarFlashcardProgress({
+    storageKeyProgress: 'reverse-grammar-intermediate-progress',
+    storageKeyToday: 'reverse-grammar-intermediate-today',
+    grammarData: intermediateGrammar,
+  });
+}

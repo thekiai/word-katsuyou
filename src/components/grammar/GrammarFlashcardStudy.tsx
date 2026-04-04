@@ -6,7 +6,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GrammarItem, GrammarLevel } from '../../data/grammarData';
 import { AnswerGrade } from '../../types/flashcard';
-import { GrammarFlashcardCard } from './GrammarFlashcardCard';
+import { GrammarFlashcardCard, GrammarDirection } from './GrammarFlashcardCard';
+import { ReverseGrammarFlashcardCard } from './ReverseGrammarFlashcardCard';
 import { CommonHeader } from '../CommonHeader';
 
 type GrammarFlashcardStudyProps = {
@@ -26,6 +27,7 @@ type GrammarFlashcardStudyProps = {
   };
   onBack?: () => void;
   level?: GrammarLevel;
+  direction?: GrammarDirection;
 };
 
 export const GrammarFlashcardStudy = ({
@@ -34,6 +36,7 @@ export const GrammarFlashcardStudy = ({
   useProgressHook,
   onBack,
   level = 'beginner',
+  direction = 'ko-ja',
 }: GrammarFlashcardStudyProps) => {
   const navigate = useNavigate();
   const {
@@ -151,14 +154,25 @@ export const GrammarFlashcardStudy = ({
 
       {/* カード */}
       <div className="flex-1 flex items-start justify-center px-4 pt-4">
-        <GrammarFlashcardCard
-          key={cardKey}
-          grammar={grammar}
-          progress={currentCard as any}
-          onAnswer={handleAnswer}
-          getPreview={handlePreview}
-          level={level}
-        />
+        {direction === 'ja-ko' ? (
+          <ReverseGrammarFlashcardCard
+            key={cardKey}
+            grammar={grammar}
+            progress={currentCard as any}
+            onAnswer={handleAnswer}
+            level={level}
+          />
+        ) : (
+          <GrammarFlashcardCard
+            key={cardKey}
+            grammar={grammar}
+            progress={currentCard as any}
+            onAnswer={handleAnswer}
+            getPreview={handlePreview}
+            level={level}
+            direction={direction}
+          />
+        )}
       </div>
     </div>
   );
