@@ -76,5 +76,6 @@ export type TodayStats = {
   newCardsRemaining: number;
   reviewCardsRemaining: number;
   learningCardsRemaining: number;
+  relearningCardsRemaining: number;
   completedToday: number;
 };

@@ -154,6 +154,7 @@ export function useGrammarFlashcardProgress({
       newCardsRemaining: Math.min(remainingNew, queue.newCards.length),
       reviewCardsRemaining: queue.dueCards.length,
       learningCardsRemaining: queue.learningCards.length,
+      relearningCardsRemaining: queue.relearningCards.length,
       completedToday: todayData.newCardsStudied + todayData.reviewsCompleted,
     };
   }, [getQueue, todayData, settings]);
@@ -166,6 +167,10 @@ export function useGrammarFlashcardProgress({
     // 優先度: Learning/Relearning → Review → New
     if (queue.learningCards.length > 0) {
       return queue.learningCards[0];
+    }
+
+    if (queue.relearningCards.length > 0) {
+      return queue.relearningCards[0];
     }
 
     if (queue.dueCards.length > 0) {

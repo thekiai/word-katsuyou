@@ -25,6 +25,7 @@ type FlashcardHomeBaseProps = {
       newCardsRemaining: number;
       learningCardsRemaining: number;
       reviewCardsRemaining: number;
+      relearningCardsRemaining: number;
     };
     getOverallStats: () => {
       total: number;
@@ -123,7 +124,8 @@ export const FlashcardHomeBase = ({
   const totalDue =
     todayStats.newCardsRemaining +
     todayStats.reviewCardsRemaining +
-    todayStats.learningCardsRemaining;
+    todayStats.learningCardsRemaining +
+    todayStats.relearningCardsRemaining;
 
   const handleReset = () => {
     resetProgress();
@@ -146,7 +148,7 @@ export const FlashcardHomeBase = ({
           </div>
 
           {/* 統計 */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-4 gap-3 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-yellow-500">
                 {todayStats.newCardsRemaining}
@@ -164,6 +166,12 @@ export const FlashcardHomeBase = ({
                 {todayStats.reviewCardsRemaining}
               </div>
               <div className="text-xs text-gray-500">復習</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-red-500">
+                {todayStats.relearningCardsRemaining}
+              </div>
+              <div className="text-xs text-gray-500">再学習</div>
             </div>
           </div>
 

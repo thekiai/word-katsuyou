@@ -94,6 +94,7 @@ export const IntermediateFlashcardStudy = ({ onBack }: IntermediateFlashcardStud
 
   const remaining =
     stats.learningCardsRemaining +
+    stats.relearningCardsRemaining +
     stats.reviewCardsRemaining +
     stats.newCardsRemaining;
 
@@ -121,6 +122,10 @@ export const IntermediateFlashcardStudy = ({ onBack }: IntermediateFlashcardStud
           <div className="flex items-center gap-1">
             <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
             <span className="text-gray-600">{stats.reviewCardsRemaining}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+            <span className="text-gray-600">{stats.relearningCardsRemaining}</span>
           </div>
         </div>
       </div>

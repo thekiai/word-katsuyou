@@ -259,6 +259,7 @@ export function getStudyQueue(
   dueCards: CardProgress[];
   newCards: CardProgress[];
   learningCards: CardProgress[];
+  relearningCards: CardProgress[];
 } {
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -266,15 +267,20 @@ export function getStudyQueue(
   const dueCards: CardProgress[] = [];
   const newCards: CardProgress[] = [];
   const learningCards: CardProgress[] = [];
+  const relearningCards: CardProgress[] = [];
 
   for (const progress of allProgress) {
     const dueDate = new Date(progress.dueDate);
 
     if (progress.state === 'new') {
       newCards.push(progress);
-    } else if (progress.state === 'learning' || progress.state === 'relearning') {
+    } else if (progress.state === 'learning') {
       if (dueDate <= now) {
         learningCards.push(progress);
+      }
+    } else if (progress.state === 'relearning') {
+      if (dueDate <= now) {
+        relearningCards.push(progress);
       }
     } else if (progress.state === 'review') {
       if (dueDate <= todayStart || dueDate <= now) {
@@ -290,6 +296,7 @@ export function getStudyQueue(
     dueCards: sortCardsByPriority(dueCards),
     newCards: limitedNewCards,
     learningCards: sortCardsByPriority(learningCards),
+    relearningCards: sortCardsByPriority(relearningCards),
   };
 }
 
