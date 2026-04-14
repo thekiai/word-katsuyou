@@ -32,8 +32,8 @@ export const ReverseGrammarFlashcardCard = ({
   const [showMemo, setShowMemo] = useState(false);
   const [memoText, setMemoText] = useState('');
   const [hasPasted, setHasPasted] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const copyRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const copyRef = useRef<HTMLTextAreaElement>(null);
   const { speak, isSpeaking } = useSpeechSynthesis();
   const { getMemo, setMemo, hasMemo } = useGrammarMemo(level);
 
@@ -227,15 +227,20 @@ export const ReverseGrammarFlashcardCard = ({
         {/* 入力フィールド */}
         {!isChecked ? (
           <div className="w-full">
-            <input
+            <textarea
               ref={inputRef}
-              type="text"
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="韓国語の例文を入力..."
-              className="w-full px-4 py-3 text-xl text-center border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-3 text-xl text-center border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-500 resize-none overflow-hidden"
               autoComplete="off"
+              rows={1}
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = 'auto';
+                target.style.height = target.scrollHeight + 'px';
+              }}
             />
             <button
               onClick={handleCheck}
@@ -292,9 +297,8 @@ export const ReverseGrammarFlashcardCard = ({
             {!isCorrect && !copyDone && (
               <div className="mt-4 w-full">
                 <div className="text-sm text-gray-500 mb-2">正解を入力して覚えよう</div>
-                <input
+                <textarea
                   ref={copyRef}
-                  type="text"
                   value={copyInput}
                   onChange={(e) => {
                     setCopyInput(e.target.value);
@@ -308,13 +312,19 @@ export const ReverseGrammarFlashcardCard = ({
                     }
                   }}
                   placeholder={grammar.exampleKo}
-                  className={`w-full px-4 py-3 text-lg text-center border-2 rounded-xl focus:outline-none ${
+                  className={`w-full px-4 py-3 text-lg text-center border-2 rounded-xl focus:outline-none resize-none overflow-hidden ${
                     copyInput.trim() && copyInput.trim() !== grammar.exampleKo.slice(0, copyInput.trim().length)
                       ? 'border-red-300 focus:border-red-500'
                       : 'border-gray-300 focus:border-blue-500'
                   }`}
                   autoComplete="off"
                   autoFocus
+                  rows={1}
+                  onInput={(e) => {
+                    const target = e.target as HTMLTextAreaElement;
+                    target.style.height = 'auto';
+                    target.style.height = target.scrollHeight + 'px';
+                  }}
                 />
               </div>
             )}
